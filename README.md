@@ -1,6 +1,8 @@
 # nes-emu
 NES emulator. A hobby project that I figured would be quite entertaining!!!
 
+Status: At the very early stages currently. I don't even have all of the CPU emulated yet.
+
 
 # References
 - [NESDev Wiki](https://wiki.nesdev.org/w/index.php/Nesdev_Wiki)
