@@ -22,6 +22,11 @@ class R6502 {
     // Useful variables
     uint16_t absAddr = 0x0000;
     uint16_t relAddr = 0x0000;
+    uint8_t fetched = 0x00;
+    uint16_t tmp = 0x0000;
+
+    // Useful methods
+    uint8_t fetch();
   private:
     // Registers
     uint8_t a = 0x00; // Accumulator
@@ -43,6 +48,9 @@ class R6502 {
       Z = 0x01 << 1, // Result zero?
       C = 0x01 << 0  // Carry?
     };
+
+    uint8_t getFlag(FLAGS flag);
+    void setFlag(FLAGS flag, uint8_t value);
 
   private:
     // Addressing modes
