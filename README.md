@@ -5,7 +5,7 @@ Status: At the very early stages currently. I don't even have all of the CPU emu
 
 
 # References
-- [My 6502 instruction matrix CSV file](https://gist.github.com/mrniceguy127/356a06ac20bf72106305e43b2897bc62)
+- [My 6502 instruction set matrix CSV file](https://gist.github.com/mrniceguy127/356a06ac20bf72106305e43b2897bc62)
 - [NESDev Wiki](https://wiki.nesdev.org/w/index.php/Nesdev_Wiki)
 - [6502 Data Sheets](http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf)
 - [6502 Instruction Set](https://www.masswerk.at/6502/6502_instruction_set.html)
