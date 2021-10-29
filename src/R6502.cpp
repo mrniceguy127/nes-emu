@@ -13,6 +13,8 @@ void R6502::reset() {
   // Useful Variables
   absAddr = 0x0000;
   relAddr = 0x0000;
+  fetched = 0x00;
+  tmp = 0x0000;
 
   // Registers
   a = 0x00;
@@ -35,6 +37,26 @@ void R6502::write(uint16_t addr, uint8_t data) {
 
 void R6502::connectBus(Bus * b) {
   bus = b;
+}
+
+uint8_t R6502::getFlag(FLAGS flag) {
+  return flag & P > 0 ? 1 : 0;
+}
+
+void R6502::setFlag(FLAGS flag, uint8_t value) {
+  if (value) {
+    P |= flag;
+  } else {
+    P &= ~flag;
+  }
+}
+
+// -----
+// Useful Methods
+// -----
+void R6502::fetch() {
+  fetched = read(absAddr);
+  return fetched;
 }
 
 // -----
@@ -159,4 +181,281 @@ uint8_t R6502::IND() {
 
   return 0;
 }
+
+
+
+
+
+// -----
+// Instructions - https://www.masswerk.at/6502/6502_instruction_set.html
+// -----
+
+
+
+uint8_t R6502::ADC() {
+  // A + M + C -> A, C
+  // Flags changed: C Z N V
+
+  fetch(); // fetch target data
+
+  tmp = (uint16_t) a + (uint16_t) fetched + (uint16_t) getFlag(C);
+
+  setFlag(C, tmp > 255);
+  setFlag(Z, tmp & 0x00FF == 0); // Clear higher order bits before comparing
+  setFlag(N, tmp & 0x0080);
+  
+  // Overflow happens when both operands have the same sign but the result is a different sign.
+  // 1. XNOR the 2 operands, the MSB in the result is whether or not the signs are the same.
+  // 2. check if the sign of the result differs from the sign of either operand (XOR them).
+  // 3. if 1 and 2 are true, over flow occured (get the sign bit of the & of 1 and 2).
+  setFlag(V, (~((uint16_t) a ^ (uint16_t) fetched) & (((uint8_t)a ^ tmp)) & 0x0080);
+
+  a = tmp & 0x00FF;
+
+  return 1; // Extra cycle possible.
+}
+
+uint8_t R6502::AND() {
+  // A AND M -> A
+  // Flags changed: Z N
+  
+  fetch();
+  a &= fetched;
+
+  setFlag(Z, a == 0);
+  setFlag(N, a & 0x80);
+
+  return 1;
+}
+
+uint8_t R6502::ASL() {
+  return 0;
+}
+
+uint8_t R6502::BCC() {
+  return 0;
+}
+
+uint8_t R6502::BCS() {
+  return 0;
+}
+
+uint8_t R6502::BEQ() {
+  return 0;
+}
+
+uint8_t R6502::BIT() {
+  return 0;
+}
+
+uint8_t R6502::BMI() {
+  return 0;
+}
+
+uint8_t R6502::BNE() {
+  return 0;
+}
+
+uint8_t R6502::BPL() {
+  return 0;
+}
+
+uint8_t R6502::BRK() {
+  return 0;
+}
+
+uint8_t R6502::BVC() {
+  return 0;
+}
+
+uint8_t R6502::BVS() {
+  return 0;
+}
+
+uint8_t R6502::CLC() {
+  return 0;
+}
+
+uint8_t R6502::CLD() {
+  return 0;
+}
+
+uint8_t R6502::CLI() {
+  return 0;
+}
+
+uint8_t R6502::CLV() {
+  return 0;
+}
+
+uint8_t R6502::CMP() {
+  return 0;
+}
+
+uint8_t R6502::CPX() {
+  return 0;
+}
+
+uint8_t R6502::CPY() {
+  return 0;
+}
+
+uint8_t R6502::DEC() {
+  return 0;
+}
+
+uint8_t R6502::DEX() {
+  return 0;
+}
+
+uint8_t R6502::DEY() {
+  return 0;
+}
+
+uint8_t R6502::EOR() {
+  return 0;
+}
+
+uint8_t R6502::INC() {
+  return 0;
+}
+
+uint8_t R6502::INX() {
+  return 0;
+}
+
+uint8_t R6502::INY() {
+  return 0;
+}
+
+uint8_t R6502::JMP() {
+  return 0;
+}
+
+uint8_t R6502::JSR() {
+  return 0;
+}
+
+uint8_t R6502::LDA() {
+  return 0;
+}
+
+uint8_t R6502::LDX() {
+  return 0;
+}
+
+uint8_t R6502::LDY() {
+  return 0;
+}
+
+uint8_t R6502::LSR() {
+  return 0;
+}
+
+uint8_t R6502::NOP() {
+  return 0;
+}
+
+uint8_t R6502::ORA() {
+  return 0;
+}
+
+uint8_t R6502::PHA() {
+  return 0;
+}
+
+uint8_t R6502::PHP() {
+  return 0;
+}
+
+uint8_t R6502::PLA() {
+  return 0;
+}
+
+uint8_t R6502::PLP() {
+  return 0;
+}
+
+uint8_t R6502::ROL() {
+  return 0;
+}
+
+uint8_t R6502::ROR() {
+  return 0;
+}
+
+uint8_t R6502::RTI() {
+  return 0;
+}
+
+uint8_t R6502::RTS() {
+  return 0;
+}
+
+uint8_t R6502::SBC() {
+  return 0;
+}
+
+uint8_t R6502::SEC() {
+  return 0;
+}
+
+uint8_t R6502::SED() {
+  return 0;
+}
+
+uint8_t R6502::SEI() {
+  return 0;
+}
+
+uint8_t R6502::STA() {
+  return 0;
+}
+
+uint8_t R6502::STX() {
+  return 0;
+}
+
+uint8_t R6502::STY() {
+  return 0;
+}
+
+uint8_t R6502::TAX() {
+  return 0;
+}
+
+uint8_t R6502::TAY() {
+  return 0;
+}
+
+uint8_t R6502::TSX() {
+  return 0;
+}
+
+uint8_t R6502::TXA() {
+  return 0;
+}
+
+uint8_t R6502::TXS() {
+  return 0;
+}
+
+uint8_t R6502::TYA() {
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+uint8_t R6502::XXX() {
+  return 0;
+}
+
+
+
 
