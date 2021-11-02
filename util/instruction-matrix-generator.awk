@@ -3,9 +3,7 @@ BEGIN {
   print "{"
 }
 
-
 NR!=1 {
-  
   ADDR_MODE="XXX"
   if ($2=="relative") {
     ADDR_MODE="REL"
@@ -31,11 +29,17 @@ NR!=1 {
     ADDR_MODE="ZPX"
   } else if ($2=="zpy") {
     ADDR_MODE="ZPY"
-  } else if ($2=="accum") { /* Accumulator address mode is essentialy the same as an implied. */
+  } else if ($2=="accum") { /* Accumulator address mode is essentialy the same as implied. */
     ADDR_MODE="IMP"
   }
+}
 
-  print "{ \"" $1 "\", " ADDR_MODE  ", " $4 " }"
+NR!=1 && NR <=256 {
+    print "  { \"" $1 "\", " ADDR_MODE  ", " $4 " },"
+}
+
+NR==257 {
+    print "  { \"" $1 "\", " ADDR_MODE  ", " $4 " }"
 }
 
 END {
