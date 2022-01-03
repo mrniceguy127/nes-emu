@@ -53,6 +53,8 @@ class R6502 {
     void setFlag(FLAGS flag, uint8_t value);
 
   private:
+    std::array<instruction, 0xF*0xF> instructionMatrix;
+
     struct instruction {
       char mnemonic[3];
       uint8_t (* addressMode)(void *);
