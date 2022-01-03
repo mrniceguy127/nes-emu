@@ -38,7 +38,7 @@ class R6502 {
     // Flags
     uint8_t P = 0x00; // Processor Status
 
-    enum FLAGS {
+    enum FLAGS { // Never considered using enums for bit manipulation. Credit to OneLoneCoder for this strategy.
       N = 0x01 << 7, // Negative?
       V = 0x01 << 6, // Overflow?
       U = 0x01 << 5, // UNUSED
@@ -51,6 +51,13 @@ class R6502 {
 
     uint8_t getFlag(FLAGS flag);
     void setFlag(FLAGS flag, uint8_t value);
+
+  private:
+    struct instruction {
+      char mnemonic[3];
+      uint8_t (* addressMode)(void *);
+      uint8_t (* operation)(void *);
+    };
 
   private:
     // Addressing modes
