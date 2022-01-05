@@ -10,23 +10,23 @@ R6502::R6502() {
   instructionMatrix = 
   {
 	  /* 0                                      1                                      2                                      3                                      4                                      5                                      6                                      7                                      8                                      9                                      A                                      B                                      C                                      D                                      E                                      F                                      */
-  /* 0 */    { "BRK", &R6502:IMP, &R6502:BRK, $4 }, { "ORA", &R6502:IZX, &R6502:ORA, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "ORA", &R6502:ZP0, &R6502:ORA, $4 }, { "ASL", &R6502:ZP0, &R6502:ASL, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "PHP", &R6502:IMP, &R6502:PHP, $4 }, { "ORA", &R6502:IMM, &R6502:ORA, $4 }, { "ASL", &R6502:IMP, &R6502:ASL, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "ORA", &R6502:ABS, &R6502:ORA, $4 }, { "ASL", &R6502:ABS, &R6502:ASL, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* 1 */    { "BPL", &R6502:REL, &R6502:BPL, $4 }, { "ORA", &R6502:IZY, &R6502:ORA, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "ORA", &R6502:ZPX, &R6502:ORA, $4 }, { "ASL", &R6502:ZPX, &R6502:ASL, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "CLC", &R6502:IMP, &R6502:CLC, $4 }, { "ORA", &R6502:ABY, &R6502:ORA, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "ORA", &R6502:ABX, &R6502:ORA, $4 }, { "ASL", &R6502:ABX, &R6502:ASL, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* 2 */    { "JSR", &R6502:XXX, &R6502:JSR, $4 }, { "AND", &R6502:IZX, &R6502:AND, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "BIT", &R6502:ZP0, &R6502:BIT, $4 }, { "AND", &R6502:ZP0, &R6502:AND, $4 }, { "ROL", &R6502:ZP0, &R6502:ROL, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "PLP", &R6502:IMP, &R6502:PLP, $4 }, { "AND", &R6502:IMM, &R6502:AND, $4 }, { "ROL", &R6502:IMP, &R6502:ROL, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "BIT", &R6502:ABS, &R6502:BIT, $4 }, { "AND", &R6502:ABS, &R6502:AND, $4 }, { "ROL", &R6502:ABS, &R6502:ROL, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* 3 */    { "BMI", &R6502:REL, &R6502:BMI, $4 }, { "AND", &R6502:IZY, &R6502:AND, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "AND", &R6502:ZPX, &R6502:AND, $4 }, { "ROL", &R6502:ZPX, &R6502:ROL, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "SEC", &R6502:IMP, &R6502:SEC, $4 }, { "AND", &R6502:ABY, &R6502:AND, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "AND", &R6502:ABX, &R6502:AND, $4 }, { "ROL", &R6502:ABX, &R6502:ROL, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* 4 */    { "RTI", &R6502:IMP, &R6502:RTI, $4 }, { "EOR", &R6502:IZX, &R6502:EOR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "EOR", &R6502:ZP0, &R6502:EOR, $4 }, { "LSR", &R6502:ZP0, &R6502:LSR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "PHA", &R6502:IMP, &R6502:PHA, $4 }, { "EOR", &R6502:IMM, &R6502:EOR, $4 }, { "LSR", &R6502:IMP, &R6502:LSR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "JMP", &R6502:ABS, &R6502:JMP, $4 }, { "EOR", &R6502:ABS, &R6502:EOR, $4 }, { "LSR", &R6502:ABS, &R6502:LSR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* 5 */    { "BVC", &R6502:REL, &R6502:BVC, $4 }, { "EOR", &R6502:IZY, &R6502:EOR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "EOR", &R6502:ZPX, &R6502:EOR, $4 }, { "LSR", &R6502:ZPX, &R6502:LSR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "CLI", &R6502:IMP, &R6502:CLI, $4 }, { "EOR", &R6502:ABY, &R6502:EOR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "EOR", &R6502:ABX, &R6502:EOR, $4 }, { "LSR", &R6502:ABX, &R6502:LSR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* 6 */    { "RTS", &R6502:IMP, &R6502:RTS, $4 }, { "ADC", &R6502:IZX, &R6502:ADC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "ADC", &R6502:ZP0, &R6502:ADC, $4 }, { "ROR", &R6502:ZP0, &R6502:ROR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "PLA", &R6502:IMP, &R6502:PLA, $4 }, { "ADC", &R6502:IMM, &R6502:ADC, $4 }, { "ROR", &R6502:IMP, &R6502:ROR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "JMP", &R6502:XXX, &R6502:JMP, $4 }, { "ADC", &R6502:ABS, &R6502:ADC, $4 }, { "ROR", &R6502:ABS, &R6502:ROR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* 7 */    { "BVS", &R6502:REL, &R6502:BVS, $4 }, { "ADC", &R6502:IZY, &R6502:ADC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "ADC", &R6502:ZPX, &R6502:ADC, $4 }, { "ROR", &R6502:ZPX, &R6502:ROR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "SEI", &R6502:IMP, &R6502:SEI, $4 }, { "ADC", &R6502:ABY, &R6502:ADC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "ADC", &R6502:ABX, &R6502:ADC, $4 }, { "ROR", &R6502:ABX, &R6502:ROR, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* 8 */    { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "STA", &R6502:IZX, &R6502:STA, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "STY", &R6502:ZP0, &R6502:STY, $4 }, { "STA", &R6502:ZP0, &R6502:STA, $4 }, { "STX", &R6502:ZP0, &R6502:STX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "DEY", &R6502:IMP, &R6502:DEY, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "TXA", &R6502:IMP, &R6502:TXA, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "STY", &R6502:ABS, &R6502:STY, $4 }, { "STA", &R6502:ABS, &R6502:STA, $4 }, { "STX", &R6502:ABS, &R6502:STX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* 9 */    { "BCC", &R6502:REL, &R6502:BCC, $4 }, { "STA", &R6502:IZY, &R6502:STA, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "STY", &R6502:ZPX, &R6502:STY, $4 }, { "STA", &R6502:ZPX, &R6502:STA, $4 }, { "STX", &R6502:ZPY, &R6502:STX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "TYA", &R6502:IMP, &R6502:TYA, $4 }, { "STA", &R6502:ABY, &R6502:STA, $4 }, { "TXS", &R6502:IMP, &R6502:TXS, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "STA", &R6502:ABX, &R6502:STA, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* A */    { "LDY", &R6502:IMM, &R6502:LDY, $4 }, { "LDA", &R6502:IZX, &R6502:LDA, $4 }, { "LDX", &R6502:IMM, &R6502:LDX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "LDY", &R6502:ZP0, &R6502:LDY, $4 }, { "LDA", &R6502:ZP0, &R6502:LDA, $4 }, { "LDX", &R6502:ZP0, &R6502:LDX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "TAY", &R6502:IMP, &R6502:TAY, $4 }, { "LDA", &R6502:IMM, &R6502:LDA, $4 }, { "TAX", &R6502:IMP, &R6502:TAX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "LDY", &R6502:ABS, &R6502:LDY, $4 }, { "LDA", &R6502:ABS, &R6502:LDA, $4 }, { "LDX", &R6502:ABS, &R6502:LDX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* B */    { "BCS", &R6502:REL, &R6502:BCS, $4 }, { "LDA", &R6502:IZY, &R6502:LDA, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "LDY", &R6502:ZPX, &R6502:LDY, $4 }, { "LDA", &R6502:ZPX, &R6502:LDA, $4 }, { "LDX", &R6502:ZPY, &R6502:LDX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "CLV", &R6502:IMP, &R6502:CLV, $4 }, { "LDA", &R6502:ABY, &R6502:LDA, $4 }, { "TSX", &R6502:IMP, &R6502:TSX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "LDY", &R6502:ABX, &R6502:LDY, $4 }, { "LDA", &R6502:ABX, &R6502:LDA, $4 }, { "LDX", &R6502:ABY, &R6502:LDX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* C */    { "CPY", &R6502:IMM, &R6502:CPY, $4 }, { "CMP", &R6502:IZX, &R6502:CMP, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "CPY", &R6502:ZP0, &R6502:CPY, $4 }, { "CMP", &R6502:ZP0, &R6502:CMP, $4 }, { "DEC", &R6502:ZP0, &R6502:DEC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "INY", &R6502:IMP, &R6502:INY, $4 }, { "CMP", &R6502:IMM, &R6502:CMP, $4 }, { "DEX", &R6502:IMP, &R6502:DEX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "CPY", &R6502:ABS, &R6502:CPY, $4 }, { "CMP", &R6502:ABS, &R6502:CMP, $4 }, { "DEC", &R6502:ABS, &R6502:DEC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* D */    { "BNE", &R6502:REL, &R6502:BNE, $4 }, { "CMP", &R6502:IZY, &R6502:CMP, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "CMP", &R6502:ZPX, &R6502:CMP, $4 }, { "DEC", &R6502:ZPX, &R6502:DEC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "CLD", &R6502:IMP, &R6502:CLD, $4 }, { "CMP", &R6502:ABY, &R6502:CMP, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "CMP", &R6502:ABX, &R6502:CMP, $4 }, { "DEC", &R6502:ABX, &R6502:DEC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* E */    { "CPX", &R6502:IMM, &R6502:CPX, $4 }, { "SBC", &R6502:IZX, &R6502:SBC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "CPX", &R6502:ZP0, &R6502:CPX, $4 }, { "SBC", &R6502:ZP0, &R6502:SBC, $4 }, { "INC", &R6502:ZP0, &R6502:INC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "INX", &R6502:IMP, &R6502:INX, $4 }, { "SBC", &R6502:IMM, &R6502:SBC, $4 }, { "NOP", &R6502:IMP, &R6502:NOP, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "CPX", &R6502:ABS, &R6502:CPX, $4 }, { "SBC", &R6502:ABS, &R6502:SBC, $4 }, { "INC", &R6502:ABS, &R6502:INC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, 
-  /* F */    { "BEQ", &R6502:REL, &R6502:BEQ, $4 }, { "SBC", &R6502:IZY, &R6502:SBC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "SBC", &R6502:ZPX, &R6502:SBC, $4 }, { "INC", &R6502:ZPX, &R6502:INC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "SED", &R6502:IMP, &R6502:SED, $4 }, { "SBC", &R6502:ABY, &R6502:SBC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 }, { "SBC", &R6502:ABX, &R6502:SBC, $4 }, { "INC", &R6502:ABX, &R6502:INC, $4 }, { "XXX", &R6502:XXX, &R6502:XXX, $4 } 
-  };
+  /* 0 */    { "BRK", &R6502:IMP, &R6502:BRK, 7}, { "ORA", &R6502:IZX, &R6502:ORA, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "ORA", &R6502:ZP0, &R6502:ORA, 3}, { "ASL", &R6502:ZP0, &R6502:ASL, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "PHP", &R6502:IMP, &R6502:PHP, 3}, { "ORA", &R6502:IMM, &R6502:ORA, 2}, { "ASL", &R6502:IMP, &R6502:ASL, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "ORA", &R6502:ABS, &R6502:ORA, 4}, { "ASL", &R6502:ABS, &R6502:ASL, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* 1 */    { "BPL", &R6502:REL, &R6502:BPL, 2}, { "ORA", &R6502:IZY, &R6502:ORA, 5}, { "XXX", &R6502:XXX, &R6502:XXX, X}, { "XXX", &R6502:XXX, &R6502:XXX, X}, { "XXX", &R6502:XXX, &R6502:XXX, X}, { "ORA", &R6502:ZPX, &R6502:ORA, 4}, { "ASL", &R6502:ZPX, &R6502:ASL, 6}, { "XXX", &R6502:XXX, &R6502:XXX, X}, { "CLC", &R6502:IMP, &R6502:CLC, 2}, { "ORA", &R6502:ABY, &R6502:ORA, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "ORA", &R6502:ABX, &R6502:ORA, 4}, { "ASL", &R6502:ABX, &R6502:ASL, 7}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* 2 */    { "JSR", &R6502:XXX, &R6502:JSR, 6}, { "AND", &R6502:IZX, &R6502:AND, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "BIT", &R6502:ZP0, &R6502:BIT, 3}, { "AND", &R6502:ZP0, &R6502:AND, 3}, { "ROL", &R6502:ZP0, &R6502:ROL, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "PLP", &R6502:IMP, &R6502:PLP, 4}, { "AND", &R6502:IMM, &R6502:AND, 2}, { "ROL", &R6502:IMP, &R6502:ROL, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "BIT", &R6502:ABS, &R6502:BIT, 4}, { "AND", &R6502:ABS, &R6502:AND, 4}, { "ROL", &R6502:ABS, &R6502:ROL, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* 3 */    { "BMI", &R6502:REL, &R6502:BMI, 2}, { "AND", &R6502:IZY, &R6502:AND, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "AND", &R6502:ZPX, &R6502:AND, 4}, { "ROL", &R6502:ZPX, &R6502:ROL, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "SEC", &R6502:IMP, &R6502:SEC, 2}, { "AND", &R6502:ABY, &R6502:AND, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "AND", &R6502:ABX, &R6502:AND, 4}, { "ROL", &R6502:ABX, &R6502:ROL, 7}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* 4 */    { "RTI", &R6502:IMP, &R6502:RTI, 6}, { "EOR", &R6502:IZX, &R6502:EOR, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "EOR", &R6502:ZP0, &R6502:EOR, 3}, { "LSR", &R6502:ZP0, &R6502:LSR, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "PHA", &R6502:IMP, &R6502:PHA, 3}, { "EOR", &R6502:IMM, &R6502:EOR, 2}, { "LSR", &R6502:IMP, &R6502:LSR, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "JMP", &R6502:ABS, &R6502:JMP, 3}, { "EOR", &R6502:ABS, &R6502:EOR, 4}, { "LSR", &R6502:ABS, &R6502:LSR, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* 5 */    { "BVC", &R6502:REL, &R6502:BVC, 2}, { "EOR", &R6502:IZY, &R6502:EOR, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "EOR", &R6502:ZPX, &R6502:EOR, 4}, { "LSR", &R6502:ZPX, &R6502:LSR, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "CLI", &R6502:IMP, &R6502:CLI, 2}, { "EOR", &R6502:ABY, &R6502:EOR, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "EOR", &R6502:ABX, &R6502:EOR, 4}, { "LSR", &R6502:ABX, &R6502:LSR, 7}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* 6 */    { "RTS", &R6502:IMP, &R6502:RTS, 6}, { "ADC", &R6502:IZX, &R6502:ADC, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "ADC", &R6502:ZP0, &R6502:ADC, 3}, { "ROR", &R6502:ZP0, &R6502:ROR, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "PLA", &R6502:IMP, &R6502:PLA, 4}, { "ADC", &R6502:IMM, &R6502:ADC, 2}, { "ROR", &R6502:IMP, &R6502:ROR, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "JMP", &R6502:XXX, &R6502:JMP, 5}, { "ADC", &R6502:ABS, &R6502:ADC, 4}, { "ROR", &R6502:ABS, &R6502:ROR, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* 7 */    { "BVS", &R6502:REL, &R6502:BVS, 2}, { "ADC", &R6502:IZY, &R6502:ADC, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "ADC", &R6502:ZPX, &R6502:ADC, 4}, { "ROR", &R6502:ZPX, &R6502:ROR, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "SEI", &R6502:IMP, &R6502:SEI, 2}, { "ADC", &R6502:ABY, &R6502:ADC, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "ADC", &R6502:ABX, &R6502:ADC, 4}, { "ROR", &R6502:ABX, &R6502:ROR, 7}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* 8 */    { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "STA", &R6502:IZX, &R6502:STA, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "STY", &R6502:ZP0, &R6502:STY, 3}, { "STA", &R6502:ZP0, &R6502:STA, 3}, { "STX", &R6502:ZP0, &R6502:STX, 3}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "DEY", &R6502:IMP, &R6502:DEY, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "TXA", &R6502:IMP, &R6502:TXA, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "STY", &R6502:ABS, &R6502:STY, 4}, { "STA", &R6502:ABS, &R6502:STA, 4}, { "STX", &R6502:ABS, &R6502:STX, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* 9 */    { "BCC", &R6502:REL, &R6502:BCC, 2}, { "STA", &R6502:IZY, &R6502:STA, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "STY", &R6502:ZPX, &R6502:STY, 4}, { "STA", &R6502:ZPX, &R6502:STA, 4}, { "STX", &R6502:ZPY, &R6502:STX, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "TYA", &R6502:IMP, &R6502:TYA, 2}, { "STA", &R6502:ABY, &R6502:STA, 5}, { "TXS", &R6502:IMP, &R6502:TXS, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "STA", &R6502:ABX, &R6502:STA, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* A */    { "LDY", &R6502:IMM, &R6502:LDY, 2}, { "LDA", &R6502:IZX, &R6502:LDA, 6}, { "LDX", &R6502:IMM, &R6502:LDX, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "LDY", &R6502:ZP0, &R6502:LDY, 3}, { "LDA", &R6502:ZP0, &R6502:LDA, 3}, { "LDX", &R6502:ZP0, &R6502:LDX, 3}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "TAY", &R6502:IMP, &R6502:TAY, 2}, { "LDA", &R6502:IMM, &R6502:LDA, 2}, { "TAX", &R6502:IMP, &R6502:TAX, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "LDY", &R6502:ABS, &R6502:LDY, 4}, { "LDA", &R6502:ABS, &R6502:LDA, 4}, { "LDX", &R6502:ABS, &R6502:LDX, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* B */    { "BCS", &R6502:REL, &R6502:BCS, 2}, { "LDA", &R6502:IZY, &R6502:LDA, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "LDY", &R6502:ZPX, &R6502:LDY, 4}, { "LDA", &R6502:ZPX, &R6502:LDA, 4}, { "LDX", &R6502:ZPY, &R6502:LDX, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "CLV", &R6502:IMP, &R6502:CLV, 2}, { "LDA", &R6502:ABY, &R6502:LDA, 4}, { "TSX", &R6502:IMP, &R6502:TSX, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "LDY", &R6502:ABX, &R6502:LDY, 4}, { "LDA", &R6502:ABX, &R6502:LDA, 4}, { "LDX", &R6502:ABY, &R6502:LDX, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* C */    { "CPY", &R6502:IMM, &R6502:CPY, 2}, { "CMP", &R6502:IZX, &R6502:CMP, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "CPY", &R6502:ZP0, &R6502:CPY, 3}, { "CMP", &R6502:ZP0, &R6502:CMP, 3}, { "DEC", &R6502:ZP0, &R6502:DEC, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "INY", &R6502:IMP, &R6502:INY, 2}, { "CMP", &R6502:IMM, &R6502:CMP, 2}, { "DEX", &R6502:IMP, &R6502:DEX, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "CPY", &R6502:ABS, &R6502:CPY, 4}, { "CMP", &R6502:ABS, &R6502:CMP, 4}, { "DEC", &R6502:ABS, &R6502:DEC, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* D */    { "BNE", &R6502:REL, &R6502:BNE, 2}, { "CMP", &R6502:IZY, &R6502:CMP, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "CMP", &R6502:ZPX, &R6502:CMP, 4}, { "DEC", &R6502:ZPX, &R6502:DEC, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "CLD", &R6502:IMP, &R6502:CLD, 2}, { "CMP", &R6502:ABY, &R6502:CMP, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "CMP", &R6502:ABX, &R6502:CMP, 4}, { "DEC", &R6502:ABX, &R6502:DEC, 7}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* E */    { "CPX", &R6502:IMM, &R6502:CPX, 2}, { "SBC", &R6502:IZX, &R6502:SBC, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "CPX", &R6502:ZP0, &R6502:CPX, 3}, { "SBC", &R6502:ZP0, &R6502:SBC, 3}, { "INC", &R6502:ZP0, &R6502:INC, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "INX", &R6502:IMP, &R6502:INX, 2}, { "SBC", &R6502:IMM, &R6502:SBC, 2}, { "NOP", &R6502:IMP, &R6502:NOP, 2}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "CPX", &R6502:ABS, &R6502:CPX, 4}, { "SBC", &R6502:ABS, &R6502:SBC, 4}, { "INC", &R6502:ABS, &R6502:INC, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, 
+  /* F */    { "BEQ", &R6502:REL, &R6502:BEQ, 2}, { "SBC", &R6502:IZY, &R6502:SBC, 5}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "SBC", &R6502:ZPX, &R6502:SBC, 4}, { "INC", &R6502:ZPX, &R6502:INC, 6}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "SED", &R6502:IMP, &R6502:SED, 2}, { "SBC", &R6502:ABY, &R6502:SBC, 4}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "XXX", &R6502:XXX, &R6502:XXX, 0}, { "SBC", &R6502:ABX, &R6502:SBC, 4}, { "INC", &R6502:ABX, &R6502:INC, 7}, { "XXX", &R6502:XXX, &R6502:XXX, 0} 
+  }
 }
 
 R6502::~R6502() { }
@@ -106,7 +106,7 @@ uint8_t R6502::ABX() {
   absAddr = (hi << 8) | lo;
   absAddr += x;
  
-  // Extra cycle is needed if page bouundary crossed
+  // Extra cycle is needed if page boundary crossed
   return absAddr >> 8 != hi ? 1 : 0;
 }
 
@@ -117,12 +117,13 @@ uint8_t R6502::ABY() {
   absAddr = (hi << 8) | lo;
   absAddr += y;
  
-  // Extra cycle is needed if page bouundary crossed
+  // Extra cycle is needed if page boundary crossed
   return absAddr >> 8 != hi ? 1 : 0;
 }
 
 
 uint8_t R6502::IMP() {
+  fetched = a;
   return 0;
 }
 
@@ -252,86 +253,282 @@ uint8_t R6502::AND() {
 }
 
 uint8_t R6502::ASL() {
+  // C <- [76543210] <- 0
+  // Flags changed: C Z N
+  
+  fetch();
+  
+  tmp = (uint16_t) fetched << 1;
+
+  setFlag(C, (tmp & 0xFF00) > 0);
+  setFlag(Z, tmp == 0);
+  setFlag(N, tmp & 0x0800);
+
+  if (instructionMatrix[opcode].addressMode == &R6502::IMP) { // Implied is same as accumulator addressing mode technically.
+    a = tmp & 0x00FF;
+  } else {
+    write(absAddr, tmp & 0x00FF);
+  }
+
   return 0;
 }
 
 uint8_t R6502::BCC() {
+  // branch on C = 0
+  // Flags changed: 
+
+  fetch();
+  
+  if (getFlag(C) == 0) {
+    absAddr = fetched;
+    if (fetched & 0xFF00 != absAddr & 0xFF00) {
+      cycles++;
+    }
+    cycles++;
+  }
+
   return 0;
 }
 
 uint8_t R6502::BCS() {
+  // branch on C = 1
+  // Flags changed: 
+
+  fetch();
+  
+  if (getFlag(C) == 1) {
+    absAddr = fetched;
+    if (fetched & 0xFF00 != absAddr & 0xFF00) {
+      cycles++;
+    }
+    cycles++;
+  }
+
   return 0;
 }
 
 uint8_t R6502::BEQ() {
+  // branch on Z = 1
+  // Flags changed: 
+
+  fetch();
+  
+  if (getFlag(Z) == 1) {
+    absAddr = fetched;
+    if (fetched & 0xFF00 != absAddr & 0xFF00) {
+      cycles++;
+    }
+    cycles++;
+  }
+
   return 0;
 }
 
 uint8_t R6502::BIT() {
+  // A AND M, M7 -> N, M6 -> V
+  // Flags changed: Z N V
+  
+  fetch();
+  
+  setFlag(Z, a & fetched == 0x00);
+  setFlag(N, fetched & (1 << 7));
+  setFlag(V, fetched & (1 << 6));
+
   return 0;
 }
 
 uint8_t R6502::BMI() {
+  // branch on N = 1
+  // Flags changed: 
+
+  fetch();
+  
+  if (getFlag(N) == 1) {
+    absAddr = fetched;
+    if (fetched & 0xFF00 != absAddr & 0xFF00) {
+      cycles++;
+    }
+    cycles++;
+  }
+
   return 0;
 }
 
 uint8_t R6502::BNE() {
+  // branch on Z = 0
+  // Flags changed: 
+
+  fetch();
+  
+  if (getFlag(Z) == 0) {
+    absAddr = fetched;
+    if (fetched & 0xFF00 != absAddr & 0xFF00) {
+      cycles++;
+    }
+    cycles++;
+  }
+
   return 0;
 }
 
 uint8_t R6502::BPL() {
+  // branch on N = 0
+  // Flags changed: 
+
+  fetch();
+  
+  if (getFlag(N) == 0) {
+    absAddr = fetched;
+    if (fetched & 0xFF00 != absAddr & 0xFF00) {
+      cycles++;
+    }
+    cycles++;
+  }
+
   return 0;
 }
 
-uint8_t R6502::BRK() {
+uint8_t R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki and then will come back after break :sweat_smile:
   return 0;
 }
 
 uint8_t R6502::BVC() {
+  // branch on V = 0
+  // Flags changed: 
+
+  fetch();
+  
+  if (getFlag(V) == 0) {
+    absAddr = fetched;
+    if (fetched & 0xFF00 != absAddr & 0xFF00) {
+      cycles++;
+    }
+    cycles++;
+  }
+
   return 0;
 }
 
 uint8_t R6502::BVS() {
+  // branch on V = 1
+  // Flags changed: 
+
+  fetch();
+  
+  if (getFlag(V) == 1) {
+    absAddr = fetched;
+    if (fetched & 0xFF00 != absAddr & 0xFF00) {
+      cycles++;
+    }
+    cycles++;
+  }
+
   return 0;
 }
 
 uint8_t R6502::CLC() {
+  // 0 -> C
+  // Flags changed: C
+  setFlag(C, 0);
   return 0;
 }
 
 uint8_t R6502::CLD() {
+  // 0 -> D
+  // Flags changed: D
+  setFlag(D, 0);
   return 0;
 }
 
 uint8_t R6502::CLI() {
+  // 0 -> I
+  // Flags changed: I
+  setFlag(I, 0);
   return 0;
 }
 
 uint8_t R6502::CLV() {
+  // 0 -> V
+  // Flags changed: V
+  setFlag(V, 0);
   return 0;
 }
 
 uint8_t R6502::CMP() {
-  return 0;
+  // A - M
+  // Flags changed: N Z C
+  fetch();
+
+  tmp = ((uint16_t) a - (uint16_t) fetched) & 0x00FF;
+
+  setFlag(N, tmp & 0x0080);
+  setFlag(Z, tmp == 0x0000);
+  setFlag(C, a >= fetched);
+  return 1;
 }
 
 uint8_t R6502::CPX() {
+  // X - M
+  // Flags changed: N Z C
+  fetch();
+
+  tmp = ((uint16_t) x - (uint16_t) fetched) & 0x00FF;
+
+  setFlag(N, tmp & 0x0080);
+  setFlag(Z, tmp == 0x0000);
+  setFlag(C, x >= fetched);
   return 0;
 }
 
 uint8_t R6502::CPY() {
+  // Y - M
+  // Flags changed: N Z C
+  fetch();
+
+  tmp = ((uint16_t) y - (uint16_t) fetched) & 0x00FF;
+
+  setFlag(N, tmp & 0x0080);
+  setFlag(Z, tmp == 0x0000);
+  setFlag(C, y >= fetched);
   return 0;
 }
 
 uint8_t R6502::DEC() {
+  // M - 1 -> M
+  // Flags changed: Z N
+  
+  fetch();
+  tmp = ((uint16_t) fetched - 1) & 0x00FF;
+
+  write(absAddr, tmp);
+  
+  setFlag(Z, tmp == 0x0000);
+  setFlag(N, tmp & 0x0080);
+
   return 0;
 }
 
 uint8_t R6502::DEX() {
+  // X - 1 -> X
+  // Flags changed: Z N
+
+  x = x - 1;
+  
+  setFlag(Z, x == 0x0000);
+  setFlag(N, x & 0x0080);
+
   return 0;
 }
 
 uint8_t R6502::DEY() {
+  // Y - 1 -> Y
+  // Flags changed: Z N
+
+  y = y - 1;
+  
+  setFlag(Z, y == 0x0000);
+  setFlag(N, y & 0x0080);
+
   return 0;
 }
 
