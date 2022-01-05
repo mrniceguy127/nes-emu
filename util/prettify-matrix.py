@@ -16,7 +16,7 @@ def get_pretty_hex(num):
     return pretty_hex.upper()
 
 def get_top_row_comment(row_length):
-    space = " " * 38
+    space = " " * 36
     indent = " " * 8
     disp = indent + "/* "
     for i in range(row_length):
