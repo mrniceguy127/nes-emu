@@ -1,5 +1,6 @@
 #include "NESIncludes.h"
 
+#define STACK_START 0x0100
 
 // -----
 // External event functions
@@ -78,7 +79,7 @@ void R6502::setFlag(FLAGS flag, uint8_t value) {
 }
 
 // -----
-// Useful Methods
+// Useful Methods - 
 // -----
 void R6502::fetch() {
   fetched = read(absAddr);
@@ -398,8 +399,8 @@ uint8_t R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki
   pc++; // Set this up for pushing to the stack
 
   setFlag(I, 1);
-  write(0x0100 + sp--, pc >> 8); // Store higher order bits first
-  write(0x0100 + sp--, pc & 0x00FF); // Than lower.
+  write(STACK_START + sp--, pc >> 8); // Store higher order bits first
+  write(STACK_START + sp--, pc & 0x00FF); // Than lower.
   
   // https://www.masswerk.at/6502/6502_instruction_set.html#BRK
   setFlag(B, 1);
@@ -533,7 +534,7 @@ uint8_t R6502::DEX() {
   // X - 1 -> X
   // Flags changed: Z N
 
-  x = x - 1;
+  x--;
   
   setFlag(Z, x == 0x0000);
   setFlag(N, x & 0x0080);
@@ -545,7 +546,7 @@ uint8_t R6502::DEY() {
   // Y - 1 -> Y
   // Flags changed: Z N
 
-  y = y - 1;
+  y--;
   
   setFlag(Z, y == 0x0000);
   setFlag(N, y & 0x0080);
@@ -554,46 +555,135 @@ uint8_t R6502::DEY() {
 }
 
 uint8_t R6502::EOR() {
-  return 0;
+  // A EOR M -> A
+  // Flags changed: Z N
+
+  fetch();
+
+  a = a ^ fetched;
+  setFlag(Z, a == 0);
+  setFlag(N, a & 0x80);
+  return 1;
 }
 
 uint8_t R6502::INC() {
+  // M + 1 -> M
+  // Flags changed: Z N
+  
+  fetch();
+  tmp = ((uint16_t) fetched + 1) & 0x00FF;
+
+  write(absAddr, tmp);
+  
+  setFlag(Z, tmp == 0x0000);
+  setFlag(N, tmp & 0x0080);
+
   return 0;
 }
 
 uint8_t R6502::INX() {
+  // X - 1 -> X
+  // Flags changed: Z N
+
+  x++;
+  
+  setFlag(Z, x == 0x0000);
+  setFlag(N, x & 0x0080);
+
   return 0;
 }
 
 uint8_t R6502::INY() {
+  // Y + 1 -> Y
+  // Flags changed: Z N
+
+  y++;
+  
+  setFlag(Z, y == 0x0000);
+  setFlag(N, y & 0x0080);
+
   return 0;
 }
 
 uint8_t R6502::JMP() {
+  // (PC+1) -> PCL
+  // (PC+2) -> PCH
+  // Flags changed:
+  pc = absAddr;
+
   return 0;
 }
 
 uint8_t R6502::JSR() {
+  // push (PC+2),
+  // (PC+1) -> PCL
+  // (PC+2) -> PCH
+  // Flags changed:
+
+  pc--;
+  write(STACK_START + sp--, pc >> 8);
+  write(STACK_START + sp--, pc & 0x00FF);
+  pc = absAddr;
   return 0;
 }
 
 uint8_t R6502::LDA() {
-  return 0;
+  // M -> A
+  // Flags changed: Z N
+
+  fetch();
+  a = fetched;
+  setFlag(Z, a == 0x00);
+  setFlag(N, a & 0x80);
+  return 1;
 }
 
 uint8_t R6502::LDX() {
-  return 0;
+  // M -> X
+  // Flags changed: Z N
+
+  fetch();
+  x = fetched;
+  setFlag(Z, x == 0x00);
+  setFlag(N, x & 0x80);
+  return 1;
 }
 
 uint8_t R6502::LDY() {
-  return 0;
+  // M -> Y
+  // Flags changed: Z N
+
+  fetch();
+  y = fetched;
+  setFlag(Z, y == 0x00);
+  setFlag(N, y & 0x80);
+  return 1;
 }
 
 uint8_t R6502::LSR() {
+  // 0 -> [76543210] -> C
+  // Flags changed: Z N C
+  
+  fetch();
+  
+  tmp = (uint16_t) fetched >> 1;
+
+  setFlag(C, (tmp & 0xFF00) > 0);
+  setFlag(Z, tmp == 0);
+  setFlag(N, 0);
+
+  if (instructionMatrix[opcode].addressMode == &R6502::IMP) { // Implied is same as accumulator addressing mode technically.
+    a = tmp & 0x00FF;
+  } else {
+    write(absAddr, tmp & 0x00FF);
+  }
+
   return 0;
 }
 
 uint8_t R6502::NOP() {
+  // No operation.
+  // Flags changed: 
   return 0;
 }
 
@@ -693,7 +783,7 @@ uint8_t R6502::TYA() {
 
 
 
-uint8_t R6502::XXX() {
+uint8_t R6502::XXX() { // Does nothing, illegal instruction
   return 0;
 }
 
