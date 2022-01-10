@@ -39,12 +39,15 @@ void R6502::reset() {
   fetched = 0x00;
   tmp = 0x0000;
 
+
+  // https://wiki.nesdev.org/w/index.php?title=CPU_power_up_state
+
   // Registers
   a = 0x00;
   x = 0x00;
   y = 0x00;
   pc = 0x0000;
-  sp = 0x00;
+  sp = 0xFD;
 
   // Flags
   P = 0x00;
@@ -389,6 +392,24 @@ uint8_t R6502::BPL() {
 }
 
 uint8_t R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki and then will come back after break :sweat_smile:
+  // interrupt, push PC+2, push SR
+  // Flags Changed: I
+  
+  pc++; // Set this up for pushing to the stack
+
+  setFlag(I, 1);
+  write(0x0100 + sp--, pc >> 8); // Store higher order bits first
+  write(0x0100 + sp--, pc & 0x00FF); // Than lower.
+  
+  // https://www.masswerk.at/6502/6502_instruction_set.html#BRK
+  setFlag(B, 1);
+  write(0x0100 + sp--, P); // Store status reg.
+  setFlag(B, 0);
+
+  // "$FFFE-$FFFF = IRQ/BRK vector" https://wiki.nesdev.org/w/index.php?title=CPU_memory_map
+  pc = (uint16_t) read(0xFFFE) | ((uint16_t) read(0xFFFF) << 8); // https://wiki.nesdev.org/w/index.php?title=CPU_interrupts#Interrupt_hijacking
+                                                                 // (Interrupt Request (IRQ)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
+
   return 0;
 }
 
