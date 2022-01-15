@@ -20,10 +20,13 @@ class R6502 {
     void write(uint16_t addr, uint8_t data);
   private:
     // Useful variables
+    uint8_t opcode = 0x00;
     uint16_t absAddr = 0x0000;
     uint16_t relAddr = 0x0000;
     uint8_t fetched = 0x00;
     uint16_t tmp = 0x0000;
+
+    uint16_t cycles = 0; // Cycles remaining for instruction. Will loop until 0.
 
     // Useful methods
     uint8_t fetch();
@@ -53,14 +56,23 @@ class R6502 {
     void setFlag(FLAGS flag, uint8_t value);
 
   private:
-    struct instruction {
-      char mnemonic[3];
-      uint8_t (* addressMode)(void *);
-      uint8_t (* operation)(void *);
-      uint8_t machineCycles;
+    struct Instruction {
+      char mnemonic[4];
+      uint8_t (R6502::*addressMode)(void) = nullptr;
+      uint8_t (R6502::*operation)(void) = nullptr;
+      uint8_t machineCycles = 0;
     };
 
-    std::array<instruction, 0xF*0xF> instructionMatrix;
+    std::vector<Instruction> instructionMatrix;
+
+  private:
+    // Utility functions
+    uint8_t pullStack();
+    void pushStack(uint8_t byte);
+    static uint8_t isZero(uint8_t);
+    static uint8_t isZero(uint16_t);
+    static uint8_t isNegative(uint8_t);
+    static uint8_t isNegative(uint16_t);
 
   private:
     // Addressing modes

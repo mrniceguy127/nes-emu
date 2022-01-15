@@ -17,12 +17,12 @@ ASL,abs,2,6,0
 XXX,XXX,0,0,0
 BPL,relative,2,2,2
 ORA,indy,2,5,1
-XXX,XXX,X,X,0
-XXX,XXX,X,X,0
-XXX,XXX,X,X,0
+XXX,XXX,0,0,0
+XXX,XXX,0,0,0
+XXX,XXX,0,0,0
 ORA,zpx,2,4,0
 ASL,zpx,2,6,0
-XXX,XXX,X,X,0
+XXX,XXX,0,0,0
 CLC,implied,1,2,0
 ORA,absy,3,4,1
 XXX,XXX,0,0,0
