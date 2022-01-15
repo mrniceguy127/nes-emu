@@ -4,7 +4,7 @@ class Bus {
   public:
     Bus();
     ~Bus();
-  private:
+  public:
     R6502 cpu;
     std::array<uint8_t, 64*1024> ram;
   public:

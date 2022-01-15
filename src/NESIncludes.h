@@ -3,6 +3,8 @@
 
 #include <cstdint>
 #include <array>
+#include <vector>
+#include <string>
 
 #include "R6502.h"
 #include "Bus.h"
