@@ -249,18 +249,20 @@ uint8_t R6502::ADC() {
   fetch(); // fetch target data
 
   tmp = (uint16_t) a + (uint16_t) fetched + (uint16_t) getFlag(C);
-
-  setFlag(C, tmp > 255);
-  setFlag(Z, tmp & 0x00FF == 0); // Clear higher order bits before comparing
-  setFlag(N, isNegative(tmp));
   
   // Overflow happens when both operands have the same sign but the result is a different sign.
   // 1. XNOR the 2 operands, the MSB in the result is whether or not the signs are the same.
   // 2. check if the sign of the result differs from the sign of either operand (XOR them).
   // 3. if 1 and 2 are true, over flow occured (get the sign bit of the & of 1 and 2).
   setFlag(V, (~((uint16_t) a ^ (uint16_t) fetched) & (((uint16_t)a ^ tmp)) & 0x0080));
+  setFlag(C, tmp & 0xFF00);
 
-  a = tmp & 0x00FF;
+  tmp &= 0x00FF; // Clear higher order bits for remaining flags
+
+  setFlag(Z, isZero(tmp));
+  setFlag(N, isNegative(tmp));
+
+  a = tmp;
 
   return 1; // Extra cycle possible.
 }
@@ -823,7 +825,33 @@ uint8_t R6502::RTS() {
 }
 
 uint8_t R6502::SBC() {
-  return 0;
+  // A - M - (1 - C) -> A
+  // C is a single bit. 1 - C is the inverse of C (C(bar)).
+  // A - M - (1 - C) == A + (-M - (1 - C)) == A + (-M - 1 + C)
+  // The -M and -1 Cancel because 2's complement
+  // If M = 010, then -M = 110
+  // -M - 1 = 101
+  // M is simply inverted and we can remove the -1
+  // A + (-M) + C
+  // Flags changed: V C Z N
+  
+  fetch();
+
+  // Same as addition, but invert memory
+
+  tmp = (uint16_t) a + (uint16_t) (fetched ^ 0xFF) + (uint16_t) getFlag(C);
+
+  setFlag(V, (~((uint16_t) a ^ (uint16_t) fetched) & (((uint16_t)a ^ tmp)) & 0x0080));
+  setFlag(C, tmp & 0xFF00);
+
+  tmp &= 0x00FF;
+
+  setFlag(Z, isZero(tmp));
+  setFlag(N, isNegative(tmp));
+
+  a = tmp;
+
+  return 1;
 }
 
 uint8_t R6502::SEC() {
