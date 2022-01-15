@@ -832,7 +832,7 @@ uint8_t R6502::SBC() {
   // If M = 010, then -M = 110
   // -M - 1 = 101
   // M is simply inverted and we can remove the -1
-  // A + (-M) + C
+  // A + (~M) + C
   // Flags changed: V C Z N
   
   fetch();
