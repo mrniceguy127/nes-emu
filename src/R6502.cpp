@@ -38,22 +38,26 @@ void R6502::reset() {
   fetched = 0x00;
   tmp = 0x0000;
 
-
-  // "...loads the program counter from the memory vector locations FFFC and FFFD..."
-  // (Page 2 under RESET (RES)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
-
-  pc = ((uint16_t)read(0xFFFC) << 8) | ((uint16_t)read(0xFFFD));
-
-  // https://wiki.nesdev.org/w/index.php?title=CPU_power_up_state
-
-  // Registers
   a = 0x00;
   x = 0x00;
   y = 0x00;
-  sp = 0xFD;
 
-  // Flags
-  P = 0x00 | U;
+  // SP is initialized to 0. // https://www.pagetable.com/?p=410
+  sp = 0x00; 
+
+  // https://wiki.nesdev.org/w/index.php?title=CPU_power_up_state
+  // "After Reset"
+  // A, X, Y were not affected
+  // S was decremented by 3 (but nothing was written to the stack)
+  // SEE ALSO https://www.pagetable.com/?p=410
+  sp -= 3;
+  // The I (IRQ disable) flag was set to true (status ORed with $04)
+  P = 0x00 | I;
+  // And finally, the internal memory was unchanged
+
+  // "...loads the program counter from the memory vector locations FFFC and FFFD..."
+  // (Page 2 under RESET (RES)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
+  pc = ((uint16_t)read(0xFFFC) << 8) | ((uint16_t)read(0xFFFD));
 }
 
 uint8_t R6502::read(uint16_t addr) {
