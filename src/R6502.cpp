@@ -39,17 +39,21 @@ void R6502::reset() {
   tmp = 0x0000;
 
 
+  // "...loads the program counter from the memory vector locations FFFC and FFFD..."
+  // (Page 2 under RESET (RES)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
+
+  pc = ((uint16_t)read(0xFFFC) << 8) | ((uint16_t)read(0xFFFD));
+
   // https://wiki.nesdev.org/w/index.php?title=CPU_power_up_state
 
   // Registers
   a = 0x00;
   x = 0x00;
   y = 0x00;
-  pc = 0x0000;
   sp = 0xFD;
 
   // Flags
-  P = 0x00;
+  P = 0x00 | U;
 }
 
 uint8_t R6502::read(uint16_t addr) {
