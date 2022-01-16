@@ -855,50 +855,128 @@ uint8_t R6502::SBC() {
 }
 
 uint8_t R6502::SEC() {
+  // 1 -> C
+  // Flags changed: C
+
+  setFlag(C, 1);
+
   return 0;
 }
 
 uint8_t R6502::SED() {
+  // 1 -> D
+  // Flags changed: D
+
+  setFlag(D, 1);
+
   return 0;
 }
 
 uint8_t R6502::SEI() {
+  // 1 -> I
+  // Flags changed: I
+
+  setFlag(I, 1);
+
   return 0;
 }
 
 uint8_t R6502::STA() {
+  // A -> M
+  // Flags changed: 
+
+  write(absAddr, a);
+
   return 0;
 }
 
 uint8_t R6502::STX() {
+  // X -> M
+  // Flags changed: 
+
+  write(absAddr, x);
+
   return 0;
 }
 
 uint8_t R6502::STY() {
+  // Y -> M
+  // Flags changed: 
+
+  write(absAddr, y);
+
   return 0;
 }
 
 uint8_t R6502::TAX() {
+  // A -> X
+  // Flags changed: Z N
+
+  x = a;
+
+  setFlag(Z, isZero(x));
+  setFlag(N, isNegative(x));
+
   return 0;
 }
 
 uint8_t R6502::TAY() {
+  // A -> Y
+  // Flags changed: Z N
+
+  y = a;
+
+  setFlag(Z, isZero(y));
+  setFlag(N, isNegative(y));
+
   return 0;
 }
 
 uint8_t R6502::TSX() {
+  // SP -> X
+  // Flags changed: Z N
+
+  x = sp;
+
+  setFlag(Z, isZero(x));
+  setFlag(N, isNegative(x));
+
   return 0;
 }
 
 uint8_t R6502::TXA() {
+  // X -> A
+  // Flags changed: Z N
+
+  a = x;
+
+  setFlag(Z, isZero(a));
+  setFlag(N, isNegative(a));
+
   return 0;
 }
 
 uint8_t R6502::TXS() {
+  // X -> SP
+  // Flags changed: Z N
+
+  sp = x;
+
+  setFlag(Z, isZero(sp));
+  setFlag(N, isNegative(sp));
+
   return 0;
 }
 
 uint8_t R6502::TYA() {
+  // Y -> A
+  // Flags changed: Z N
+
+  a = y;
+
+  setFlag(Z, isZero(a));
+  setFlag(N, isNegative(a));
+
   return 0;
 }
 
