@@ -127,6 +127,11 @@ uint8_t R6502::IMM() {
   return 0;
 }  
 
+// Second byte has low order byte of effective address, third has higher order byte (reminder again: 6502 is little endian!!!)
+// That means ABS instructions can acess all 64KB of address space.
+// 2^8 = 0x100
+// 2 byte addressing...
+// 0x100 * 0x100 = 0x10000 (64KB)
 uint8_t R6502::ABS() {
   uint16_t lo = read(pc++);
   uint16_t hi = read(pc++);
