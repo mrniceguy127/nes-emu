@@ -73,6 +73,8 @@ class R6502 {
     static uint8_t isZero(uint16_t);
     static uint8_t isNegative(uint8_t);
     static uint8_t isNegative(uint16_t);
+    void doCycle(); // Emulate cycle. Useful for capturing cycle "events"
+    uint16_t incPC(); // Returns 16 bit int because this is the type of the PC.
 
   private:
     // Addressing modes
