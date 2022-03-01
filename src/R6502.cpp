@@ -30,6 +30,22 @@ R6502::R6502() {
 
 R6502::~R6502() { }
 
+
+
+static uint16_t totalCyclesPassed = 0; // Temp variablee for testing doCycle
+
+
+void R6502::doCycle() {
+  // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
+  cycles++; // This won't be needed because of this function. Remove later, but keep for now so I can actually visualize what I'm changing.
+  totalCyclesPassed++;
+}
+
+uint16_t R6502::incPC() {
+  return pc++;
+}
+
+
 void R6502::clock() { }
 void R6502::reset() {
   // Useful Variables
@@ -61,15 +77,19 @@ void R6502::reset() {
 }
 
 uint8_t R6502::read(uint16_t addr) {
+  doCycle();
   return bus->read(addr); 
 }
 
 void R6502::write(uint16_t addr, uint8_t data) {
+  doCycle();
   bus->write(addr, data);
 }
 
 uint8_t R6502::pullStack() {
-  return read(0x0100 + ++sp);
+  uint8_t tmp = ++sp;
+  doCycle();
+  return read(0x0100 + tmp);
 }
 
 void R6502::pushStack(uint8_t byte) {
@@ -123,7 +143,7 @@ uint8_t R6502::fetch() {
 
 // Next byte has operand. get current pc, then increment.
 uint8_t R6502::IMM() {
-  absAddr = pc++;
+  absAddr = incPC();
   return 0;
 }  
 
@@ -133,15 +153,15 @@ uint8_t R6502::IMM() {
 // 2 byte addressing...
 // 0x100 * 0x100 = 0x10000 (64KB)
 uint8_t R6502::ABS() {
-  uint16_t lo = read(pc++);
-  uint16_t hi = read(pc++);
+  uint16_t lo = read(incPC());
+  uint16_t hi = read(incPC());
   absAddr = (hi << 8) | lo;
   return 0;
 }
 
 uint8_t R6502::ABX() {
-  uint16_t lo = read(pc++);
-  uint16_t hi = read(pc++);
+  uint16_t lo = read(incPC());
+  uint16_t hi = read(incPC());
   absAddr = (hi << 8) | lo;
   absAddr += x;
  
@@ -151,8 +171,8 @@ uint8_t R6502::ABX() {
 
 
 uint8_t R6502::ABY() {
-  uint16_t lo = read(pc++);
-  uint16_t hi = read(pc++);
+  uint16_t lo = read(incPC());
+  uint16_t hi = read(incPC());
   absAddr = (hi << 8) | lo;
   absAddr += y;
  
@@ -168,27 +188,27 @@ uint8_t R6502::IMP() {
 
 
 uint8_t R6502::ZP0() {
-  absAddr = read(pc++);
+  absAddr = read(incPC());
   return 0;
 }
 
 
 uint8_t R6502::ZPX() {
-  absAddr = read(pc++) + x;
+  absAddr = read(incPC()) + x;
   absAddr &= 0x00FF; // no paging past the zero page may occur
   return 0;
 }
 
 
 uint8_t R6502::ZPY() {
-  absAddr = read(pc++) + y;
+  absAddr = read(incPC()) + y;
   absAddr &= 0x00FF; // no paging past the zero page may occur
   return 0;
 }
 
 
 uint8_t R6502::REL() {
-  relAddr = read(pc++);
+  relAddr = read(incPC());
 
   // if negative (MSB of lo byte == 1), set hi byte to FF since relAddr is 2 bytes, not 1 as read. This will keep the relative address negative when converted to 2 byte form.
   if (isNegative(relAddr)) {
@@ -200,7 +220,7 @@ uint8_t R6502::REL() {
 
 
 uint8_t R6502::IZX() {
-  uint16_t baseAddr = read(pc++);
+  uint16_t baseAddr = read(incPC());
   uint16_t loAddr = (baseAddr + x) & 0x00FF;
   uint16_t hiAddr = (baseAddr + x + 1) & 0x00FF;
 
@@ -214,7 +234,7 @@ uint8_t R6502::IZX() {
 
 
 uint8_t R6502::IZY() {
-  uint16_t baseAddr = read(pc++);
+  uint16_t baseAddr = read(incPC());
   uint16_t lo = read(baseAddr & 0x00FF);
   uint16_t hi = read((baseAddr + 1) & 0x00FF);
 
@@ -230,8 +250,8 @@ uint8_t R6502::IND() {
   // From hnesdev.icequake.net/6502bugs.txt:
   // "An indirect JMP (xxFF) will fail because the MSB will be fetched from
   // address xx00 instead of page xx+1."
-  uint8_t pointerLo = read(pc++);
-  uint8_t pointerHi = read(pc++);
+  uint8_t pointerLo = read(incPC());
+  uint8_t pointerHi = read(incPC());
 
   uint16_t loAddr = (((uint16_t) pointerHi) << 8) | pointerLo;
   // hiAddr is intentionally bugged. pointerLo + 1 can overflow.
@@ -323,9 +343,9 @@ uint8_t R6502::BCC() {
   if (getFlag(C) == 0) {
     absAddr = fetched;
     if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      cycles++;
+      doCycle();
     }
-    cycles++;
+    doCycle();
   }
 
   return 0;
@@ -340,9 +360,9 @@ uint8_t R6502::BCS() {
   if (getFlag(C) == 1) {
     absAddr = fetched;
     if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      cycles++;
+      doCycle();
     }
-    cycles++;
+    doCycle();
   }
 
   return 0;
@@ -357,9 +377,9 @@ uint8_t R6502::BEQ() {
   if (getFlag(Z) == 1) {
     absAddr = fetched;
     if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      cycles++;
+      doCycle();
     }
-    cycles++;
+    doCycle();
   }
 
   return 0;
@@ -389,9 +409,9 @@ uint8_t R6502::BMI() {
   if (getFlag(N) == 1) {
     absAddr = fetched;
     if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      cycles++;
+      doCycle();
     }
-    cycles++;
+    doCycle();
   }
 
   return 0;
@@ -406,9 +426,9 @@ uint8_t R6502::BNE() {
   if (getFlag(Z) == 0) {
     absAddr = fetched;
     if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      cycles++;
+      doCycle();
     }
-    cycles++;
+    doCycle();
   }
 
   return 0;
@@ -423,9 +443,9 @@ uint8_t R6502::BPL() {
   if (getFlag(N) == 0) {
     absAddr = fetched;
     if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      cycles++;
+      doCycle();
     }
-    cycles++;
+    doCycle();
   }
 
   return 0;
@@ -435,7 +455,7 @@ uint8_t R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki
   // interrupt, push PC+2, push SR
   // Flags Changed: I
   
-  pc++; // Set this up for pushing to the stack
+  incPC(); // Set this up for pushing to the stack
 
   setFlag(I, 1);
   pushStack(pc >> 8); // Store higher order bits first
@@ -462,9 +482,9 @@ uint8_t R6502::BVC() {
   if (getFlag(V) == 0) {
     absAddr = fetched;
     if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      cycles++;
+      doCycle();
     }
-    cycles++;
+    doCycle();
   }
 
   return 0;
@@ -479,9 +499,9 @@ uint8_t R6502::BVS() {
   if (getFlag(V) == 1) {
     absAddr = fetched;
     if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      cycles++;
+      doCycle();
     }
-    cycles++;
+    doCycle();
   }
 
   return 0;
