@@ -73,7 +73,16 @@ void R6502::reset() {
 
   // "...loads the program counter from the memory vector locations FFFC and FFFD..."
   // (Page 2 under RESET (RES)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
-  pc = ((uint16_t)read(0xFFFC) << 8) | ((uint16_t)read(0xFFFD));
+  pc = ((uint16_t) read(0xFFFC) << 8) | ((uint16_t) read(0xFFFD));
+}
+
+void R6502::irq() {
+  // https://www.pagetable.com/?p=410
+  pushStack((pc & 0xFF00) >> 8);
+  pushStack((pc & 0x00FF));
+  pushStack(P & ~B); // B flag is cleared when pushed
+  pc = ((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
+  // Look this over later
 }
 
 uint8_t R6502::read(uint16_t addr) {
