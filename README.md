@@ -10,6 +10,7 @@ Status: At the very early stages currently. I don't even have all of the CPU emu
 - [6502 Data Sheets](http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf)
 - [6502 Instruction Set](https://www.masswerk.at/6502/6502_instruction_set.html)
 - [6502 Bugs List](http://nesdev.icequake.net/6502bugs.txt)
+- [6502 Manual](http://archive.6502.org/datasheets/synertek_programming_manual.pdf)
 - [NES architecture reference](http://fms.komkon.org/EMUL8/NES.html)
 - These when I got stuck in the beginning and to help me get started:
   - Part 2 only of [this series](https://www.youtube.com/watch?v=8XmxKPJDGU0)
