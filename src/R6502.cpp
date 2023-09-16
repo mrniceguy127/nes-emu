@@ -32,95 +32,207 @@ R6502::~R6502() { }
 
 
 
-static uint16_t totalCyclesPassed = 0; // Temp variablee for testing doCycle
-
-
 void R6502::doCycle() {
   // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
   cycles++; // This won't be needed because of this function. Remove later, but keep for now so I can actually visualize what I'm changing.
   totalCyclesPassed++;
 }
 
-uint16_t R6502::incPC() {
-  return pc++;
+void R6502::doRelBranch() {
+  doCycle(); // default cycle....
+  absAddr = pc + relAddr;
+  if (absAddr & 0xFF00 != absAddr & 0xFF00) {
+    doCycle(); // branch on different page, so extra cycle
+  }
+
+  setPC(absAddr);
 }
 
-
 void R6502::clock() { }
-void R6502::reset() {
+
+void R6502::init() {
+  // setting these manually... pre emulation stuff
   // Useful Variables
   absAddr = 0x0000;
   relAddr = 0x0000;
-  fetched = 0x00;
+  operand = 0x00;
   tmp = 0x0000;
 
-  a = 0x00;
+  accumulator = 0x00;
   x = 0x00;
   y = 0x00;
 
+  reset();
+}
+
+void R6502::reset() {
   // SP is initialized to 0. // https://www.pagetable.com/?p=410
-  sp = 0x00; 
+  setSP(0x00); 
 
   // https://wiki.nesdev.org/w/index.php?title=CPU_power_up_state
   // "After Reset"
   // A, X, Y were not affected
+
   // S was decremented by 3 (but nothing was written to the stack)
   // SEE ALSO https://www.pagetable.com/?p=410
-  sp -= 3;
+  setSP(sp - 3);
+ 
   // The I (IRQ disable) flag was set to true (status ORed with $04)
-  P = 0x00 | I;
+  setP(0x00 | I);
   // And finally, the internal memory was unchanged
 
   // "...loads the program counter from the memory vector locations FFFC and FFFD..."
   // (Page 2 under RESET (RES)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
-  pc = ((uint16_t) read(0xFFFC) << 8) | ((uint16_t) read(0xFFFD));
+  setPC(((uint16_t) read(0xFFFC) << 8) | ((uint16_t) read(0xFFFD)));
+
+  // Done!
+}
+
+void R6502::brk() {
+  // https://www.pagetable.com/?p=410
+  // http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
+  incPC();
+  incPC();
+
+  pushStack((pc & 0xFF00) >> 8);
+  pushStack((pc & 0x00FF));
+  setFlags(I);
+  pushStack(P);
+  setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
+  // Look this over later
 }
 
 void R6502::irq() {
   // https://www.pagetable.com/?p=410
+  // http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
+  incPC();
+  incPC();
+
   pushStack((pc & 0xFF00) >> 8);
   pushStack((pc & 0x00FF));
-  pushStack(P & ~B); // B flag is cleared when pushed
-  pc = ((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
+  setFlags(B | I, I); // B flag is cleared wehn pushed.
+  setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
   // Look this over later
 }
 
 uint8_t R6502::read(uint16_t addr) {
-  doCycle();
+  //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
   return bus->read(addr); 
 }
 
+uint16_t R6502::read16(uint16_t addr) {
+  //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
+  return ((uint16_t) (bus->read(addr + 1) << 8)) | bus->read(addr); 
+}
+
 void R6502::write(uint16_t addr, uint8_t data) {
-  doCycle();
+  //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
   bus->write(addr, data);
 }
 
+void R6502::setPC(uint16_t addr) {
+  pc = addr;
+  onRegisterUpdate();
+}
+
+void R6502::incPC() {
+  setPC(pc + 1);
+}
+
+void R6502::decPC() {
+  setPC(pc - 1);
+}
+
+void R6502::setSP(uint8_t byte) {
+  sp = byte;
+  onRegisterUpdate();
+}
+
+void R6502::incSP() {
+  setSP(sp + 1);
+}
+
+void R6502::decSP() {
+  setSP(sp - 1);
+}
+
+void R6502::setX(uint8_t byte) {
+  x = byte;
+  onRegisterUpdate();
+}
+
+void R6502::incX() {
+  setX(x + 1);
+}
+
+void R6502::decX() {
+  setX(x - 1);
+}
+
+void R6502::setY(uint8_t byte) {
+  y = byte;
+  onRegisterUpdate();
+}
+
+void R6502::incY() {
+  setY(y + 1);
+}
+
+void R6502::decY() {
+  setY(y - 1);
+}
+
+void R6502::setAccumulator(uint8_t byte) {
+  accumulator = byte;
+  onRegisterUpdate();
+}
+
+void R6502::setP(uint8_t byte) {
+  P = byte | U;
+  onRegisterUpdate();
+}
+
+void R6502::onRegisterUpdate() {
+  // Logging...
+  return;
+}
+
 uint8_t R6502::pullStack() {
-  uint8_t tmp = ++sp;
-  doCycle();
-  return read(0x0100 + tmp);
+  incSP();
+  return read(0x0100 + sp);
+}
+uint16_t R6502::pullStack16() {
+  uint16_t lo = (uint16_t) pullStack();
+  uint16_t hi = (uint16_t) pullStack();
+  return (hi << 8) | lo;
 }
 
 void R6502::pushStack(uint8_t byte) {
-  write(0x0100 + sp--, byte);
+  write(0x0100 + sp, byte);
+  decSP();
 }
 
 uint8_t R6502::isZero(uint8_t byte) {
-  return byte == 0x00;
+  return byte == 0x00 ? Z : 0x0;
 }
 
 uint8_t R6502::isZero(uint16_t doubleByte) {
-  return doubleByte == 0x0000;
+  return doubleByte == 0x0000 ? Z : 0x0;
 }
 
 uint8_t R6502::isNegative(uint8_t byte) {
-  return byte & 0x80;
+  return byte & 0x80 ? N : 0x0;
 }
 
 uint8_t R6502::isNegative(uint16_t doubleByte) {
-  return doubleByte & 0x0080;
+  return doubleByte & 0x0080 ? N : 0x0;
 }
 
+uint8_t R6502::isCarry(uint16_t doubleByte) {
+  return doubleByte & 0xFF00 ? C : 0x0;
+}
+  
+ 
 void R6502::connectBus(Bus * b) {
   bus = b;
 }
@@ -129,20 +241,24 @@ uint8_t R6502::getFlag(FLAGS flag) {
   return flag & P > 0 ? 1 : 0;
 }
 
-void R6502::setFlag(FLAGS flag, uint8_t value) {
-  if (value) {
-    P |= flag;
-  } else {
-    P &= ~flag;
-  }
+uint8_t R6502::setBitsOfByte(uint8_t bitsToChange, uint8_t value, uint8_t byte) {
+  return (byte & ~bitsToChange) | (value & bitsToChange);
+}
+
+void R6502::setFlags(uint8_t flags, uint8_t value) {
+  setP(setBitsOfByte(flags, value, P));
+}
+
+void R6502::setFlags(uint8_t flags) {
+  setFlags(flags, flags);
 }
 
 // -----
 // Useful Methods - 
 // -----
-uint8_t R6502::fetch() {
-  fetched = read(absAddr);
-  return fetched;
+uint8_t R6502::fetchOperand() {
+  operand = read(absAddr);
+  return operand;
 }
 
 // -----
@@ -152,7 +268,8 @@ uint8_t R6502::fetch() {
 
 // Next byte has operand. get current pc, then increment.
 uint8_t R6502::IMM() {
-  absAddr = incPC();
+  absAddr = pc;
+  incPC();
   return 0;
 }  
 
@@ -162,16 +279,15 @@ uint8_t R6502::IMM() {
 // 2 byte addressing...
 // 0x100 * 0x100 = 0x10000 (64KB)
 uint8_t R6502::ABS() {
-  uint16_t lo = read(incPC());
-  uint16_t hi = read(incPC());
-  absAddr = (hi << 8) | lo;
+  absAddr = read16(pc);
+  setPC(pc + 2);
   return 0;
 }
 
 uint8_t R6502::ABX() {
-  uint16_t lo = read(incPC());
-  uint16_t hi = read(incPC());
-  absAddr = (hi << 8) | lo;
+  absAddr = read16(pc);
+  uint8_t hi = absAddr >> 8;
+  setPC(pc + 2);
   absAddr += x;
  
   // Extra cycle is needed if page boundary crossed
@@ -180,9 +296,9 @@ uint8_t R6502::ABX() {
 
 
 uint8_t R6502::ABY() {
-  uint16_t lo = read(incPC());
-  uint16_t hi = read(incPC());
-  absAddr = (hi << 8) | lo;
+  absAddr = read16(pc);
+  uint8_t hi = absAddr >> 8;
+  setPC(pc + 2);
   absAddr += y;
  
   // Extra cycle is needed if page boundary crossed
@@ -191,34 +307,37 @@ uint8_t R6502::ABY() {
 
 
 uint8_t R6502::IMP() {
-  fetched = a;
+  operand = accumulator;
   return 0;
 }
 
 
 uint8_t R6502::ZP0() {
-  absAddr = read(incPC());
+  absAddr = read(pc);
+  incPC();
   return 0;
 }
 
 
 uint8_t R6502::ZPX() {
-  absAddr = read(incPC()) + x;
+  absAddr = read(pc) + x;
+  incPC();
   absAddr &= 0x00FF; // no paging past the zero page may occur
   return 0;
 }
 
 
 uint8_t R6502::ZPY() {
-  absAddr = read(incPC()) + y;
+  absAddr = read(pc) + y;
+  incPC();
   absAddr &= 0x00FF; // no paging past the zero page may occur
   return 0;
 }
 
 
 uint8_t R6502::REL() {
-  relAddr = read(incPC());
-
+  relAddr = read(pc);
+  incPC();
   // if negative (MSB of lo byte == 1), set hi byte to FF since relAddr is 2 bytes, not 1 as read. This will keep the relative address negative when converted to 2 byte form.
   if (isNegative(relAddr)) {
     relAddr |= 0xFF00;
@@ -229,25 +348,20 @@ uint8_t R6502::REL() {
 
 
 uint8_t R6502::IZX() {
-  uint16_t baseAddr = read(incPC());
+  uint16_t baseAddr = read(pc);
+  incPC();
   uint16_t loAddr = (baseAddr + x) & 0x00FF;
-  uint16_t hiAddr = (baseAddr + x + 1) & 0x00FF;
-
-  uint16_t lo = read(loAddr);
-  uint16_t hi = read(hiAddr);
-
-  absAddr = (hi << 8) | lo;
+  absAddr = read16(loAddr);
 
   return 0;
 }
 
 
 uint8_t R6502::IZY() {
-  uint16_t baseAddr = read(incPC());
-  uint16_t lo = read(baseAddr & 0x00FF);
-  uint16_t hi = read((baseAddr + 1) & 0x00FF);
-
-  absAddr = (hi << 8) | lo;
+  uint16_t baseAddr = read(pc);
+  incPC();
+  absAddr = read16(baseAddr & 0x00FF);
+  uint8_t hi = absAddr >> 8;
   absAddr += y;
 
   return absAddr >> 8 != hi ? 1 : 0;
@@ -259,8 +373,11 @@ uint8_t R6502::IND() {
   // From hnesdev.icequake.net/6502bugs.txt:
   // "An indirect JMP (xxFF) will fail because the MSB will be fetched from
   // address xx00 instead of page xx+1."
-  uint8_t pointerLo = read(incPC());
-  uint8_t pointerHi = read(incPC());
+  // DO NOT simplify this. Need to make the bug clear and show details.
+  uint8_t pointerLo = read(pc);
+  incPC();
+  uint8_t pointerHi = read(pc);
+  incPC();
 
   uint16_t loAddr = (((uint16_t) pointerHi) << 8) | pointerLo;
   // hiAddr is intentionally bugged. pointerLo + 1 can overflow.
@@ -288,36 +405,31 @@ uint8_t R6502::ADC() {
   // A + M + C -> A, C
   // Flags changed: C Z N V
 
-  fetch(); // fetch target data
+  fetchOperand(); // fetch target data
 
-  tmp = (uint16_t) a + (uint16_t) fetched + (uint16_t) getFlag(C);
+  tmp = (uint16_t) accumulator + (uint16_t) operand + (uint16_t) getFlag(C);
   
   // Overflow happens when both operands have the same sign but the result is a different sign.
   // 1. XNOR the 2 operands, the MSB in the result is whether or not the signs are the same.
   // 2. check if the sign of the result differs from the sign of either operand (XOR them).
   // 3. if 1 and 2 are true, over flow occured (get the sign bit of the & of 1 and 2).
-  setFlag(V, (~((uint16_t) a ^ (uint16_t) fetched) & (((uint16_t)a ^ tmp)) & 0x0080));
-  setFlag(C, tmp & 0xFF00);
+  uint8_t overflowBit = (~((uint16_t) accumulator ^ (uint16_t) operand) & (((uint16_t)accumulator ^ tmp)) & 0x0080) ? V : 0x0;
 
-  tmp &= 0x00FF; // Clear higher order bits for remaining flags
+  setFlags(C | Z | N | V, isCarry(tmp) | isZero((uint8_t) (tmp & 0x00FF)) | isNegative(tmp) | overflowBit);
 
-  setFlag(Z, isZero(tmp));
-  setFlag(N, isNegative(tmp));
+  setAccumulator(tmp);
 
-  a = tmp;
-
-  return 1; // Extra cycle possible.
+  return 1;
 }
 
 uint8_t R6502::AND() {
   // A AND M -> A
   // Flags changed: Z N
   
-  fetch();
-  a &= fetched;
+  fetchOperand();
+  setAccumulator(accumulator & operand);
 
-  setFlag(Z, a == 0);
-  setFlag(N, isNegative(a));
+  setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 
   return 1;
 }
@@ -326,16 +438,14 @@ uint8_t R6502::ASL() {
   // C <- [76543210] <- 0
   // Flags changed: C Z N
   
-  fetch();
+  fetchOperand();
   
-  tmp = (uint16_t) fetched << 1;
+  tmp = (uint16_t) operand << 1;
 
-  setFlag(C, (tmp & 0xFF00) > 0);
-  setFlag(Z, tmp == 0);
-  setFlag(N, tmp & 0x0800);
+  setFlags(C | Z | N, isCarry(tmp) | isZero(tmp) | isNegative(tmp));
 
   if (instructionMatrix[opcode].addressMode == &R6502::IMP) { // Implied is same as accumulator addressing mode technically.
-    a = tmp & 0x00FF;
+    setAccumulator(tmp & 0x00FF);
   } else {
     write(absAddr, tmp & 0x00FF);
   }
@@ -347,15 +457,7 @@ uint8_t R6502::BCC() {
   // branch on C = 0
   // Flags changed: 
 
-  fetch();
-  
-  if (getFlag(C) == 0) {
-    absAddr = fetched;
-    if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      doCycle();
-    }
-    doCycle();
-  }
+  if (getFlag(C) == 0) doRelBranch();
 
   return 0;
 }
@@ -364,15 +466,7 @@ uint8_t R6502::BCS() {
   // branch on C = 1
   // Flags changed: 
 
-  fetch();
-  
-  if (getFlag(C) == 1) {
-    absAddr = fetched;
-    if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      doCycle();
-    }
-    doCycle();
-  }
+  if (getFlag(C) == 1) doRelBranch();
 
   return 0;
 }
@@ -381,15 +475,7 @@ uint8_t R6502::BEQ() {
   // branch on Z = 1
   // Flags changed: 
 
-  fetch();
-  
-  if (getFlag(Z) == 1) {
-    absAddr = fetched;
-    if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      doCycle();
-    }
-    doCycle();
-  }
+  if (getFlag(Z) == 1) doRelBranch();
 
   return 0;
 }
@@ -398,13 +484,11 @@ uint8_t R6502::BIT() {
   // A AND M, M7 -> N, M6 -> V
   // Flags changed: Z N V
   
-  fetch();
+  fetchOperand();
 
-  tmp = (a & fetched) & 0x00FF;
+  tmp = (accumulator & operand);
   
-  setFlag(Z, isZero(tmp));
-  setFlag(N, isNegative(fetched));
-  setFlag(V, fetched & (1 << 6));
+  setFlags(Z | N | V, isZero(tmp) | isNegative(operand) | (operand & (1 << 6)));
 
   return 0;
 }
@@ -413,15 +497,9 @@ uint8_t R6502::BMI() {
   // branch on N = 1
   // Flags changed: 
 
-  fetch();
+  fetchOperand();
   
-  if (getFlag(N) == 1) {
-    absAddr = fetched;
-    if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      doCycle();
-    }
-    doCycle();
-  }
+  if (getFlag(N) == 1) doRelBranch();
 
   return 0;
 }
@@ -430,15 +508,9 @@ uint8_t R6502::BNE() {
   // branch on Z = 0
   // Flags changed: 
 
-  fetch();
+  fetchOperand();
   
-  if (getFlag(Z) == 0) {
-    absAddr = fetched;
-    if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      doCycle();
-    }
-    doCycle();
-  }
+  if (getFlag(Z) == 0) doRelBranch();
 
   return 0;
 }
@@ -447,15 +519,9 @@ uint8_t R6502::BPL() {
   // branch on N = 0
   // Flags changed: 
 
-  fetch();
+  fetchOperand();
   
-  if (getFlag(N) == 0) {
-    absAddr = fetched;
-    if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      doCycle();
-    }
-    doCycle();
-  }
+  if (getFlag(N) == 0) doRelBranch();
 
   return 0;
 }
@@ -466,17 +532,15 @@ uint8_t R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki
   
   incPC(); // Set this up for pushing to the stack
 
-  setFlag(I, 1);
+  setFlags(I);
   pushStack(pc >> 8); // Store higher order bits first
   pushStack(pc & 0x00FF); // Than lower.
   
   // https://www.masswerk.at/6502/6502_instruction_set.html#BRK
-  setFlag(B, 1);
-  pushStack(P); // Store status reg.
-  setFlag(B, 0);
+  pushStack(P | B); // Store status reg.
 
   // "$FFFE-$FFFF = IRQ/BRK vector" https://wiki.nesdev.org/w/index.php?title=CPU_memory_map
-  pc = (uint16_t) read(0xFFFE) | ((uint16_t) read(0xFFFF) << 8); // https://wiki.nesdev.org/w/index.php?title=CPU_interrupts#Interrupt_hijacking
+  setPC((uint16_t) read(0xFFFE) | ((uint16_t) read(0xFFFF) << 8)); // https://wiki.nesdev.org/w/index.php?title=CPU_interrupts#Interrupt_hijacking
                                                                  // (Interrupt Request (IRQ)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
 
   return 0;
@@ -486,15 +550,9 @@ uint8_t R6502::BVC() {
   // branch on V = 0
   // Flags changed: 
 
-  fetch();
+  fetchOperand();
   
-  if (getFlag(V) == 0) {
-    absAddr = fetched;
-    if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      doCycle();
-    }
-    doCycle();
-  }
+  if (getFlag(V) == 0) doRelBranch();
 
   return 0;
 }
@@ -503,15 +561,9 @@ uint8_t R6502::BVS() {
   // branch on V = 1
   // Flags changed: 
 
-  fetch();
+  fetchOperand();
   
-  if (getFlag(V) == 1) {
-    absAddr = fetched;
-    if (fetched & 0xFF00 != absAddr & 0xFF00) {
-      doCycle();
-    }
-    doCycle();
-  }
+  if (getFlag(V) == 1) doRelBranch();
 
   return 0;
 }
@@ -519,67 +571,62 @@ uint8_t R6502::BVS() {
 uint8_t R6502::CLC() {
   // 0 -> C
   // Flags changed: C
-  setFlag(C, 0);
+  setFlags(C, 0);
   return 0;
 }
 
 uint8_t R6502::CLD() {
   // 0 -> D
   // Flags changed: D
-  setFlag(D, 0);
+  setFlags(D, 0);
   return 0;
 }
 
 uint8_t R6502::CLI() {
   // 0 -> I
   // Flags changed: I
-  setFlag(I, 0);
+  setFlags(I, 0);
   return 0;
 }
 
 uint8_t R6502::CLV() {
   // 0 -> V
   // Flags changed: V
-  setFlag(V, 0);
+  setFlags(V, 0);
   return 0;
 }
 
 uint8_t R6502::CMP() {
   // A - M
   // Flags changed: N Z C
-  fetch();
+  fetchOperand();
 
-  tmp = ((uint16_t) a - (uint16_t) fetched) & 0x00FF;
+  tmp = ((uint16_t) accumulator - (uint16_t) operand) & 0x00FF;
 
-  setFlag(N, isNegative(tmp));
-  setFlag(Z, isZero(tmp));
-  setFlag(C, a >= fetched);
+  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | accumulator >= operand ? C : 0x0);
+
   return 1;
 }
 
 uint8_t R6502::CPX() {
   // X - M
   // Flags changed: N Z C
-  fetch();
+  fetchOperand();
 
-  tmp = ((uint16_t) x - (uint16_t) fetched) & 0x00FF;
+  tmp = ((uint16_t) x - (uint16_t) operand) & 0x00FF;
 
-  setFlag(N, isNegative(tmp));
-  setFlag(Z, isZero(tmp));
-  setFlag(C, x >= fetched);
+  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | x >= operand ? C : 0x0);
   return 0;
 }
 
 uint8_t R6502::CPY() {
   // Y - M
   // Flags changed: N Z C
-  fetch();
+  fetchOperand();
 
-  tmp = ((uint16_t) y - (uint16_t) fetched) & 0x00FF;
+  tmp = ((uint16_t) y - (uint16_t) operand) & 0x00FF;
 
-  setFlag(N, isNegative(tmp));
-  setFlag(Z, isZero(tmp));
-  setFlag(C, y >= fetched);
+  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | y >= operand ? C : 0x0);
   return 0;
 }
 
@@ -587,13 +634,12 @@ uint8_t R6502::DEC() {
   // M - 1 -> M
   // Flags changed: Z N
   
-  fetch();
-  tmp = ((uint16_t) fetched - 1) & 0x00FF;
+  fetchOperand();
+  tmp = ((uint16_t) operand - 1) & 0x00FF;
 
   write(absAddr, tmp);
   
-  setFlag(Z, isZero(tmp));
-  setFlag(N, isNegative(tmp));
+  setFlags(Z | N, isZero(tmp) | isNegative(tmp));
 
   return 0;
 }
@@ -602,10 +648,8 @@ uint8_t R6502::DEX() {
   // X - 1 -> X
   // Flags changed: Z N
 
-  x--;
-  
-  setFlag(Z, isZero(x));
-  setFlag(N, isNegative(x));
+  decX();
+  setFlags(Z | N, isZero(x) | isNegative(x));
 
   return 0;
 }
@@ -614,10 +658,8 @@ uint8_t R6502::DEY() {
   // Y - 1 -> Y
   // Flags changed: Z N
 
-  y--;
-  
-  setFlag(Z, isZero(y));
-  setFlag(N, isNegative(y));
+  decY();
+  setFlags(Z | N, isZero(y) | isNegative(y));
 
   return 0;
 }
@@ -626,11 +668,11 @@ uint8_t R6502::EOR() {
   // A EOR M -> A
   // Flags changed: Z N
 
-  fetch();
+  fetchOperand();
 
-  a = a ^ fetched;
-  setFlag(Z, a == 0);
-  setFlag(N, isNegative(a));
+  setAccumulator(accumulator ^ operand);
+  setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
+
   return 1;
 }
 
@@ -638,13 +680,11 @@ uint8_t R6502::INC() {
   // M + 1 -> M
   // Flags changed: Z N
   
-  fetch();
-  tmp = ((uint16_t) fetched + 1) & 0x00FF;
+  fetchOperand();
+  tmp = ((uint16_t) operand + 1) & 0x00FF;
 
   write(absAddr, tmp);
-  
-  setFlag(Z, isZero(tmp));
-  setFlag(N, isNegative(tmp));
+  setFlags(Z | N, isZero(tmp) | isNegative(tmp));
 
   return 0;
 }
@@ -653,10 +693,8 @@ uint8_t R6502::INX() {
   // X - 1 -> X
   // Flags changed: Z N
 
-  x++;
-  
-  setFlag(Z, isZero(x));
-  setFlag(N, isNegative(x));
+  incX();
+  setFlags(Z | N, isZero(x) | isNegative(x));
 
   return 0;
 }
@@ -665,10 +703,8 @@ uint8_t R6502::INY() {
   // Y + 1 -> Y
   // Flags changed: Z N
 
-  y++;
-  
-  setFlag(Z, isZero(y));
-  setFlag(N, isNegative(y));
+  incY();
+  setFlags(Z | N, isZero(y) | isNegative(y));
 
   return 0;
 }
@@ -677,7 +713,7 @@ uint8_t R6502::JMP() {
   // (PC+1) -> PCL
   // (PC+2) -> PCH
   // Flags changed:
-  pc = absAddr;
+  setPC(absAddr);
 
   return 0;
 }
@@ -688,10 +724,10 @@ uint8_t R6502::JSR() {
   // (PC+2) -> PCH
   // Flags changed:
 
-  pc--;
+  decPC();
   pushStack(pc >> 8);
   pushStack(pc & 0x00FF);
-  pc = absAddr;
+  setPC(absAddr);
   return 0;
 }
 
@@ -699,10 +735,9 @@ uint8_t R6502::LDA() {
   // M -> A
   // Flags changed: Z N
 
-  fetch();
-  a = fetched;
-  setFlag(Z, isZero(a));
-  setFlag(N, isNegative(a));
+  fetchOperand();
+  setAccumulator(operand);
+  setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
   return 1;
 }
 
@@ -710,10 +745,9 @@ uint8_t R6502::LDX() {
   // M -> X
   // Flags changed: Z N
 
-  fetch();
-  x = fetched;
-  setFlag(Z, isZero(x));
-  setFlag(N, isNegative(x));
+  fetchOperand();
+  setX(operand);
+  setFlags(Z | N, isZero(x) | isNegative(x));
   return 1;
 }
 
@@ -721,10 +755,9 @@ uint8_t R6502::LDY() {
   // M -> Y
   // Flags changed: Z N
 
-  fetch();
-  y = fetched;
-  setFlag(Z, isZero(y));
-  setFlag(N, isNegative(y));
+  fetchOperand();
+  setY(operand);
+  setFlags(Z | N, isZero(y) | isNegative(y));
   return 1;
 }
 
@@ -732,16 +765,14 @@ uint8_t R6502::LSR() {
   // 0 -> [76543210] -> C
   // Flags changed: Z N C
   
-  fetch();
+  fetchOperand();
   
-  tmp = (uint16_t) fetched >> 1;
+  tmp = (uint16_t) operand >> 1;
 
-  setFlag(C, tmp & 0xFF00);
-  setFlag(Z, isZero(tmp));
-  setFlag(N, 0);
+  setFlags(C | Z | N, isZero(tmp) | isCarry(tmp));
 
   if (instructionMatrix[opcode].addressMode == &R6502::IMP) { // Implied is same as accumulator addressing mode technically.
-    a = tmp & 0x00FF;
+    setAccumulator(tmp & 0x00FF);
   } else {
     write(absAddr, tmp & 0x00FF);
   }
@@ -759,12 +790,10 @@ uint8_t R6502::ORA() {
   // A OR M -> A
   // Flags changed: Z N
   
-  fetch();
+  fetchOperand();
 
-  a = a | fetched;
-
-  setFlag(Z, isZero(a));
-  setFlag(N, isNegative(a));
+  setAccumulator(accumulator | operand);
+  setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 
   return 1;
 }
@@ -773,7 +802,7 @@ uint8_t R6502::PHA() {
   // push A
   // Flags changed:
   
-  pushStack(a);
+  pushStack(accumulator);
 
   return 0;
 }
@@ -791,9 +820,8 @@ uint8_t R6502::PLA() {
   // pull A
   // Flags changed: Z N
 
-  a = pullStack();
-  setFlag(Z, isZero(a));
-  setFlag(N, isNegative(a));
+  setAccumulator(pullStack());
+  setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 
   return 0;
 }
@@ -802,7 +830,7 @@ uint8_t R6502::PLP() {
   // pull P
   // Flags changed: FROM STACK
 
-  P = pullStack();
+  setP(pullStack());
 
   return 0;
 }
@@ -811,16 +839,14 @@ uint8_t R6502::ROL() {
   // C <- [76543210] <- C
   // Flags Changed: C Z N
   
-  fetch();
+  fetchOperand();
 
-  tmp = ((uint16_t) (fetched << 1) | (uint16_t) (fetched >> 7)) & 0x00FF;
+  tmp = ((uint16_t) (operand << 1) | (uint16_t) (operand >> 7)) & 0x00FF;
 
-  setFlag(C, fetched & 0x80);
-  setFlag(Z, tmp == 0);
-  setFlag(N, isNegative(tmp));
+  setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | operand & 0x80 ? C : 0x0);
   
   if (instructionMatrix[opcode].addressMode == &R6502::IMP) {
-     a = tmp;
+     setAccumulator(tmp);
   } else {
      write(absAddr, tmp);
   }
@@ -832,16 +858,14 @@ uint8_t R6502::ROR() {
   // C -> [76543210] -> C
   // Flags Changed: C Z N
   
-  fetch();
+  fetchOperand();
 
-  tmp = ((uint16_t) (fetched >> 1) | (uint16_t) (fetched << 7)) & 0x00FF;
+  tmp = ((uint16_t) (operand >> 1) | (uint16_t) (operand << 7)) & 0x00FF;
 
-  setFlag(C, fetched & 0x01);
-  setFlag(Z, tmp == 0);
-  setFlag(N, isNegative(tmp));
+  setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | operand & 0x01 ? C : 0x0);
   
   if (instructionMatrix[opcode].addressMode == &R6502::IMP) {
-     a = tmp;
+     setAccumulator(tmp);
   } else {
      write(absAddr, tmp);
   }
@@ -852,16 +876,19 @@ uint8_t R6502::ROR() {
 uint8_t R6502::RTI() {
   // pull P, pull PC
   // Flags changed: FROM STACK
+  // "The status register is pulled with the break flag
+  // ...and bit 5 ignored. Then PC is pulled from the stack."
   
-  P = pullStack();
-  pc = pullStack();
+  setP(setBitsOfByte(U | B, P, pullStack()));
+
+  setPC(pullStack16());
 
   return 0;
 }
 
 uint8_t R6502::RTS() {
   // pull PC, PC+1 -> PC
-  pc = pullStack() + 1;
+  setPC(pullStack16() + 1);
 
   return 0;
 }
@@ -877,21 +904,16 @@ uint8_t R6502::SBC() {
   // A + (~M) + C
   // Flags changed: V C Z N
   
-  fetch();
+  fetchOperand();
 
   // Same as addition, but invert memory
 
-  tmp = (uint16_t) a + (uint16_t) (fetched ^ 0xFF) + (uint16_t) getFlag(C);
+  tmp = (uint16_t) accumulator + (uint16_t) (operand ^ 0xFF) + (uint16_t) getFlag(C);
 
-  setFlag(V, (~((uint16_t) a ^ (uint16_t) fetched) & (((uint16_t)a ^ tmp)) & 0x0080));
-  setFlag(C, tmp & 0xFF00);
+  uint8_t overflowBit = (~((uint16_t) accumulator ^ (uint16_t) operand) & (((uint16_t)accumulator ^ tmp)) & 0x0080) ? V : 0;
+  setFlags(V | C | Z | N, overflowBit | isCarry(tmp) | isZero(tmp) | isNegative(tmp));
 
-  tmp &= 0x00FF;
-
-  setFlag(Z, isZero(tmp));
-  setFlag(N, isNegative(tmp));
-
-  a = tmp;
+  setAccumulator(tmp);
 
   return 1;
 }
@@ -900,7 +922,7 @@ uint8_t R6502::SEC() {
   // 1 -> C
   // Flags changed: C
 
-  setFlag(C, 1);
+  setFlags(C);
 
   return 0;
 }
@@ -909,7 +931,7 @@ uint8_t R6502::SED() {
   // 1 -> D
   // Flags changed: D
 
-  setFlag(D, 1);
+  setFlags(D);
 
   return 0;
 }
@@ -918,7 +940,7 @@ uint8_t R6502::SEI() {
   // 1 -> I
   // Flags changed: I
 
-  setFlag(I, 1);
+  setFlags(I);
 
   return 0;
 }
@@ -927,7 +949,7 @@ uint8_t R6502::STA() {
   // A -> M
   // Flags changed: 
 
-  write(absAddr, a);
+  write(absAddr, accumulator);
 
   return 0;
 }
@@ -954,10 +976,8 @@ uint8_t R6502::TAX() {
   // A -> X
   // Flags changed: Z N
 
-  x = a;
-
-  setFlag(Z, isZero(x));
-  setFlag(N, isNegative(x));
+  setX(accumulator);
+  setFlags(Z | N, isZero(x) | isNegative(x));
 
   return 0;
 }
@@ -966,10 +986,8 @@ uint8_t R6502::TAY() {
   // A -> Y
   // Flags changed: Z N
 
-  y = a;
-
-  setFlag(Z, isZero(y));
-  setFlag(N, isNegative(y));
+  setY(accumulator);
+  setFlags(Z | N, isZero(y) | isNegative(y));
 
   return 0;
 }
@@ -978,10 +996,8 @@ uint8_t R6502::TSX() {
   // SP -> X
   // Flags changed: Z N
 
-  x = sp;
-
-  setFlag(Z, isZero(x));
-  setFlag(N, isNegative(x));
+  setX(sp);
+  setFlags(Z | N, isZero(x) | isNegative(x));
 
   return 0;
 }
@@ -990,10 +1006,8 @@ uint8_t R6502::TXA() {
   // X -> A
   // Flags changed: Z N
 
-  a = x;
-
-  setFlag(Z, isZero(a));
-  setFlag(N, isNegative(a));
+  setAccumulator(x);
+  setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 
   return 0;
 }
@@ -1002,10 +1016,8 @@ uint8_t R6502::TXS() {
   // X -> SP
   // Flags changed: Z N
 
-  sp = x;
-
-  setFlag(Z, isZero(sp));
-  setFlag(N, isNegative(sp));
+  setSP(x);
+  setFlags(Z | N, isZero(sp) | isNegative(sp));
 
   return 0;
 }
@@ -1014,10 +1026,8 @@ uint8_t R6502::TYA() {
   // Y -> A
   // Flags changed: Z N
 
-  a = y;
-
-  setFlag(Z, isZero(a));
-  setFlag(N, isNegative(a));
+  setAccumulator(y);
+  setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 
   return 0;
 }

@@ -7,9 +7,13 @@ class R6502 {
     R6502();
     ~R6502();
   public:
+    // Initialization for outside programmer
+    void init();
+  public:
     // External events
     void clock();
     void reset();
+    void brk();
     void irq();
     void nmi();
 
@@ -17,26 +21,29 @@ class R6502 {
   private:
     Bus * bus = nullptr;
     uint8_t read(uint16_t addr);
+    uint16_t read16(uint16_t addr);
     void write(uint16_t addr, uint8_t data);
   private:
     // Useful variables
     uint8_t opcode = 0x00;
     uint16_t absAddr = 0x0000;
     uint16_t relAddr = 0x0000;
-    uint8_t fetched = 0x00;
+    uint8_t operand = 0x00;
     uint16_t tmp = 0x0000;
 
-    uint16_t cycles = 0; // Cycles remaining for instruction. Will loop until 0.
+    uint16_t cycles = 0; // Cycles remaining for instruction. Will loop until 0.... removing, notes in doCycles implementation
+    uint64_t totalCyclesPassed = 0;
 
     // Useful methods
-    uint8_t fetch();
+    uint8_t fetchOperand();
   private:
     // Registers
-    uint8_t a = 0x00; // Accumulator
+    uint8_t accumulator = 0x00; // Accumulator
     uint8_t x = 0x00; // X Index register
     uint8_t y = 0x00; // Y Index register
     uint16_t pc = 0x0000; // Program Counter (16 bits)
     uint8_t sp = 0x00; // Stack pointer
+    
     
     // Flags
     uint8_t P = 0x00; // Processor Status
@@ -53,6 +60,9 @@ class R6502 {
     };
 
     uint8_t getFlag(FLAGS flag);
+    uint8_t setBitsOfByte(uint8_t bitsToChange, uint8_t value, uint8_t byte);
+    void setFlags(uint8_t flags, uint8_t value);
+    void setFlags(uint8_t flags);
     void setFlag(FLAGS flag, uint8_t value);
 
   private:
@@ -68,13 +78,34 @@ class R6502 {
   private:
     // Utility functions
     uint8_t pullStack();
+    uint16_t pullStack16();
     void pushStack(uint8_t byte);
     static uint8_t isZero(uint8_t);
     static uint8_t isZero(uint16_t);
     static uint8_t isNegative(uint8_t);
     static uint8_t isNegative(uint16_t);
+    static uint8_t isCarry(uint16_t);
     void doCycle(); // Emulate cycle. Useful for capturing cycle "events"
-    uint16_t incPC(); // Returns 16 bit int because this is the type of the PC.
+    void doRelBranch(); // Relative branching is all done the same...
+    uint16_t cyclesPassed(); // Get total cycles passed...
+    void setPC(uint16_t);
+    void incPC();
+    void decPC();
+    void setSP(uint8_t);
+    void incSP();
+    void decSP();
+    void setX(uint8_t);
+    void incX();
+    void decX();
+    void setY(uint8_t);
+    void incY();
+    void decY();
+    void setAccumulator(uint8_t);
+    void setP(uint8_t);
+
+  private:
+    // Events... Useful for logging, etc.
+    void onRegisterUpdate();
 
   private:
     // Addressing modes
