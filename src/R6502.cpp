@@ -1,4 +1,5 @@
 #include "NESIncludes.h"
+#include <iostream>
 
 // -----
 // External event functions
@@ -66,6 +67,10 @@ void R6502::doRelBranch() {
  */
 void R6502::clock() { }
 
+/**
+ * @brief Init CPU for emulation
+ * 
+ */
 void R6502::init() {
   // setting these manually... pre emulation stuff
   // Useful Variables
@@ -147,6 +152,9 @@ void R6502::NMI() {
  */
 uint8_t R6502::read(uint16_t addr) {
   //doCycle(); eventually, we'll count cy to onecles naturally. For now.... quick mafs
+  std::cout << "hell " << (int) addr << std::endl;
+  bus->read(addr);
+  std::cout << "hell 2 " << std::endl;
   return bus->read(addr); 
 }
 
@@ -194,7 +202,7 @@ uint16_t R6502::readPC16() {
 
 void R6502::write(uint16_t addr, uint8_t data) {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
-  write(addr, data);
+  bus->write(addr, data);
 }
 
 /**

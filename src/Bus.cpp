@@ -1,12 +1,6 @@
 #include "NESIncludes.h"
 
-Bus::Bus() {
-  cpu.connectBus(this);
-
-  for (auto & i : ram) {
-    i = 0x00;
-  }
-}
+Bus::Bus() {}
 
 Bus::~Bus() { }
 
