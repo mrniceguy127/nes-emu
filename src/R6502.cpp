@@ -62,10 +62,10 @@ void R6502::init() {
   x = 0x00;
   y = 0x00;
 
-  reset();
+  RES();
 }
 
-void R6502::reset() {
+void R6502::RES() {
   // SP is initialized to 0. // https://www.pagetable.com/?p=410
   setSP(0x00); 
 
@@ -88,36 +88,36 @@ void R6502::reset() {
   // Done!
 }
 
-void R6502::brk() {
+void R6502::IRQ() {
   // https://www.pagetable.com/?p=410
   // http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
-  incPC();
-  incPC();
 
-  pushStack((pc & 0xFF00) >> 8);
-  pushStack((pc & 0x00FF));
-  setFlags(I);
-  pushStack(P);
+  pushStack16(pc);
+  pushStack(P & ~B);
+  setFlags(I); // B flag is cleared when pushed.
   setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
-  // Look this over later
 }
 
-void R6502::irq() {
+void R6502::NMI() {
   // https://www.pagetable.com/?p=410
   // http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
-  incPC();
-  incPC();
 
-  pushStack((pc & 0xFF00) >> 8);
-  pushStack((pc & 0x00FF));
-  setFlags(B | I, I); // B flag is cleared wehn pushed.
-  setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
-  // Look this over later
+  pushStack16(pc);
+  pushStack(P & ~B);
+  setFlags(I); // B flag is cleared when pushed.
+  setPC((uint16_t) read(0xFFFA) | (uint16_t) read(0xFFFB) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
 }
 
 uint8_t R6502::read(uint16_t addr) {
-  //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
+  //doCycle(); eventually, we'll count cy to onecles naturally. For now.... quick mafs
   return bus->read(addr); 
+}
+
+uint8_t R6502::readPC() {
+  //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
+  uint8_t byte = read(pc);
+  incPC();
+  return byte; 
 }
 
 uint16_t R6502::read16(uint16_t addr) {
@@ -125,9 +125,16 @@ uint16_t R6502::read16(uint16_t addr) {
   return ((uint16_t) (bus->read(addr + 1) << 8)) | bus->read(addr); 
 }
 
+uint16_t R6502::readPC16() {
+  uint16_t lo = (uint16_t) readPC();
+  uint16_t hi = (uint16_t) readPC();
+
+  return (hi << 8) | lo;
+}
+
 void R6502::write(uint16_t addr, uint8_t data) {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
-  bus->write(addr, data);
+  write(addr, data);
 }
 
 void R6502::setPC(uint16_t addr) {
@@ -192,11 +199,6 @@ void R6502::setP(uint8_t byte) {
   onRegisterUpdate();
 }
 
-void R6502::onRegisterUpdate() {
-  // Logging...
-  return;
-}
-
 uint8_t R6502::pullStack() {
   incSP();
   return read(0x0100 + sp);
@@ -212,53 +214,156 @@ void R6502::pushStack(uint8_t byte) {
   decSP();
 }
 
+void R6502::pushStack16(uint16_t dbyte) {
+  pushStack(dbyte >> 8); // Store higher order bits first
+  pushStack(dbyte & 0x00FF); // Than lower.
+  // its cause of the way stacks work. we want to fetch lo off the stack first.
+}
+
+
+// -------------
+// Flag utils
+// -------------
+
+/**
+ * @brief Is byte a zero?
+ * 
+ * @param byte 
+ * @return uint8_t - Returns the Zero flag (true) if zero and zero (false) if not zero.
+ */
 uint8_t R6502::isZero(uint8_t byte) {
   return byte == 0x00 ? Z : 0x0;
 }
 
+/**
+ * @brief Is double byte a zero?
+ * 
+ * @param byte 
+ * @return uint8_t - Returns the Zero flag (true) if zero and zero (false) if not zero.
+ */
 uint8_t R6502::isZero(uint16_t doubleByte) {
   return doubleByte == 0x0000 ? Z : 0x0;
 }
 
+/**
+ * @brief Is byte negative?
+ * 
+ * @param byte 
+ * @return uint8_t - Returns the Negative flag (true) if negative and zero (false) if not negative.
+ */
 uint8_t R6502::isNegative(uint8_t byte) {
   return byte & 0x80 ? N : 0x0;
 }
 
+/**
+ * @brief Is double byte negative?
+ * 
+ * @param byte 
+ * @return uint8_t - Returns the Negative flag (true) if negative and zero (false) if not negative.
+ */
 uint8_t R6502::isNegative(uint16_t doubleByte) {
   return doubleByte & 0x0080 ? N : 0x0;
 }
 
+/**
+ * @brief Is double byte indicative of a carry occuring?
+ * 
+ * @param byte 
+ * @return uint8_t - Returns the Carry flag (true) if a carry occured and zero (false) if no carry occured.
+ */
 uint8_t R6502::isCarry(uint16_t doubleByte) {
   return doubleByte & 0xFF00 ? C : 0x0;
 }
-  
- 
-void R6502::connectBus(Bus * b) {
-  bus = b;
-}
 
+/**
+ * @brief returns the BIT value of a flag
+ * 
+ * @param flag The flag of the bit you want.
+ * @return uint8_t 1 or 0.
+ */
 uint8_t R6502::getFlag(FLAGS flag) {
   return flag & P > 0 ? 1 : 0;
 }
 
+/**
+ * @brief sets bits of a byte based on a mask byte and a byte representing what to change them to.
+ * 
+ * @param bitsToChange The byte mask.
+ * @param value The values to set the bits specified by the mask to.
+ * @param byte The original byte to modify.
+ * @return uint8_t 
+ */
 uint8_t R6502::setBitsOfByte(uint8_t bitsToChange, uint8_t value, uint8_t byte) {
   return (byte & ~bitsToChange) | (value & bitsToChange);
 }
 
+/**
+ * @brief Sets flags to a specific value.
+ * 
+ * @param flags The flags to set. e.g. Z | N | C to set the Z, N, and C flags.
+ * @param value The value to set them to. i.e. 1 or 0
+ */
 void R6502::setFlags(uint8_t flags, uint8_t value) {
   setP(setBitsOfByte(flags, value, P));
 }
 
+/**
+ * @brief Set specific flags to 1.
+ * 
+ * @param flags The flags to set. e.g. Z | N | C to set the Z, N, and C flags to one.
+ */
 void R6502::setFlags(uint8_t flags) {
   setFlags(flags, flags);
 }
 
+
+
+ 
+// -------------
+// Init utils
+// -------------
+
+/**
+ * @brief Sets the CPU's bus. That's all.
+ * 
+ * @param b 
+ */
+void R6502::connectBus(Bus * b) {
+  bus = b;
+}
+
+
 // -----
-// Useful Methods - 
+// Intructions utils.
 // -----
+
+/**
+ * @brief Reads from the currently relevant absolute address.
+ * 
+ * This is almost always the operand of an instruction)
+ * 
+ * @return uint8_t - The operand in most cases. 
+ */
 uint8_t R6502::fetchOperand() {
   operand = read(absAddr);
   return operand;
+}
+
+
+
+// -----
+// "Emulation hooking utils"
+// -----
+
+/**
+ * @brief Called everytime a register updates.
+ * 
+ * Useful for logging.
+ * 
+ */
+void R6502::onRegisterUpdate() {
+  // Logging...
+  return;
 }
 
 // -----
@@ -279,15 +384,13 @@ uint8_t R6502::IMM() {
 // 2 byte addressing...
 // 0x100 * 0x100 = 0x10000 (64KB)
 uint8_t R6502::ABS() {
-  absAddr = read16(pc);
-  setPC(pc + 2);
+  absAddr = readPC16();
   return 0;
 }
 
 uint8_t R6502::ABX() {
-  absAddr = read16(pc);
+  absAddr = readPC16();
   uint8_t hi = absAddr >> 8;
-  setPC(pc + 2);
   absAddr += x;
  
   // Extra cycle is needed if page boundary crossed
@@ -296,9 +399,8 @@ uint8_t R6502::ABX() {
 
 
 uint8_t R6502::ABY() {
-  absAddr = read16(pc);
+  absAddr = readPC16();
   uint8_t hi = absAddr >> 8;
-  setPC(pc + 2);
   absAddr += y;
  
   // Extra cycle is needed if page boundary crossed
@@ -313,31 +415,27 @@ uint8_t R6502::IMP() {
 
 
 uint8_t R6502::ZP0() {
-  absAddr = read(pc);
-  incPC();
+  absAddr = readPC();
   return 0;
 }
 
 
 uint8_t R6502::ZPX() {
-  absAddr = read(pc) + x;
-  incPC();
+  absAddr = readPC() + x;
   absAddr &= 0x00FF; // no paging past the zero page may occur
   return 0;
 }
 
 
 uint8_t R6502::ZPY() {
-  absAddr = read(pc) + y;
-  incPC();
+  absAddr = readPC() + y;
   absAddr &= 0x00FF; // no paging past the zero page may occur
   return 0;
 }
 
 
 uint8_t R6502::REL() {
-  relAddr = read(pc);
-  incPC();
+  relAddr = readPC();
   // if negative (MSB of lo byte == 1), set hi byte to FF since relAddr is 2 bytes, not 1 as read. This will keep the relative address negative when converted to 2 byte form.
   if (isNegative(relAddr)) {
     relAddr |= 0xFF00;
@@ -348,8 +446,7 @@ uint8_t R6502::REL() {
 
 
 uint8_t R6502::IZX() {
-  uint16_t baseAddr = read(pc);
-  incPC();
+  uint16_t baseAddr = readPC();
   uint16_t loAddr = (baseAddr + x) & 0x00FF;
   absAddr = read16(loAddr);
 
@@ -358,8 +455,7 @@ uint8_t R6502::IZX() {
 
 
 uint8_t R6502::IZY() {
-  uint16_t baseAddr = read(pc);
-  incPC();
+  uint16_t baseAddr = readPC();
   absAddr = read16(baseAddr & 0x00FF);
   uint8_t hi = absAddr >> 8;
   absAddr += y;
@@ -530,20 +626,24 @@ uint8_t R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki
   // interrupt, push PC+2, push SR
   // Flags Changed: I
   
-  incPC(); // Set this up for pushing to the stack
+  // https://www.pagetable.com/?p=410
+  // http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
+  incPC();
 
-  setFlags(I);
-  pushStack(pc >> 8); // Store higher order bits first
-  pushStack(pc & 0x00FF); // Than lower.
-  
+  pushStack16(pc);
   // https://www.masswerk.at/6502/6502_instruction_set.html#BRK
   pushStack(P | B); // Store status reg.
+  setFlags(I);
 
+  // https://wiki.nesdev.org/w/index.php?title=CPU_interrupts#Interrupt_hijacking
+  // (Interrupt Request (IRQ)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
   // "$FFFE-$FFFF = IRQ/BRK vector" https://wiki.nesdev.org/w/index.php?title=CPU_memory_map
-  setPC((uint16_t) read(0xFFFE) | ((uint16_t) read(0xFFFF) << 8)); // https://wiki.nesdev.org/w/index.php?title=CPU_interrupts#Interrupt_hijacking
-                                                                 // (Interrupt Request (IRQ)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
+  setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
+
+
 
   return 0;
+  // Look this over later
 }
 
 uint8_t R6502::BVC() {
@@ -725,8 +825,7 @@ uint8_t R6502::JSR() {
   // Flags changed:
 
   decPC();
-  pushStack(pc >> 8);
-  pushStack(pc & 0x00FF);
+  pushStack16(pc);
   setPC(absAddr);
   return 0;
 }

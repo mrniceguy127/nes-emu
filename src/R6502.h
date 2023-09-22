@@ -12,16 +12,17 @@ class R6502 {
   public:
     // External events
     void clock();
-    void reset();
-    void brk();
-    void irq();
-    void nmi();
+    void RES();
+    void IRQ();
+    void NMI();
 
     void connectBus(Bus * bus);
   private:
     Bus * bus = nullptr;
     uint8_t read(uint16_t addr);
     uint16_t read16(uint16_t addr);
+    uint8_t readPC();
+    uint16_t readPC16();
     void write(uint16_t addr, uint8_t data);
   private:
     // Useful variables
@@ -80,6 +81,7 @@ class R6502 {
     uint8_t pullStack();
     uint16_t pullStack16();
     void pushStack(uint8_t byte);
+    void pushStack16(uint16_t dbyte);
     static uint8_t isZero(uint8_t);
     static uint8_t isZero(uint16_t);
     static uint8_t isNegative(uint8_t);
