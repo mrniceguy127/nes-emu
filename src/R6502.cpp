@@ -31,13 +31,25 @@ R6502::R6502() {
 R6502::~R6502() { }
 
 
-
+/**
+ * @brief Executes when a cycle occurs.
+ * 
+ * Good for capturing clock cycles.
+ * 
+ */
 void R6502::doCycle() {
   // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
   cycles++; // This won't be needed because of this function. Remove later, but keep for now so I can actually visualize what I'm changing.
   totalCyclesPassed++;
 }
 
+/**
+ * @brief Performs relative branching.
+ * 
+ * Very frequent operation in instructions...
+ * Useful method for cutting down on bugs.
+ * 
+ */
 void R6502::doRelBranch() {
   doCycle(); // default cycle....
   absAddr = pc + relAddr;
@@ -48,6 +60,10 @@ void R6502::doRelBranch() {
   setPC(absAddr);
 }
 
+/**
+ * @brief Start CPU clock.
+ * 
+ */
 void R6502::clock() { }
 
 void R6502::init() {
@@ -65,6 +81,13 @@ void R6502::init() {
   RES();
 }
 
+/**
+ * @brief Reset command.
+ * 
+ * https://wiki.nesdev.org/w/index.php?title=CPU_power_up_state
+ * (Page 2 under RESET (RES)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
+ * 
+ */
 void R6502::RES() {
   // SP is initialized to 0. // https://www.pagetable.com/?p=410
   setSP(0x00); 
@@ -88,31 +111,50 @@ void R6502::RES() {
   // Done!
 }
 
+/**
+ * @brief IRQ interrupt sequence command
+ * 
+ * http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
+ * https://www.nesdev.org/wiki/CPU_interrupts
+ * 
+ */
 void R6502::IRQ() {
-  // https://www.pagetable.com/?p=410
-  // http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
-
   pushStack16(pc);
   pushStack(P & ~B);
   setFlags(I); // B flag is cleared when pushed.
   setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
 }
 
+/**
+ * @brief NMI interrupt sequence command
+ * 
+ * http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
+ * https://www.nesdev.org/wiki/CPU_interrupts
+ * 
+ */
 void R6502::NMI() {
-  // https://www.pagetable.com/?p=410
-  // http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
-
   pushStack16(pc);
   pushStack(P & ~B);
   setFlags(I); // B flag is cleared when pushed.
   setPC((uint16_t) read(0xFFFA) | (uint16_t) read(0xFFFB) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
 }
 
+/**
+ * @brief Read byte at address
+ * 
+ * @param addr Address of data
+ * @return uint8_t The data
+ */
 uint8_t R6502::read(uint16_t addr) {
   //doCycle(); eventually, we'll count cy to onecles naturally. For now.... quick mafs
   return bus->read(addr); 
 }
 
+/**
+ * @brief Read byte at address in PC and then increment PC
+ * 
+ * @return uint8_t The data
+ */
 uint8_t R6502::readPC() {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
   uint8_t byte = read(pc);
@@ -120,11 +162,22 @@ uint8_t R6502::readPC() {
   return byte; 
 }
 
+/**
+ * @brief Read a double byte and handle the 6502's little endian nature.
+ * 
+ * @param addr Initial address of double byte.
+ * @return uint16_t The double byte.
+ */
 uint16_t R6502::read16(uint16_t addr) {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
   return ((uint16_t) (bus->read(addr + 1) << 8)) | bus->read(addr); 
 }
 
+/**
+ * @brief Read byte at address in PC, increment PC, and then repeat again for the double byte.
+ * 
+ * @return uint16_t The double byte.
+ */
 uint16_t R6502::readPC16() {
   uint16_t lo = (uint16_t) readPC();
   uint16_t hi = (uint16_t) readPC();
@@ -132,88 +185,178 @@ uint16_t R6502::readPC16() {
   return (hi << 8) | lo;
 }
 
+/**
+ * @brief Write a byte at an address.
+ * 
+ * @param addr The address to write to.
+ * @param data The data to write.
+ */
+
 void R6502::write(uint16_t addr, uint8_t data) {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
   write(addr, data);
 }
 
+/**
+ * @brief Set the value in the PC directly.
+ * 
+ * @param addr The address to store in the PC.
+ */
 void R6502::setPC(uint16_t addr) {
   pc = addr;
   onRegisterUpdate();
 }
 
+/**
+ * @brief Increment PC.
+ * 
+ */
 void R6502::incPC() {
   setPC(pc + 1);
 }
 
+/**
+ * @brief Decrement the PC.
+ * 
+ */
 void R6502::decPC() {
   setPC(pc - 1);
 }
 
+/**
+ * @brief Set the stack pointer directly.
+ * 
+ * @param byte New pointer value. 
+ */
 void R6502::setSP(uint8_t byte) {
   sp = byte;
   onRegisterUpdate();
 }
 
+/**
+ * @brief Increment stack pointer.
+ * 
+ */
 void R6502::incSP() {
   setSP(sp + 1);
 }
 
+/**
+ * @brief Decrement stack pointer.
+ * 
+ */
 void R6502::decSP() {
   setSP(sp - 1);
 }
 
+/**
+ * @brief Set the X index register value directly.
+ * 
+ * @param byte New X index value.
+ */
 void R6502::setX(uint8_t byte) {
   x = byte;
   onRegisterUpdate();
 }
 
+/**
+ * @brief Increment the X index register.
+ * 
+ */
 void R6502::incX() {
   setX(x + 1);
 }
 
+/**
+ * @brief Decrement the X index register.
+ * 
+ */
 void R6502::decX() {
   setX(x - 1);
 }
 
+/**
+ * @brief Set the Y index register directly.
+ * 
+ * @param byte New Y index value.
+ */
 void R6502::setY(uint8_t byte) {
   y = byte;
   onRegisterUpdate();
 }
 
+/**
+ * @brief Increment the Y index register.
+ * 
+ */
 void R6502::incY() {
   setY(y + 1);
 }
 
+/**
+ * @brief Decrement the Y index register.
+ * 
+ */
 void R6502::decY() {
   setY(y - 1);
 }
 
+/**
+ * @brief Set the value of the accumulator.
+ * 
+ * @param byte New accumulator value.
+ */
 void R6502::setAccumulator(uint8_t byte) {
   accumulator = byte;
   onRegisterUpdate();
 }
 
+/**
+ * @brief Set processor status directly.
+ * 
+ * @param byte New processor status.
+ */
 void R6502::setP(uint8_t byte) {
   P = byte | U;
   onRegisterUpdate();
 }
 
+/**
+ * @brief Pull the stack.
+ * 
+ * @return uint8_t Top value on stack.
+ */
 uint8_t R6502::pullStack() {
   incSP();
   return read(0x0100 + sp);
 }
+
+/**
+ * @brief Pull a double byute from the stack (2 pulls).
+ * 
+ * @return uint16_t The double byte on the stack.
+ */
 uint16_t R6502::pullStack16() {
   uint16_t lo = (uint16_t) pullStack();
   uint16_t hi = (uint16_t) pullStack();
   return (hi << 8) | lo;
 }
 
+/**
+ * @brief Push byte onto the stack.
+ * 
+ * @param byte The value to push to the stack.
+ */
 void R6502::pushStack(uint8_t byte) {
   write(0x0100 + sp, byte);
   decSP();
 }
 
+/**
+ * @brief Push double byte to the stack.
+ * 
+ * @param dbyte The double byte to push to the stack.
+ */
 void R6502::pushStack16(uint16_t dbyte) {
   pushStack(dbyte >> 8); // Store higher order bits first
   pushStack(dbyte & 0x00FF); // Than lower.
@@ -371,23 +514,40 @@ void R6502::onRegisterUpdate() {
 // -----
 
 
-// Next byte has operand. get current pc, then increment.
+/**
+ * @brief Immediate addressing mode.
+ *
+ * Next byte has operand. get current pc, then increment.
+ * 
+ * @return uint8_t 
+ */
 uint8_t R6502::IMM() {
   absAddr = pc;
   incPC();
   return 0;
 }  
 
-// Second byte has low order byte of effective address, third has higher order byte (reminder again: 6502 is little endian!!!)
-// That means ABS instructions can acess all 64KB of address space.
-// 2^8 = 0x100
-// 2 byte addressing...
-// 0x100 * 0x100 = 0x10000 (64KB)
+/**
+ * @brief Absolute addressing mode.
+ * 
+ * Second byte has low order byte of effective address, third has higher order byte (reminder again: 6502 is little endian!!!)
+ * That means ABS instructions can acess all 64KB of address space.
+ * 2^8 = 0x100
+ * 2 byte addressing...
+ * 0x100 * 0x100 = 0x10000 (64KB)
+ *
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::ABS() {
   absAddr = readPC16();
   return 0;
 }
 
+/**
+ * @brief Absolute X addressing mode.
+ * 
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::ABX() {
   absAddr = readPC16();
   uint8_t hi = absAddr >> 8;
@@ -397,7 +557,11 @@ uint8_t R6502::ABX() {
   return absAddr >> 8 != hi ? 1 : 0;
 }
 
-
+/**
+ * @brief Absolute Y addressing mode.
+ * 
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::ABY() {
   absAddr = readPC16();
   uint8_t hi = absAddr >> 8;
@@ -407,33 +571,53 @@ uint8_t R6502::ABY() {
   return absAddr >> 8 != hi ? 1 : 0;
 }
 
-
+/**
+ * @brief Implied addressing mode.
+ * 
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::IMP() {
   operand = accumulator;
   return 0;
 }
 
-
+/**
+ * @brief Zero Page addressing mode.
+ * 
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::ZP0() {
   absAddr = readPC();
   return 0;
 }
 
-
+/**
+ * @brief Zero Page (X-indexed) addressing mode.
+ * 
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::ZPX() {
   absAddr = readPC() + x;
   absAddr &= 0x00FF; // no paging past the zero page may occur
   return 0;
 }
 
-
+/**
+ * @brief Zero Page (Y-indexed) addressing mode.
+ * 
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::ZPY() {
   absAddr = readPC() + y;
   absAddr &= 0x00FF; // no paging past the zero page may occur
   return 0;
 }
 
-
+/**
+ * @brief Relative addressing mode.
+ * 
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::REL() {
   relAddr = readPC();
   // if negative (MSB of lo byte == 1), set hi byte to FF since relAddr is 2 bytes, not 1 as read. This will keep the relative address negative when converted to 2 byte form.
@@ -444,7 +628,11 @@ uint8_t R6502::REL() {
   return 0;
 }
 
-
+/**
+ * @brief Indirect (X-indexed) addressing mode.
+ * 
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::IZX() {
   uint16_t baseAddr = readPC();
   uint16_t loAddr = (baseAddr + x) & 0x00FF;
@@ -453,7 +641,11 @@ uint8_t R6502::IZX() {
   return 0;
 }
 
-
+/**
+ * @brief Indirect (X-indexed) addressing mode.
+ * 
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::IZY() {
   uint16_t baseAddr = readPC();
   absAddr = read16(baseAddr & 0x00FF);
@@ -463,13 +655,18 @@ uint8_t R6502::IZY() {
   return absAddr >> 8 != hi ? 1 : 0;
 }
 
-
+/**
+ * @brief Indirect addressing mode.
+ * 
+ * Things start to look weird here in order to simulate a bug in the CPU.
+ * From hnesdev.icequake.net/6502bugs.txt:
+ * "An indirect JMP (xxFF) will fail because the MSB will be fetched from
+ * address xx00 instead of page xx+1."
+ * DO NOT simplify this. Need to make the bug clear and show details.
+ *
+ * @return uint8_t Extra cycle possible?
+ */
 uint8_t R6502::IND() {
-  // Things start to look weird here in order to simulate a bug in the CPU.
-  // From hnesdev.icequake.net/6502bugs.txt:
-  // "An indirect JMP (xxFF) will fail because the MSB will be fetched from
-  // address xx00 instead of page xx+1."
-  // DO NOT simplify this. Need to make the bug clear and show details.
   uint8_t pointerLo = read(pc);
   incPC();
   uint8_t pointerHi = read(pc);
