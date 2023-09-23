@@ -1,9 +1,9 @@
 #include "NESIncludes.h"
 
-class Bus {
+class Memory {
   public:
-    Bus();
-    ~Bus();
+    Memory();
+    ~Memory();
   public:
     std::array<uint8_t, 0x10000> ram;
   public:

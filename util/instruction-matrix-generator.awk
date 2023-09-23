@@ -29,17 +29,19 @@ NR!=1 {
     ADDR_MODE="ZPX"
   } else if ($2=="zpy") {
     ADDR_MODE="ZPY"
-  } else if ($2=="accum") { /* Accumulator address mode is essentialy the same as implied. */
-    ADDR_MODE="IMP"
+  } else if ($2=="accum") {
+    ADDR_MODE="ACC"
   }
 }
 
 NR!=1 && NR <=256 {
-    print "  { \"" $1 "\", &R6502::" ADDR_MODE  ", &R6502::" $1 ", " $4 "},"
+    #print "  { \"" $1 "\", &" ADDR_MODE  ", &" $1 ", " $4 "},"
+    print "  { &R6502::" ADDR_MODE  ", &R6502::" $1 ", " $4 "},"
 }
 
 NR==257 {
-    print "  { \"" $1 "\", &R6502::" ADDR_MODE  ", &R6502::" $1 ", " $4 "}"
+    #print "  { \"" $1 "\", &" ADDR_MODE  ", &" $1 ", " $4 "}"
+    print "  { &R6502::" ADDR_MODE  ", &R6502::" $1 ", " $4 "}"
 }
 
 END {

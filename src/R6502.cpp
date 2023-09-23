@@ -1,31 +1,30 @@
 #include "NESIncludes.h"
-#include <iostream>
 
 // -----
 // External event functions
 // -----
 
-R6502::R6502() {
+R6502::R6502(Memory& mem) : memory(mem) {
   // Generated using script located at util/generate-matrix.sh
   instructionMatrix =
   {
-	  /* 0                                    1                                    2                                    3                                    4                                    5                                    6                                    7                                    8                                    9                                    A                                    B                                    C                                    D                                    E                                    F                                    */
-  /* 0 */    { "BRK", &R6502::IMP, &R6502::BRK, 7}, { "ORA", &R6502::IZX, &R6502::ORA, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "ORA", &R6502::ZP0, &R6502::ORA, 3}, { "ASL", &R6502::ZP0, &R6502::ASL, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "PHP", &R6502::IMP, &R6502::PHP, 3}, { "ORA", &R6502::IMM, &R6502::ORA, 2}, { "ASL", &R6502::IMP, &R6502::ASL, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "ORA", &R6502::ABS, &R6502::ORA, 4}, { "ASL", &R6502::ABS, &R6502::ASL, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* 1 */    { "BPL", &R6502::REL, &R6502::BPL, 2}, { "ORA", &R6502::IZY, &R6502::ORA, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "ORA", &R6502::ZPX, &R6502::ORA, 4}, { "ASL", &R6502::ZPX, &R6502::ASL, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "CLC", &R6502::IMP, &R6502::CLC, 2}, { "ORA", &R6502::ABY, &R6502::ORA, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "ORA", &R6502::ABX, &R6502::ORA, 4}, { "ASL", &R6502::ABX, &R6502::ASL, 7}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* 2 */    { "JSR", &R6502::XXX, &R6502::JSR, 6}, { "AND", &R6502::IZX, &R6502::AND, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "BIT", &R6502::ZP0, &R6502::BIT, 3}, { "AND", &R6502::ZP0, &R6502::AND, 3}, { "ROL", &R6502::ZP0, &R6502::ROL, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "PLP", &R6502::IMP, &R6502::PLP, 4}, { "AND", &R6502::IMM, &R6502::AND, 2}, { "ROL", &R6502::IMP, &R6502::ROL, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "BIT", &R6502::ABS, &R6502::BIT, 4}, { "AND", &R6502::ABS, &R6502::AND, 4}, { "ROL", &R6502::ABS, &R6502::ROL, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* 3 */    { "BMI", &R6502::REL, &R6502::BMI, 2}, { "AND", &R6502::IZY, &R6502::AND, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "AND", &R6502::ZPX, &R6502::AND, 4}, { "ROL", &R6502::ZPX, &R6502::ROL, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "SEC", &R6502::IMP, &R6502::SEC, 2}, { "AND", &R6502::ABY, &R6502::AND, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "AND", &R6502::ABX, &R6502::AND, 4}, { "ROL", &R6502::ABX, &R6502::ROL, 7}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* 4 */    { "RTI", &R6502::IMP, &R6502::RTI, 6}, { "EOR", &R6502::IZX, &R6502::EOR, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "EOR", &R6502::ZP0, &R6502::EOR, 3}, { "LSR", &R6502::ZP0, &R6502::LSR, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "PHA", &R6502::IMP, &R6502::PHA, 3}, { "EOR", &R6502::IMM, &R6502::EOR, 2}, { "LSR", &R6502::IMP, &R6502::LSR, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "JMP", &R6502::ABS, &R6502::JMP, 3}, { "EOR", &R6502::ABS, &R6502::EOR, 4}, { "LSR", &R6502::ABS, &R6502::LSR, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* 5 */    { "BVC", &R6502::REL, &R6502::BVC, 2}, { "EOR", &R6502::IZY, &R6502::EOR, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "EOR", &R6502::ZPX, &R6502::EOR, 4}, { "LSR", &R6502::ZPX, &R6502::LSR, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "CLI", &R6502::IMP, &R6502::CLI, 2}, { "EOR", &R6502::ABY, &R6502::EOR, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "EOR", &R6502::ABX, &R6502::EOR, 4}, { "LSR", &R6502::ABX, &R6502::LSR, 7}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* 6 */    { "RTS", &R6502::IMP, &R6502::RTS, 6}, { "ADC", &R6502::IZX, &R6502::ADC, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "ADC", &R6502::ZP0, &R6502::ADC, 3}, { "ROR", &R6502::ZP0, &R6502::ROR, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "PLA", &R6502::IMP, &R6502::PLA, 4}, { "ADC", &R6502::IMM, &R6502::ADC, 2}, { "ROR", &R6502::IMP, &R6502::ROR, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "JMP", &R6502::XXX, &R6502::JMP, 5}, { "ADC", &R6502::ABS, &R6502::ADC, 4}, { "ROR", &R6502::ABS, &R6502::ROR, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* 7 */    { "BVS", &R6502::REL, &R6502::BVS, 2}, { "ADC", &R6502::IZY, &R6502::ADC, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "ADC", &R6502::ZPX, &R6502::ADC, 4}, { "ROR", &R6502::ZPX, &R6502::ROR, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "SEI", &R6502::IMP, &R6502::SEI, 2}, { "ADC", &R6502::ABY, &R6502::ADC, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "ADC", &R6502::ABX, &R6502::ADC, 4}, { "ROR", &R6502::ABX, &R6502::ROR, 7}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* 8 */    { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "STA", &R6502::IZX, &R6502::STA, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "STY", &R6502::ZP0, &R6502::STY, 3}, { "STA", &R6502::ZP0, &R6502::STA, 3}, { "STX", &R6502::ZP0, &R6502::STX, 3}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "DEY", &R6502::IMP, &R6502::DEY, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "TXA", &R6502::IMP, &R6502::TXA, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "STY", &R6502::ABS, &R6502::STY, 4}, { "STA", &R6502::ABS, &R6502::STA, 4}, { "STX", &R6502::ABS, &R6502::STX, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* 9 */    { "BCC", &R6502::REL, &R6502::BCC, 2}, { "STA", &R6502::IZY, &R6502::STA, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "STY", &R6502::ZPX, &R6502::STY, 4}, { "STA", &R6502::ZPX, &R6502::STA, 4}, { "STX", &R6502::ZPY, &R6502::STX, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "TYA", &R6502::IMP, &R6502::TYA, 2}, { "STA", &R6502::ABY, &R6502::STA, 5}, { "TXS", &R6502::IMP, &R6502::TXS, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "STA", &R6502::ABX, &R6502::STA, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* A */    { "LDY", &R6502::IMM, &R6502::LDY, 2}, { "LDA", &R6502::IZX, &R6502::LDA, 6}, { "LDX", &R6502::IMM, &R6502::LDX, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "LDY", &R6502::ZP0, &R6502::LDY, 3}, { "LDA", &R6502::ZP0, &R6502::LDA, 3}, { "LDX", &R6502::ZP0, &R6502::LDX, 3}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "TAY", &R6502::IMP, &R6502::TAY, 2}, { "LDA", &R6502::IMM, &R6502::LDA, 2}, { "TAX", &R6502::IMP, &R6502::TAX, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "LDY", &R6502::ABS, &R6502::LDY, 4}, { "LDA", &R6502::ABS, &R6502::LDA, 4}, { "LDX", &R6502::ABS, &R6502::LDX, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* B */    { "BCS", &R6502::REL, &R6502::BCS, 2}, { "LDA", &R6502::IZY, &R6502::LDA, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "LDY", &R6502::ZPX, &R6502::LDY, 4}, { "LDA", &R6502::ZPX, &R6502::LDA, 4}, { "LDX", &R6502::ZPY, &R6502::LDX, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "CLV", &R6502::IMP, &R6502::CLV, 2}, { "LDA", &R6502::ABY, &R6502::LDA, 4}, { "TSX", &R6502::IMP, &R6502::TSX, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "LDY", &R6502::ABX, &R6502::LDY, 4}, { "LDA", &R6502::ABX, &R6502::LDA, 4}, { "LDX", &R6502::ABY, &R6502::LDX, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* C */    { "CPY", &R6502::IMM, &R6502::CPY, 2}, { "CMP", &R6502::IZX, &R6502::CMP, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "CPY", &R6502::ZP0, &R6502::CPY, 3}, { "CMP", &R6502::ZP0, &R6502::CMP, 3}, { "DEC", &R6502::ZP0, &R6502::DEC, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "INY", &R6502::IMP, &R6502::INY, 2}, { "CMP", &R6502::IMM, &R6502::CMP, 2}, { "DEX", &R6502::IMP, &R6502::DEX, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "CPY", &R6502::ABS, &R6502::CPY, 4}, { "CMP", &R6502::ABS, &R6502::CMP, 4}, { "DEC", &R6502::ABS, &R6502::DEC, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* D */    { "BNE", &R6502::REL, &R6502::BNE, 2}, { "CMP", &R6502::IZY, &R6502::CMP, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "CMP", &R6502::ZPX, &R6502::CMP, 4}, { "DEC", &R6502::ZPX, &R6502::DEC, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "CLD", &R6502::IMP, &R6502::CLD, 2}, { "CMP", &R6502::ABY, &R6502::CMP, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "CMP", &R6502::ABX, &R6502::CMP, 4}, { "DEC", &R6502::ABX, &R6502::DEC, 7}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* E */    { "CPX", &R6502::IMM, &R6502::CPX, 2}, { "SBC", &R6502::IZX, &R6502::SBC, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "CPX", &R6502::ZP0, &R6502::CPX, 3}, { "SBC", &R6502::ZP0, &R6502::SBC, 3}, { "INC", &R6502::ZP0, &R6502::INC, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "INX", &R6502::IMP, &R6502::INX, 2}, { "SBC", &R6502::IMM, &R6502::SBC, 2}, { "NOP", &R6502::IMP, &R6502::NOP, 2}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "CPX", &R6502::ABS, &R6502::CPX, 4}, { "SBC", &R6502::ABS, &R6502::SBC, 4}, { "INC", &R6502::ABS, &R6502::INC, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, 
-  /* F */    { "BEQ", &R6502::REL, &R6502::BEQ, 2}, { "SBC", &R6502::IZY, &R6502::SBC, 5}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "SBC", &R6502::ZPX, &R6502::SBC, 4}, { "INC", &R6502::ZPX, &R6502::INC, 6}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "SED", &R6502::IMP, &R6502::SED, 2}, { "SBC", &R6502::ABY, &R6502::SBC, 4}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "XXX", &R6502::XXX, &R6502::XXX, 0}, { "SBC", &R6502::ABX, &R6502::SBC, 4}, { "INC", &R6502::ABX, &R6502::INC, 7}, { "XXX", &R6502::XXX, &R6502::XXX, 0} 
+        /* 0                               1                               2                               3                               4                               5                               6                               7                               8                               9                               A                               B                               C                               D                               E                               F                               */
+/* 0 */    { &R6502::IMP, &R6502::BRK, 7}, { &R6502::IZX, &R6502::ORA, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::ORA, 3}, { &R6502::ZP0, &R6502::ASL, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::PHP, 3}, { &R6502::IMM, &R6502::ORA, 2}, { &R6502::ACC, &R6502::ASL, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::ORA, 4}, { &R6502::ABS, &R6502::ASL, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* 1 */    { &R6502::REL, &R6502::BPL, 2}, { &R6502::IZY, &R6502::ORA, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::ORA, 4}, { &R6502::ZPX, &R6502::ASL, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::CLC, 2}, { &R6502::ABY, &R6502::ORA, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::ORA, 4}, { &R6502::ABX, &R6502::ASL, 7}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* 2 */    { &R6502::XXX, &R6502::JSR, 6}, { &R6502::IZX, &R6502::AND, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::BIT, 3}, { &R6502::ZP0, &R6502::AND, 3}, { &R6502::ZP0, &R6502::ROL, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::PLP, 4}, { &R6502::IMM, &R6502::AND, 2}, { &R6502::ACC, &R6502::ROL, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::BIT, 4}, { &R6502::ABS, &R6502::AND, 4}, { &R6502::ABS, &R6502::ROL, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* 3 */    { &R6502::REL, &R6502::BMI, 2}, { &R6502::IZY, &R6502::AND, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::AND, 4}, { &R6502::ZPX, &R6502::ROL, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::SEC, 2}, { &R6502::ABY, &R6502::AND, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::AND, 4}, { &R6502::ABX, &R6502::ROL, 7}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* 4 */    { &R6502::IMP, &R6502::RTI, 6}, { &R6502::IZX, &R6502::EOR, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::EOR, 3}, { &R6502::ZP0, &R6502::LSR, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::PHA, 3}, { &R6502::IMM, &R6502::EOR, 2}, { &R6502::ACC, &R6502::LSR, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::JMP, 3}, { &R6502::ABS, &R6502::EOR, 4}, { &R6502::ABS, &R6502::LSR, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* 5 */    { &R6502::REL, &R6502::BVC, 2}, { &R6502::IZY, &R6502::EOR, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::EOR, 4}, { &R6502::ZPX, &R6502::LSR, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::CLI, 2}, { &R6502::ABY, &R6502::EOR, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::EOR, 4}, { &R6502::ABX, &R6502::LSR, 7}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* 6 */    { &R6502::IMP, &R6502::RTS, 6}, { &R6502::IZX, &R6502::ADC, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::ADC, 3}, { &R6502::ZP0, &R6502::ROR, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::PLA, 4}, { &R6502::IMM, &R6502::ADC, 2}, { &R6502::ACC, &R6502::ROR, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::JMP, 5}, { &R6502::ABS, &R6502::ADC, 4}, { &R6502::ABS, &R6502::ROR, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* 7 */    { &R6502::REL, &R6502::BVS, 2}, { &R6502::IZY, &R6502::ADC, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::ADC, 4}, { &R6502::ZPX, &R6502::ROR, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::SEI, 2}, { &R6502::ABY, &R6502::ADC, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::ADC, 4}, { &R6502::ABX, &R6502::ROR, 7}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* 8 */    { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IZX, &R6502::STA, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::STY, 3}, { &R6502::ZP0, &R6502::STA, 3}, { &R6502::ZP0, &R6502::STX, 3}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::DEY, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::TXA, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::STY, 4}, { &R6502::ABS, &R6502::STA, 4}, { &R6502::ABS, &R6502::STX, 4}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* 9 */    { &R6502::REL, &R6502::BCC, 2}, { &R6502::IZY, &R6502::STA, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::STY, 4}, { &R6502::ZPX, &R6502::STA, 4}, { &R6502::ZPY, &R6502::STX, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::TYA, 2}, { &R6502::ABY, &R6502::STA, 5}, { &R6502::IMP, &R6502::TXS, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::STA, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* A */    { &R6502::IMM, &R6502::LDY, 2}, { &R6502::IZX, &R6502::LDA, 6}, { &R6502::IMM, &R6502::LDX, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::LDY, 3}, { &R6502::ZP0, &R6502::LDA, 3}, { &R6502::ZP0, &R6502::LDX, 3}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::TAY, 2}, { &R6502::IMM, &R6502::LDA, 2}, { &R6502::IMP, &R6502::TAX, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::LDY, 4}, { &R6502::ABS, &R6502::LDA, 4}, { &R6502::ABS, &R6502::LDX, 4}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* B */    { &R6502::REL, &R6502::BCS, 2}, { &R6502::IZY, &R6502::LDA, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::LDY, 4}, { &R6502::ZPX, &R6502::LDA, 4}, { &R6502::ZPY, &R6502::LDX, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::CLV, 2}, { &R6502::ABY, &R6502::LDA, 4}, { &R6502::IMP, &R6502::TSX, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::LDY, 4}, { &R6502::ABX, &R6502::LDA, 4}, { &R6502::ABY, &R6502::LDX, 4}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* C */    { &R6502::IMM, &R6502::CPY, 2}, { &R6502::IZX, &R6502::CMP, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::CPY, 3}, { &R6502::ZP0, &R6502::CMP, 3}, { &R6502::ZP0, &R6502::DEC, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::INY, 2}, { &R6502::IMM, &R6502::CMP, 2}, { &R6502::IMP, &R6502::DEX, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::CPY, 4}, { &R6502::ABS, &R6502::CMP, 4}, { &R6502::ABS, &R6502::DEC, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* D */    { &R6502::REL, &R6502::BNE, 2}, { &R6502::IZY, &R6502::CMP, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::CMP, 4}, { &R6502::ZPX, &R6502::DEC, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::CLD, 2}, { &R6502::ABY, &R6502::CMP, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::CMP, 4}, { &R6502::ABX, &R6502::DEC, 7}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* E */    { &R6502::IMM, &R6502::CPX, 2}, { &R6502::IZX, &R6502::SBC, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::CPX, 3}, { &R6502::ZP0, &R6502::SBC, 3}, { &R6502::ZP0, &R6502::INC, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::INX, 2}, { &R6502::IMM, &R6502::SBC, 2}, { &R6502::IMP, &R6502::NOP, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::CPX, 4}, { &R6502::ABS, &R6502::SBC, 4}, { &R6502::ABS, &R6502::INC, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
+/* F */    { &R6502::REL, &R6502::BEQ, 2}, { &R6502::IZY, &R6502::SBC, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::SBC, 4}, { &R6502::ZPX, &R6502::INC, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::SED, 2}, { &R6502::ABY, &R6502::SBC, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::SBC, 4}, { &R6502::ABX, &R6502::INC, 7}, { &R6502::XXX, &R6502::XXX, 0} 
   };
 }
 
@@ -59,6 +58,26 @@ void R6502::doRelBranch() {
   }
 
   setPC(absAddr);
+}
+
+/**
+ * @brief Preps an extra cycle if asked by address mode
+ * 
+ * Extra cycle will execute if instruction agrees on extra cycle.
+ * 
+ */
+void R6502::prepExtraCycle() {
+  extraCyclePrepped = 0x01;
+}
+
+
+/**
+ * @brief Performs extra clock cycle if agreed upon by the address mode.
+ * 
+ */
+void R6502::doPossibleExtraCycle() {
+  if (extraCyclePrepped) doCycle();
+  extraCyclePrepped = 0x00;
 }
 
 /**
@@ -152,10 +171,8 @@ void R6502::NMI() {
  */
 uint8_t R6502::read(uint16_t addr) {
   //doCycle(); eventually, we'll count cy to onecles naturally. For now.... quick mafs
-  std::cout << "hell " << (int) addr << std::endl;
-  bus->read(addr);
-  std::cout << "hell 2 " << std::endl;
-  return bus->read(addr); 
+  memory.read(addr);
+  return memory.read(addr); 
 }
 
 /**
@@ -178,7 +195,7 @@ uint8_t R6502::readPC() {
  */
 uint16_t R6502::read16(uint16_t addr) {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
-  return ((uint16_t) (bus->read(addr + 1) << 8)) | bus->read(addr); 
+  return ((uint16_t) (memory.read(addr + 1) << 8)) | memory.read(addr); 
 }
 
 /**
@@ -202,7 +219,7 @@ uint16_t R6502::readPC16() {
 
 void R6502::write(uint16_t addr, uint8_t data) {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
-  bus->write(addr, data);
+  memory.write(addr, data);
 }
 
 /**
@@ -467,23 +484,6 @@ void R6502::setFlags(uint8_t flags) {
   setFlags(flags, flags);
 }
 
-
-
- 
-// -------------
-// Init utils
-// -------------
-
-/**
- * @brief Sets the CPU's bus. That's all.
- * 
- * @param b 
- */
-void R6502::connectBus(Bus * b) {
-  bus = b;
-}
-
-
 // -----
 // Intructions utils.
 // -----
@@ -527,12 +527,10 @@ void R6502::onRegisterUpdate() {
  *
  * Next byte has operand. get current pc, then increment.
  * 
- * @return uint8_t 
  */
-uint8_t R6502::IMM() {
+void R6502::IMM() {
   absAddr = pc;
   incPC();
-  return 0;
 }  
 
 /**
@@ -544,49 +542,53 @@ uint8_t R6502::IMM() {
  * 2 byte addressing...
  * 0x100 * 0x100 = 0x10000 (64KB)
  *
- * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::ABS() {
+void R6502::ABS() {
   absAddr = readPC16();
-  return 0;
 }
 
 /**
  * @brief Absolute X addressing mode.
  * 
- * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::ABX() {
+void R6502::ABX() {
   absAddr = readPC16();
   uint8_t hi = absAddr >> 8;
   absAddr += x;
  
   // Extra cycle is needed if page boundary crossed
-  return absAddr >> 8 != hi ? 1 : 0;
+  if (absAddr >> 8 != hi) prepExtraCycle();
 }
 
 /**
  * @brief Absolute Y addressing mode.
  * 
- * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::ABY() {
+void R6502::ABY() {
   absAddr = readPC16();
   uint8_t hi = absAddr >> 8;
   absAddr += y;
  
   // Extra cycle is needed if page boundary crossed
-  return absAddr >> 8 != hi ? 1 : 0;
+  if (absAddr >> 8 != hi) prepExtraCycle();
 }
 
 /**
  * @brief Implied addressing mode.
  * 
- * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::IMP() {
+void R6502::IMP() {
   operand = accumulator;
-  return 0;
+}
+
+/**
+ * @brief Accumulator addressing mode.
+ * 
+ * It's just IMP...
+ * 
+ */
+void R6502::ACC() {
+  IMP();
 }
 
 /**
@@ -594,73 +596,59 @@ uint8_t R6502::IMP() {
  * 
  * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::ZP0() {
+void R6502::ZP0() {
   absAddr = readPC();
-  return 0;
 }
 
 /**
  * @brief Zero Page (X-indexed) addressing mode.
  * 
- * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::ZPX() {
+void R6502::ZPX() {
   absAddr = readPC() + x;
   absAddr &= 0x00FF; // no paging past the zero page may occur
-  return 0;
 }
 
 /**
  * @brief Zero Page (Y-indexed) addressing mode.
  * 
- * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::ZPY() {
+void R6502::ZPY() {
   absAddr = readPC() + y;
   absAddr &= 0x00FF; // no paging past the zero page may occur
-  return 0;
 }
 
 /**
  * @brief Relative addressing mode.
  * 
- * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::REL() {
+void R6502::REL() {
   relAddr = readPC();
   // if negative (MSB of lo byte == 1), set hi byte to FF since relAddr is 2 bytes, not 1 as read. This will keep the relative address negative when converted to 2 byte form.
-  if (isNegative(relAddr)) {
-    relAddr |= 0xFF00;
-  }
-
-  return 0;
+  if (isNegative(relAddr)) relAddr |= 0xFF00;
 }
 
 /**
  * @brief Indirect (X-indexed) addressing mode.
  * 
- * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::IZX() {
+void R6502::IZX() {
   uint16_t baseAddr = readPC();
   uint16_t loAddr = (baseAddr + x) & 0x00FF;
   absAddr = read16(loAddr);
-
-  return 0;
 }
 
 /**
  * @brief Indirect (X-indexed) addressing mode.
  * 
- * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::IZY() {
+void R6502::IZY() {
   uint16_t baseAddr = readPC();
   absAddr = read16(baseAddr & 0x00FF);
   uint8_t hi = absAddr >> 8;
   absAddr += y;
 
-  return absAddr >> 8 != hi ? 1 : 0;
+  if (absAddr >> 8 != hi) prepExtraCycle();
 }
 
 /**
@@ -672,9 +660,8 @@ uint8_t R6502::IZY() {
  * address xx00 instead of page xx+1."
  * DO NOT simplify this. Need to make the bug clear and show details.
  *
- * @return uint8_t Extra cycle possible?
  */
-uint8_t R6502::IND() {
+void R6502::IND() {
   uint8_t pointerLo = read(pc);
   incPC();
   uint8_t pointerHi = read(pc);
@@ -688,8 +675,6 @@ uint8_t R6502::IND() {
   uint16_t hi = read(hiAddr);
 
   absAddr = (hi << 8) | lo;
-
-  return 0;
 }
 
 
@@ -702,7 +687,7 @@ uint8_t R6502::IND() {
 
 
 
-uint8_t R6502::ADC() {
+void R6502::ADC() {
   // A + M + C -> A, C
   // Flags changed: C Z N V
 
@@ -720,10 +705,10 @@ uint8_t R6502::ADC() {
 
   setAccumulator(tmp);
 
-  return 1;
+  doPossibleExtraCycle();
 }
 
-uint8_t R6502::AND() {
+void R6502::AND() {
   // A AND M -> A
   // Flags changed: Z N
   
@@ -732,10 +717,10 @@ uint8_t R6502::AND() {
 
   setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 
-  return 1;
+  doPossibleExtraCycle();
 }
 
-uint8_t R6502::ASL() {
+void R6502::ASL() {
   // C <- [76543210] <- 0
   // Flags changed: C Z N
   
@@ -745,43 +730,32 @@ uint8_t R6502::ASL() {
 
   setFlags(C | Z | N, isCarry(tmp) | isZero(tmp) | isNegative(tmp));
 
-  if (instructionMatrix[opcode].addressMode == &R6502::IMP) { // Implied is same as accumulator addressing mode technically.
-    setAccumulator(tmp & 0x00FF);
-  } else {
-    write(absAddr, tmp & 0x00FF);
-  }
-
-  return 0;
+  if (instructionMatrix[opcode].addressMode == &R6502::ACC) setAccumulator(tmp & 0x00FF);
+  else write(absAddr, tmp & 0x00FF);
 }
 
-uint8_t R6502::BCC() {
+void R6502::BCC() {
   // branch on C = 0
   // Flags changed: 
 
   if (getFlag(C) == 0) doRelBranch();
-
-  return 0;
 }
 
-uint8_t R6502::BCS() {
+void R6502::BCS() {
   // branch on C = 1
   // Flags changed: 
 
   if (getFlag(C) == 1) doRelBranch();
-
-  return 0;
 }
 
-uint8_t R6502::BEQ() {
+void R6502::BEQ() {
   // branch on Z = 1
   // Flags changed: 
 
   if (getFlag(Z) == 1) doRelBranch();
-
-  return 0;
 }
 
-uint8_t R6502::BIT() {
+void R6502::BIT() {
   // A AND M, M7 -> N, M6 -> V
   // Flags changed: Z N V
   
@@ -790,44 +764,36 @@ uint8_t R6502::BIT() {
   tmp = (accumulator & operand);
   
   setFlags(Z | N | V, isZero(tmp) | isNegative(operand) | (operand & (1 << 6)));
-
-  return 0;
 }
 
-uint8_t R6502::BMI() {
+void R6502::BMI() {
   // branch on N = 1
   // Flags changed: 
 
   fetchOperand();
   
   if (getFlag(N) == 1) doRelBranch();
-
-  return 0;
 }
 
-uint8_t R6502::BNE() {
+void R6502::BNE() {
   // branch on Z = 0
   // Flags changed: 
 
   fetchOperand();
   
   if (getFlag(Z) == 0) doRelBranch();
-
-  return 0;
 }
 
-uint8_t R6502::BPL() {
+void R6502::BPL() {
   // branch on N = 0
   // Flags changed: 
 
   fetchOperand();
   
   if (getFlag(N) == 0) doRelBranch();
-
-  return 0;
 }
 
-uint8_t R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki and then will come back after break :sweat_smile:
+void R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki and then will come back after break :sweat_smile:
   // interrupt, push PC+2, push SR
   // Flags Changed: I
   
@@ -844,64 +810,51 @@ uint8_t R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki
   // (Interrupt Request (IRQ)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
   // "$FFFE-$FFFF = IRQ/BRK vector" https://wiki.nesdev.org/w/index.php?title=CPU_memory_map
   setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
-
-
-
-  return 0;
-  // Look this over later
 }
 
-uint8_t R6502::BVC() {
+void R6502::BVC() {
   // branch on V = 0
   // Flags changed: 
 
   fetchOperand();
   
   if (getFlag(V) == 0) doRelBranch();
-
-  return 0;
 }
 
-uint8_t R6502::BVS() {
+void R6502::BVS() {
   // branch on V = 1
   // Flags changed: 
 
   fetchOperand();
   
   if (getFlag(V) == 1) doRelBranch();
-
-  return 0;
 }
 
-uint8_t R6502::CLC() {
+void R6502::CLC() {
   // 0 -> C
   // Flags changed: C
   setFlags(C, 0);
-  return 0;
 }
 
-uint8_t R6502::CLD() {
+void R6502::CLD() {
   // 0 -> D
   // Flags changed: D
   setFlags(D, 0);
-  return 0;
 }
 
-uint8_t R6502::CLI() {
+void R6502::CLI() {
   // 0 -> I
   // Flags changed: I
   setFlags(I, 0);
-  return 0;
 }
 
-uint8_t R6502::CLV() {
+void R6502::CLV() {
   // 0 -> V
   // Flags changed: V
   setFlags(V, 0);
-  return 0;
 }
 
-uint8_t R6502::CMP() {
+void R6502::CMP() {
   // A - M
   // Flags changed: N Z C
   fetchOperand();
@@ -909,11 +862,9 @@ uint8_t R6502::CMP() {
   tmp = ((uint16_t) accumulator - (uint16_t) operand) & 0x00FF;
 
   setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | accumulator >= operand ? C : 0x0);
-
-  return 1;
 }
 
-uint8_t R6502::CPX() {
+void R6502::CPX() {
   // X - M
   // Flags changed: N Z C
   fetchOperand();
@@ -921,10 +872,9 @@ uint8_t R6502::CPX() {
   tmp = ((uint16_t) x - (uint16_t) operand) & 0x00FF;
 
   setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | x >= operand ? C : 0x0);
-  return 0;
 }
 
-uint8_t R6502::CPY() {
+void R6502::CPY() {
   // Y - M
   // Flags changed: N Z C
   fetchOperand();
@@ -932,10 +882,9 @@ uint8_t R6502::CPY() {
   tmp = ((uint16_t) y - (uint16_t) operand) & 0x00FF;
 
   setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | y >= operand ? C : 0x0);
-  return 0;
 }
 
-uint8_t R6502::DEC() {
+void R6502::DEC() {
   // M - 1 -> M
   // Flags changed: Z N
   
@@ -945,31 +894,25 @@ uint8_t R6502::DEC() {
   write(absAddr, tmp);
   
   setFlags(Z | N, isZero(tmp) | isNegative(tmp));
-
-  return 0;
 }
 
-uint8_t R6502::DEX() {
+void R6502::DEX() {
   // X - 1 -> X
   // Flags changed: Z N
 
   decX();
   setFlags(Z | N, isZero(x) | isNegative(x));
-
-  return 0;
 }
 
-uint8_t R6502::DEY() {
+void R6502::DEY() {
   // Y - 1 -> Y
   // Flags changed: Z N
 
   decY();
   setFlags(Z | N, isZero(y) | isNegative(y));
-
-  return 0;
 }
 
-uint8_t R6502::EOR() {
+void R6502::EOR() {
   // A EOR M -> A
   // Flags changed: Z N
 
@@ -978,10 +921,10 @@ uint8_t R6502::EOR() {
   setAccumulator(accumulator ^ operand);
   setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 
-  return 1;
+  doPossibleExtraCycle();
 }
 
-uint8_t R6502::INC() {
+void R6502::INC() {
   // M + 1 -> M
   // Flags changed: Z N
   
@@ -990,40 +933,32 @@ uint8_t R6502::INC() {
 
   write(absAddr, tmp);
   setFlags(Z | N, isZero(tmp) | isNegative(tmp));
-
-  return 0;
 }
 
-uint8_t R6502::INX() {
+void R6502::INX() {
   // X - 1 -> X
   // Flags changed: Z N
 
   incX();
   setFlags(Z | N, isZero(x) | isNegative(x));
-
-  return 0;
 }
 
-uint8_t R6502::INY() {
+void R6502::INY() {
   // Y + 1 -> Y
   // Flags changed: Z N
 
   incY();
   setFlags(Z | N, isZero(y) | isNegative(y));
-
-  return 0;
 }
 
-uint8_t R6502::JMP() {
+void R6502::JMP() {
   // (PC+1) -> PCL
   // (PC+2) -> PCH
   // Flags changed:
   setPC(absAddr);
-
-  return 0;
 }
 
-uint8_t R6502::JSR() {
+void R6502::JSR() {
   // push (PC+2),
   // (PC+1) -> PCL
   // (PC+2) -> PCH
@@ -1032,40 +967,39 @@ uint8_t R6502::JSR() {
   decPC();
   pushStack16(pc);
   setPC(absAddr);
-  return 0;
 }
 
-uint8_t R6502::LDA() {
+void R6502::LDA() {
   // M -> A
   // Flags changed: Z N
 
   fetchOperand();
   setAccumulator(operand);
   setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
-  return 1;
+  doPossibleExtraCycle();
 }
 
-uint8_t R6502::LDX() {
+void R6502::LDX() {
   // M -> X
   // Flags changed: Z N
 
   fetchOperand();
   setX(operand);
   setFlags(Z | N, isZero(x) | isNegative(x));
-  return 1;
+  doPossibleExtraCycle();
 }
 
-uint8_t R6502::LDY() {
+void R6502::LDY() {
   // M -> Y
   // Flags changed: Z N
 
   fetchOperand();
   setY(operand);
   setFlags(Z | N, isZero(y) | isNegative(y));
-  return 1;
+  doPossibleExtraCycle();
 }
 
-uint8_t R6502::LSR() {
+void R6502::LSR() {
   // 0 -> [76543210] -> C
   // Flags changed: Z N C
   
@@ -1075,22 +1009,17 @@ uint8_t R6502::LSR() {
 
   setFlags(C | Z | N, isZero(tmp) | isCarry(tmp));
 
-  if (instructionMatrix[opcode].addressMode == &R6502::IMP) { // Implied is same as accumulator addressing mode technically.
-    setAccumulator(tmp & 0x00FF);
-  } else {
-    write(absAddr, tmp & 0x00FF);
-  }
-
-  return 0;
+  if (instructionMatrix[opcode].addressMode == &R6502::ACC) setAccumulator(tmp & 0x00FF);
+  else write(absAddr, tmp & 0x00FF);
 }
 
-uint8_t R6502::NOP() {
+void R6502::NOP() {
   // No operation.
   // Flags changed: 
-  return 0;
+  return;
 }
 
-uint8_t R6502::ORA() {
+void R6502::ORA() {
   // A OR M -> A
   // Flags changed: Z N
   
@@ -1099,47 +1028,39 @@ uint8_t R6502::ORA() {
   setAccumulator(accumulator | operand);
   setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 
-  return 1;
+  doPossibleExtraCycle();
 }
 
-uint8_t R6502::PHA() {
+void R6502::PHA() {
   // push A
   // Flags changed:
   
   pushStack(accumulator);
-
-  return 0;
 }
 
-uint8_t R6502::PHP() {
+void R6502::PHP() {
   // push P
   // Flags changed:
   
   pushStack(P);
-
-  return 0;
 }
 
-uint8_t R6502::PLA() {
+void R6502::PLA() {
   // pull A
   // Flags changed: Z N
 
   setAccumulator(pullStack());
   setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
-
-  return 0;
 }
 
-uint8_t R6502::PLP() {
+void R6502::PLP() {
   // pull P
   // Flags changed: FROM STACK
 
   setP(pullStack());
-
-  return 0;
 }
 
-uint8_t R6502::ROL() {
+void R6502::ROL() {
   // C <- [76543210] <- C
   // Flags Changed: C Z N
   
@@ -1149,16 +1070,11 @@ uint8_t R6502::ROL() {
 
   setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | operand & 0x80 ? C : 0x0);
   
-  if (instructionMatrix[opcode].addressMode == &R6502::IMP) {
-     setAccumulator(tmp);
-  } else {
-     write(absAddr, tmp);
-  }
-
-  return 0;
+  if (instructionMatrix[opcode].addressMode == &R6502::ACC) setAccumulator(tmp);
+  else write(absAddr, tmp);
 }
 
-uint8_t R6502::ROR() {
+void R6502::ROR() {
   // C -> [76543210] -> C
   // Flags Changed: C Z N
   
@@ -1168,36 +1084,26 @@ uint8_t R6502::ROR() {
 
   setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | operand & 0x01 ? C : 0x0);
   
-  if (instructionMatrix[opcode].addressMode == &R6502::IMP) {
-     setAccumulator(tmp);
-  } else {
-     write(absAddr, tmp);
-  }
-
-  return 0;
+  if (instructionMatrix[opcode].addressMode == &R6502::ACC) setAccumulator(tmp);
+  else write(absAddr, tmp);
 }
 
-uint8_t R6502::RTI() {
+void R6502::RTI() {
   // pull P, pull PC
   // Flags changed: FROM STACK
   // "The status register is pulled with the break flag
   // ...and bit 5 ignored. Then PC is pulled from the stack."
   
   setP(setBitsOfByte(U | B, P, pullStack()));
-
   setPC(pullStack16());
-
-  return 0;
 }
 
-uint8_t R6502::RTS() {
+void R6502::RTS() {
   // pull PC, PC+1 -> PC
   setPC(pullStack16() + 1);
-
-  return 0;
 }
 
-uint8_t R6502::SBC() {
+void R6502::SBC() {
   // A - M - (1 - C) -> A
   // C is a single bit. 1 - C is the inverse of C (C(bar)).
   // A - M - (1 - C) == A + (-M - (1 - C)) == A + (-M - 1 + C)
@@ -1219,121 +1125,97 @@ uint8_t R6502::SBC() {
 
   setAccumulator(tmp);
 
-  return 1;
+  doPossibleExtraCycle();
 }
 
-uint8_t R6502::SEC() {
+void R6502::SEC() {
   // 1 -> C
   // Flags changed: C
 
   setFlags(C);
-
-  return 0;
 }
 
-uint8_t R6502::SED() {
+void R6502::SED() {
   // 1 -> D
   // Flags changed: D
 
   setFlags(D);
-
-  return 0;
 }
 
-uint8_t R6502::SEI() {
+void R6502::SEI() {
   // 1 -> I
   // Flags changed: I
 
   setFlags(I);
-
-  return 0;
 }
 
-uint8_t R6502::STA() {
+void R6502::STA() {
   // A -> M
   // Flags changed: 
 
   write(absAddr, accumulator);
-
-  return 0;
 }
 
-uint8_t R6502::STX() {
+void R6502::STX() {
   // X -> M
   // Flags changed: 
 
   write(absAddr, x);
-
-  return 0;
 }
 
-uint8_t R6502::STY() {
+void R6502::STY() {
   // Y -> M
   // Flags changed: 
 
   write(absAddr, y);
-
-  return 0;
 }
 
-uint8_t R6502::TAX() {
+void R6502::TAX() {
   // A -> X
   // Flags changed: Z N
 
   setX(accumulator);
   setFlags(Z | N, isZero(x) | isNegative(x));
-
-  return 0;
 }
 
-uint8_t R6502::TAY() {
+void R6502::TAY() {
   // A -> Y
   // Flags changed: Z N
 
   setY(accumulator);
   setFlags(Z | N, isZero(y) | isNegative(y));
-
-  return 0;
 }
 
-uint8_t R6502::TSX() {
+void R6502::TSX() {
   // SP -> X
   // Flags changed: Z N
 
   setX(sp);
   setFlags(Z | N, isZero(x) | isNegative(x));
-
-  return 0;
 }
 
-uint8_t R6502::TXA() {
+void R6502::TXA() {
   // X -> A
   // Flags changed: Z N
 
   setAccumulator(x);
   setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
-
-  return 0;
 }
 
-uint8_t R6502::TXS() {
+void R6502::TXS() {
   // X -> SP
   // Flags changed: Z N
 
   setSP(x);
   setFlags(Z | N, isZero(sp) | isNegative(sp));
-
-  return 0;
 }
 
-uint8_t R6502::TYA() {
+void R6502::TYA() {
   // Y -> A
   // Flags changed: Z N
 
   setAccumulator(y);
   setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
-
-  return 0;
 }
 
 
@@ -1344,8 +1226,8 @@ uint8_t R6502::TYA() {
 
 
 
-uint8_t R6502::XXX() { // Does nothing, illegal instruction
-  return 0;
+void R6502::XXX() { // Does nothing, illegal instruction
+  return;
 }
 
 

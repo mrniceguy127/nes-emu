@@ -1,0 +1,18 @@
+\hypertarget{Memory_8h_source}{}\doxysection{Memory.\+h}
+\label{Memory_8h_source}\index{src/Memory.h@{src/Memory.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include "{}NESIncludes.h"{}}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{keyword}{class }\mbox{\hyperlink{classMemory}{Memory}} \{}
+\DoxyCodeLine{4   \textcolor{keyword}{public}:}
+\DoxyCodeLine{5     \mbox{\hyperlink{classMemory}{Memory}}();}
+\DoxyCodeLine{6     \mbox{\hyperlink{classMemory}{\string~Memory}}();}
+\DoxyCodeLine{7   \textcolor{keyword}{public}:}
+\DoxyCodeLine{8     std::array<uint8\_t, 0x10000> ram;}
+\DoxyCodeLine{9   \textcolor{keyword}{public}:}
+\DoxyCodeLine{10     uint8\_t read(uint16\_t addr);}
+\DoxyCodeLine{11     \textcolor{keywordtype}{void} write(uint16\_t addr, uint8\_t data);}
+\DoxyCodeLine{12 \};}
+
+\end{DoxyCode}

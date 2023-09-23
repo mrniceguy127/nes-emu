@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bus_0',['Bus',['../classBus.html',1,'']]]
+  ['clock_0',['clock',['../classR6502.html#a901623838e58b817967948dbeba88c59',1,'R6502']]]
 ];

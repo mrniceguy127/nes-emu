@@ -12,6 +12,9 @@ struct \mbox{\hyperlink{structR6502_1_1Instruction}{Instruction}}
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\Hypertarget{classR6502_ae4140f2a4a989aee58a94b6e015a965f}\label{classR6502_ae4140f2a4a989aee58a94b6e015a965f}} 
+{\bfseries R6502} (\mbox{\hyperlink{classMemory}{Memory}} \&)
+\item 
 \mbox{\Hypertarget{classR6502_ac2c953dfe859abf412b739cba0ff8a8c}\label{classR6502_ac2c953dfe859abf412b739cba0ff8a8c}} 
 void {\bfseries init} ()
 \begin{DoxyCompactList}\small\item\em Init CPU for emulation. \end{DoxyCompactList}\item 
@@ -23,9 +26,7 @@ void \mbox{\hyperlink{classR6502_a2737d72976d543cd11d6d23531844b48}{RES}} ()
 void \mbox{\hyperlink{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}{IRQ}} ()
 \begin{DoxyCompactList}\small\item\em IRQ interrupt sequence command. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classR6502_a343ece93fe35fa7f4c030a8352dc8e36}{NMI}} ()
-\begin{DoxyCompactList}\small\item\em NMI interrupt sequence command. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classR6502_a82e3c80b625a84f3d1fe63885c35a204}{connect\+Bus}} (\mbox{\hyperlink{classBus}{Bus}} $\ast$bus)
-\begin{DoxyCompactList}\small\item\em Sets the CPU\textquotesingle{}s bus. That\textquotesingle{}s all. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em NMI interrupt sequence command. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Types}
 \begin{DoxyCompactItemize}
 \item 
@@ -65,9 +66,6 @@ void \mbox{\hyperlink{classR6502_a6167fd22e3883eb1343d4c874836d90b}{set\+Flags}}
 \begin{DoxyCompactList}\small\item\em Sets flags to a specific value. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classR6502_aa435f7321be2e8166f03c7fc0cd542f8}{set\+Flags}} (uint8\+\_\+t flags)
 \begin{DoxyCompactList}\small\item\em Set specific flags to 1. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_a02c8cddf9e231e3f98af20b85a4e9bf9}\label{classR6502_a02c8cddf9e231e3f98af20b85a4e9bf9}} 
-void {\bfseries set\+Flag} (FLAGS flag, uint8\+\_\+t value)
-\item 
 uint8\+\_\+t \mbox{\hyperlink{classR6502_a96bd67071c7f130a60a69b9008f8cae5}{pull\+Stack}} ()
 \begin{DoxyCompactList}\small\item\em Pull the stack. \end{DoxyCompactList}\item 
 uint16\+\_\+t \mbox{\hyperlink{classR6502_a41863794dd7b4df05c79ca459dae2704}{pull\+Stack16}} ()
@@ -80,6 +78,11 @@ void \mbox{\hyperlink{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}{do\+Cycle}} 
 \begin{DoxyCompactList}\small\item\em Executes when a cycle occurs. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classR6502_ae65b642474bd73978e218965c58dc45d}{do\+Rel\+Branch}} ()
 \begin{DoxyCompactList}\small\item\em Performs relative branching. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classR6502_a1d04e292b825b6c39a048f2e4115a506}{prep\+Extra\+Cycle}} ()
+\begin{DoxyCompactList}\small\item\em Preps an extra cycle if asked by address mode. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classR6502_a81adecf5be1bf7b7c56c031d5079b8d7}\label{classR6502_a81adecf5be1bf7b7c56c031d5079b8d7}} 
+void {\bfseries do\+Possible\+Extra\+Cycle} ()
+\begin{DoxyCompactList}\small\item\em Performs extra clock cycle if agreed upon by the address mode. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classR6502_ace68437a1162fdc3e01c85da9b56f513}\label{classR6502_ace68437a1162fdc3e01c85da9b56f513}} 
 uint16\+\_\+t {\bfseries cycles\+Passed} ()
 \item 
@@ -121,200 +124,210 @@ void \mbox{\hyperlink{classR6502_aca7646723dc26712851a13a5e8f94c46}{setP}} (uint
 \begin{DoxyCompactList}\small\item\em Set processor status directly. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classR6502_ab832f67a5d15cacb32a6b718e735db39}{on\+Register\+Update}} ()
 \begin{DoxyCompactList}\small\item\em Called everytime a register updates. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_a92e0274aa230a47420fed88a0506806f}{IMM}} ()
+void \mbox{\hyperlink{classR6502_a3812901801ba1c1d2aead2c3e7bfb828}{IMM}} ()
 \begin{DoxyCompactList}\small\item\em Immediate addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_a944c6b84e4408567085976fab3047479}{ABS}} ()
+void \mbox{\hyperlink{classR6502_ac93c1333174ccc6418b4b47c048e4031}{ABS}} ()
 \begin{DoxyCompactList}\small\item\em Absolute addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_ac9113367a214712f21f5d54a6d4f86da}{ABX}} ()
+\mbox{\Hypertarget{classR6502_a023bdb9739c5c398eeed6bee4762705c}\label{classR6502_a023bdb9739c5c398eeed6bee4762705c}} 
+void {\bfseries ABX} ()
 \begin{DoxyCompactList}\small\item\em Absolute X addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_ac4bfae4e389c9ec3d0f19a98c74b3e67}{ABY}} ()
+\mbox{\Hypertarget{classR6502_aff25c3746b34a675f0fbfdd01383219f}\label{classR6502_aff25c3746b34a675f0fbfdd01383219f}} 
+void {\bfseries ABY} ()
 \begin{DoxyCompactList}\small\item\em Absolute Y addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_ad79d4ce2b810b29774438d2d9d77d793}{IMP}} ()
+\mbox{\Hypertarget{classR6502_ad4048b908598050a4b1801fda801f4e2}\label{classR6502_ad4048b908598050a4b1801fda801f4e2}} 
+void {\bfseries IMP} ()
 \begin{DoxyCompactList}\small\item\em Implied addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_a953a07c858ff31c929aa8fdf654fb4bd}{ZP0}} ()
+void \mbox{\hyperlink{classR6502_a9c30eaecaa00f48227068476d266ea3d}{ACC}} ()
+\begin{DoxyCompactList}\small\item\em Accumulator addressing mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classR6502_a8d2547fe06bc528772ec844511990191}{ZP0}} ()
 \begin{DoxyCompactList}\small\item\em Zero Page addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_a4b4c37d06574c616ca54811db16fdeb3}{ZPX}} ()
+\mbox{\Hypertarget{classR6502_a32109a816b54aa6a4f4c52146ebc7e7f}\label{classR6502_a32109a816b54aa6a4f4c52146ebc7e7f}} 
+void {\bfseries ZPX} ()
 \begin{DoxyCompactList}\small\item\em Zero Page (X-\/indexed) addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_a5ab8e99ee00f7187d6831948dc26eaad}{ZPY}} ()
+\mbox{\Hypertarget{classR6502_a52ab5eba817da30fb09ef59ded9722d2}\label{classR6502_a52ab5eba817da30fb09ef59ded9722d2}} 
+void {\bfseries ZPY} ()
 \begin{DoxyCompactList}\small\item\em Zero Page (Y-\/indexed) addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_aa27a2fefb1cc2515d99a49019e4914d0}{REL}} ()
+\mbox{\Hypertarget{classR6502_a9895d87654e2fde3afa164f5535a897d}\label{classR6502_a9895d87654e2fde3afa164f5535a897d}} 
+void {\bfseries REL} ()
 \begin{DoxyCompactList}\small\item\em Relative addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_a316a5e5bd4a887464e1e6c713f535b2e}{IZX}} ()
+\mbox{\Hypertarget{classR6502_abd41fed822fd054081f8421890f4e820}\label{classR6502_abd41fed822fd054081f8421890f4e820}} 
+void {\bfseries IZX} ()
 \begin{DoxyCompactList}\small\item\em Indirect (X-\/indexed) addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_af126d97c49e41295b1eae184e4920143}{IZY}} ()
+\mbox{\Hypertarget{classR6502_a5b992eb2018cd87f93a72fc9d65ddf1c}\label{classR6502_a5b992eb2018cd87f93a72fc9d65ddf1c}} 
+void {\bfseries IZY} ()
 \begin{DoxyCompactList}\small\item\em Indirect (X-\/indexed) addressing mode. \end{DoxyCompactList}\item 
-uint8\+\_\+t \mbox{\hyperlink{classR6502_a8334ab8b225ff897bf3c9a7e6ccff122}{IND}} ()
+void \mbox{\hyperlink{classR6502_a6435b53748a3449c49638ee52efa98ab}{IND}} ()
 \begin{DoxyCompactList}\small\item\em Indirect addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_a9269aa8d3f33b5291ef829438c7eb1d9}\label{classR6502_a9269aa8d3f33b5291ef829438c7eb1d9}} 
-uint8\+\_\+t {\bfseries ADC} ()
+\mbox{\Hypertarget{classR6502_adc4d8e2f1a7d8da904e2cc7c8f18c546}\label{classR6502_adc4d8e2f1a7d8da904e2cc7c8f18c546}} 
+void {\bfseries ADC} ()
 \item 
-\mbox{\Hypertarget{classR6502_addfd53e7ffeaedd8cd5a870d9d9a6a76}\label{classR6502_addfd53e7ffeaedd8cd5a870d9d9a6a76}} 
-uint8\+\_\+t {\bfseries AND} ()
+\mbox{\Hypertarget{classR6502_aaca43cdbcf788046e391b052ac8cc0cc}\label{classR6502_aaca43cdbcf788046e391b052ac8cc0cc}} 
+void {\bfseries AND} ()
 \item 
-\mbox{\Hypertarget{classR6502_a1534bc10afa194e181fd49264817bf05}\label{classR6502_a1534bc10afa194e181fd49264817bf05}} 
-uint8\+\_\+t {\bfseries ASL} ()
+\mbox{\Hypertarget{classR6502_a8bf8a223b860ab4b56dab442a1edad03}\label{classR6502_a8bf8a223b860ab4b56dab442a1edad03}} 
+void {\bfseries ASL} ()
 \item 
-\mbox{\Hypertarget{classR6502_a60296d4a37500c327fb93b32313f705a}\label{classR6502_a60296d4a37500c327fb93b32313f705a}} 
-uint8\+\_\+t {\bfseries BCC} ()
+\mbox{\Hypertarget{classR6502_a77c1bad167b7ab8cf1731499e7a1ad28}\label{classR6502_a77c1bad167b7ab8cf1731499e7a1ad28}} 
+void {\bfseries BCC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a7adaac918b199b09c88e3240cb4647f4}\label{classR6502_a7adaac918b199b09c88e3240cb4647f4}} 
-uint8\+\_\+t {\bfseries BCS} ()
+\mbox{\Hypertarget{classR6502_a5ec41f149a7e904fe553074df234c07f}\label{classR6502_a5ec41f149a7e904fe553074df234c07f}} 
+void {\bfseries BCS} ()
 \item 
-\mbox{\Hypertarget{classR6502_ade12cb4c17bdf9ea822b2ea45db04cd9}\label{classR6502_ade12cb4c17bdf9ea822b2ea45db04cd9}} 
-uint8\+\_\+t {\bfseries BEQ} ()
+\mbox{\Hypertarget{classR6502_a27d7f75ef6fff879713720849b50f8ca}\label{classR6502_a27d7f75ef6fff879713720849b50f8ca}} 
+void {\bfseries BEQ} ()
 \item 
-\mbox{\Hypertarget{classR6502_ab221a0f3368d6a398b4ac7d68a051dbe}\label{classR6502_ab221a0f3368d6a398b4ac7d68a051dbe}} 
-uint8\+\_\+t {\bfseries BIT} ()
+\mbox{\Hypertarget{classR6502_a67402b60c558deaa34a579df59bb1eeb}\label{classR6502_a67402b60c558deaa34a579df59bb1eeb}} 
+void {\bfseries BIT} ()
 \item 
-\mbox{\Hypertarget{classR6502_a75b7bc1d1ec2f96afbb5a335ea9d1f0c}\label{classR6502_a75b7bc1d1ec2f96afbb5a335ea9d1f0c}} 
-uint8\+\_\+t {\bfseries BMI} ()
+\mbox{\Hypertarget{classR6502_aa330d5adb2ef4849f554a05de8455de1}\label{classR6502_aa330d5adb2ef4849f554a05de8455de1}} 
+void {\bfseries BMI} ()
 \item 
-\mbox{\Hypertarget{classR6502_a80321ec92ae0369bb52080c08f94ad20}\label{classR6502_a80321ec92ae0369bb52080c08f94ad20}} 
-uint8\+\_\+t {\bfseries BNE} ()
+\mbox{\Hypertarget{classR6502_ab6038b88b429b8f6bc37eeced13a0292}\label{classR6502_ab6038b88b429b8f6bc37eeced13a0292}} 
+void {\bfseries BNE} ()
 \item 
-\mbox{\Hypertarget{classR6502_a497bb1c4e0cbc1278fc5d4c1f80627c8}\label{classR6502_a497bb1c4e0cbc1278fc5d4c1f80627c8}} 
-uint8\+\_\+t {\bfseries BPL} ()
+\mbox{\Hypertarget{classR6502_a67025ccbdd59f63a21c7d36005f5efe4}\label{classR6502_a67025ccbdd59f63a21c7d36005f5efe4}} 
+void {\bfseries BPL} ()
 \item 
-\mbox{\Hypertarget{classR6502_a8d4d4e24f4ff738167f1b200b9962681}\label{classR6502_a8d4d4e24f4ff738167f1b200b9962681}} 
-uint8\+\_\+t {\bfseries BRK} ()
+\mbox{\Hypertarget{classR6502_aff10b619e4ea7ff176a0a2bcd553926a}\label{classR6502_aff10b619e4ea7ff176a0a2bcd553926a}} 
+void {\bfseries BRK} ()
 \item 
-\mbox{\Hypertarget{classR6502_ac23dd1895cf983faf0716c044d86df12}\label{classR6502_ac23dd1895cf983faf0716c044d86df12}} 
-uint8\+\_\+t {\bfseries BVC} ()
+\mbox{\Hypertarget{classR6502_a3f4463ccbfa21219aff5233a2789e668}\label{classR6502_a3f4463ccbfa21219aff5233a2789e668}} 
+void {\bfseries BVC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a1fd271ac0964d553d47be52889b77c5f}\label{classR6502_a1fd271ac0964d553d47be52889b77c5f}} 
-uint8\+\_\+t {\bfseries BVS} ()
+\mbox{\Hypertarget{classR6502_a960054edad1320a11607e3cc7d5be30f}\label{classR6502_a960054edad1320a11607e3cc7d5be30f}} 
+void {\bfseries BVS} ()
 \item 
-\mbox{\Hypertarget{classR6502_a1e39bdb9b650c6ccc45ae0fa49520c6a}\label{classR6502_a1e39bdb9b650c6ccc45ae0fa49520c6a}} 
-uint8\+\_\+t {\bfseries CLC} ()
+\mbox{\Hypertarget{classR6502_a203ef5a0570aa8f432f4115fe126a407}\label{classR6502_a203ef5a0570aa8f432f4115fe126a407}} 
+void {\bfseries CLC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a6136d0a7abb0ed247a7473d4dde7275c}\label{classR6502_a6136d0a7abb0ed247a7473d4dde7275c}} 
-uint8\+\_\+t {\bfseries CLD} ()
+\mbox{\Hypertarget{classR6502_a8c4920043f744573a2b77ca5cbfcdb64}\label{classR6502_a8c4920043f744573a2b77ca5cbfcdb64}} 
+void {\bfseries CLD} ()
 \item 
-\mbox{\Hypertarget{classR6502_a9800409fed104b92684921b98f438fa6}\label{classR6502_a9800409fed104b92684921b98f438fa6}} 
-uint8\+\_\+t {\bfseries CLI} ()
+\mbox{\Hypertarget{classR6502_abc2c44abd2e635a995b21f9ba012b25e}\label{classR6502_abc2c44abd2e635a995b21f9ba012b25e}} 
+void {\bfseries CLI} ()
 \item 
-\mbox{\Hypertarget{classR6502_a23fd131bff17032f6507b7c534c546ff}\label{classR6502_a23fd131bff17032f6507b7c534c546ff}} 
-uint8\+\_\+t {\bfseries CLV} ()
+\mbox{\Hypertarget{classR6502_a6c8bb62ac48a2bd7304e298e9b018486}\label{classR6502_a6c8bb62ac48a2bd7304e298e9b018486}} 
+void {\bfseries CLV} ()
 \item 
-\mbox{\Hypertarget{classR6502_a2ed18bb94a2e5cb336a96b33213c86c9}\label{classR6502_a2ed18bb94a2e5cb336a96b33213c86c9}} 
-uint8\+\_\+t {\bfseries CMP} ()
+\mbox{\Hypertarget{classR6502_a6b01918eb906a2ca2f10c2c531846cc6}\label{classR6502_a6b01918eb906a2ca2f10c2c531846cc6}} 
+void {\bfseries CMP} ()
 \item 
-\mbox{\Hypertarget{classR6502_a96141149407a82083e8e7e6cf15b365e}\label{classR6502_a96141149407a82083e8e7e6cf15b365e}} 
-uint8\+\_\+t {\bfseries CPX} ()
+\mbox{\Hypertarget{classR6502_a6fd2bfa55f13b0cc020a2fab5a6807b7}\label{classR6502_a6fd2bfa55f13b0cc020a2fab5a6807b7}} 
+void {\bfseries CPX} ()
 \item 
-\mbox{\Hypertarget{classR6502_a0a447bc8226c70fd8b8ef3e71b52a20a}\label{classR6502_a0a447bc8226c70fd8b8ef3e71b52a20a}} 
-uint8\+\_\+t {\bfseries CPY} ()
+\mbox{\Hypertarget{classR6502_a7555ebfedb330a4ce754b0c2add929ad}\label{classR6502_a7555ebfedb330a4ce754b0c2add929ad}} 
+void {\bfseries CPY} ()
 \item 
-\mbox{\Hypertarget{classR6502_a4ea66281dbfae0fafd0d206320afbd31}\label{classR6502_a4ea66281dbfae0fafd0d206320afbd31}} 
-uint8\+\_\+t {\bfseries DEC} ()
+\mbox{\Hypertarget{classR6502_a62b92efa044391ae19ce0db4dd48d7c1}\label{classR6502_a62b92efa044391ae19ce0db4dd48d7c1}} 
+void {\bfseries DEC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a058a1e2e11f3899c154f27bfdfa98c72}\label{classR6502_a058a1e2e11f3899c154f27bfdfa98c72}} 
-uint8\+\_\+t {\bfseries DEX} ()
+\mbox{\Hypertarget{classR6502_a64547248c063fa139416e3fe62a0fcf7}\label{classR6502_a64547248c063fa139416e3fe62a0fcf7}} 
+void {\bfseries DEX} ()
 \item 
-\mbox{\Hypertarget{classR6502_abef9c2df8480256bb2dc4ffe8860cf17}\label{classR6502_abef9c2df8480256bb2dc4ffe8860cf17}} 
-uint8\+\_\+t {\bfseries DEY} ()
+\mbox{\Hypertarget{classR6502_a7df4987ecfad8fce996dfb43d2f334b4}\label{classR6502_a7df4987ecfad8fce996dfb43d2f334b4}} 
+void {\bfseries DEY} ()
 \item 
-\mbox{\Hypertarget{classR6502_a0899cf74a6f057d3cbc8051587747aeb}\label{classR6502_a0899cf74a6f057d3cbc8051587747aeb}} 
-uint8\+\_\+t {\bfseries EOR} ()
+\mbox{\Hypertarget{classR6502_ad6966dd96bae5fd78399ca33429cb30c}\label{classR6502_ad6966dd96bae5fd78399ca33429cb30c}} 
+void {\bfseries EOR} ()
 \item 
-\mbox{\Hypertarget{classR6502_a9b973a534d7249656fef5f249a15ede9}\label{classR6502_a9b973a534d7249656fef5f249a15ede9}} 
-uint8\+\_\+t {\bfseries INC} ()
+\mbox{\Hypertarget{classR6502_afad06b3838d2dc3d3ab783b269ea8315}\label{classR6502_afad06b3838d2dc3d3ab783b269ea8315}} 
+void {\bfseries INC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a46c66b920740c23635cafee8a0942712}\label{classR6502_a46c66b920740c23635cafee8a0942712}} 
-uint8\+\_\+t {\bfseries INX} ()
+\mbox{\Hypertarget{classR6502_a757ccebd0c60e97a8dd9912c79dc23f5}\label{classR6502_a757ccebd0c60e97a8dd9912c79dc23f5}} 
+void {\bfseries INX} ()
 \item 
-\mbox{\Hypertarget{classR6502_a5b8bd25eb641b860443971c31e0a7316}\label{classR6502_a5b8bd25eb641b860443971c31e0a7316}} 
-uint8\+\_\+t {\bfseries INY} ()
+\mbox{\Hypertarget{classR6502_a675dba4d8a91277072f4b50c826f9f18}\label{classR6502_a675dba4d8a91277072f4b50c826f9f18}} 
+void {\bfseries INY} ()
 \item 
-\mbox{\Hypertarget{classR6502_a51e05f4c6f6abe1c173654fad09c8de2}\label{classR6502_a51e05f4c6f6abe1c173654fad09c8de2}} 
-uint8\+\_\+t {\bfseries JMP} ()
+\mbox{\Hypertarget{classR6502_aa6b6e0d9938b8124b12bca3bbf643898}\label{classR6502_aa6b6e0d9938b8124b12bca3bbf643898}} 
+void {\bfseries JMP} ()
 \item 
-\mbox{\Hypertarget{classR6502_a789f3125ba64c57269ad2a5208ec4a1e}\label{classR6502_a789f3125ba64c57269ad2a5208ec4a1e}} 
-uint8\+\_\+t {\bfseries JSR} ()
+\mbox{\Hypertarget{classR6502_a237281abd6ac2d4d03668bb5b7e37267}\label{classR6502_a237281abd6ac2d4d03668bb5b7e37267}} 
+void {\bfseries JSR} ()
 \item 
-\mbox{\Hypertarget{classR6502_a8ef4d69b6c4ffde436ae2cc198fe281a}\label{classR6502_a8ef4d69b6c4ffde436ae2cc198fe281a}} 
-uint8\+\_\+t {\bfseries LDA} ()
+\mbox{\Hypertarget{classR6502_a066cca697589d3af640b28cea4ffd098}\label{classR6502_a066cca697589d3af640b28cea4ffd098}} 
+void {\bfseries LDA} ()
 \item 
-\mbox{\Hypertarget{classR6502_ac54cfd9d69e078a2eaecc88da5efa4af}\label{classR6502_ac54cfd9d69e078a2eaecc88da5efa4af}} 
-uint8\+\_\+t {\bfseries LDX} ()
+\mbox{\Hypertarget{classR6502_a72ef2bdeb01842bf5e7b440b5a8d473b}\label{classR6502_a72ef2bdeb01842bf5e7b440b5a8d473b}} 
+void {\bfseries LDX} ()
 \item 
-\mbox{\Hypertarget{classR6502_a95cba89ca4b108f32c87124592da1aca}\label{classR6502_a95cba89ca4b108f32c87124592da1aca}} 
-uint8\+\_\+t {\bfseries LDY} ()
+\mbox{\Hypertarget{classR6502_af0fdf3f8b4c81921e8364cc37a4e92be}\label{classR6502_af0fdf3f8b4c81921e8364cc37a4e92be}} 
+void {\bfseries LDY} ()
 \item 
-\mbox{\Hypertarget{classR6502_ab801196cdd33361f89fd8cffce5cb596}\label{classR6502_ab801196cdd33361f89fd8cffce5cb596}} 
-uint8\+\_\+t {\bfseries LSR} ()
+\mbox{\Hypertarget{classR6502_a2ecf90dc6b71755361e93dc759c0ee99}\label{classR6502_a2ecf90dc6b71755361e93dc759c0ee99}} 
+void {\bfseries LSR} ()
 \item 
-\mbox{\Hypertarget{classR6502_a63966d98d4c1087bca09a462b20532d1}\label{classR6502_a63966d98d4c1087bca09a462b20532d1}} 
-uint8\+\_\+t {\bfseries NOP} ()
+\mbox{\Hypertarget{classR6502_a246e6176f86f7ec7d1ed0182b3cb5aae}\label{classR6502_a246e6176f86f7ec7d1ed0182b3cb5aae}} 
+void {\bfseries NOP} ()
 \item 
-\mbox{\Hypertarget{classR6502_ae643e47e502facdb24f8c339e0abf170}\label{classR6502_ae643e47e502facdb24f8c339e0abf170}} 
-uint8\+\_\+t {\bfseries ORA} ()
+\mbox{\Hypertarget{classR6502_ae81c2c76e4334994e8ce30fc06ec9e62}\label{classR6502_ae81c2c76e4334994e8ce30fc06ec9e62}} 
+void {\bfseries ORA} ()
 \item 
-\mbox{\Hypertarget{classR6502_a89783d04a13b78fd2b6472615961a2e7}\label{classR6502_a89783d04a13b78fd2b6472615961a2e7}} 
-uint8\+\_\+t {\bfseries PHA} ()
+\mbox{\Hypertarget{classR6502_ae6770e3a64b941429fad069fd8a9a8ca}\label{classR6502_ae6770e3a64b941429fad069fd8a9a8ca}} 
+void {\bfseries PHA} ()
 \item 
-\mbox{\Hypertarget{classR6502_a345994683927692f65b591058f792930}\label{classR6502_a345994683927692f65b591058f792930}} 
-uint8\+\_\+t {\bfseries PHP} ()
+\mbox{\Hypertarget{classR6502_a704f17f5b3c17609e2fd31a99ed08f8d}\label{classR6502_a704f17f5b3c17609e2fd31a99ed08f8d}} 
+void {\bfseries PHP} ()
 \item 
-\mbox{\Hypertarget{classR6502_a709e520446a57472e09c0a7cf46dce46}\label{classR6502_a709e520446a57472e09c0a7cf46dce46}} 
-uint8\+\_\+t {\bfseries PLA} ()
+\mbox{\Hypertarget{classR6502_a0292876daad4efc2e802d43ec8e9b560}\label{classR6502_a0292876daad4efc2e802d43ec8e9b560}} 
+void {\bfseries PLA} ()
 \item 
-\mbox{\Hypertarget{classR6502_ab1314358edb3124334a3a3298581ed0c}\label{classR6502_ab1314358edb3124334a3a3298581ed0c}} 
-uint8\+\_\+t {\bfseries PLP} ()
+\mbox{\Hypertarget{classR6502_af7a1b7efd114384dd5b4c063028818bd}\label{classR6502_af7a1b7efd114384dd5b4c063028818bd}} 
+void {\bfseries PLP} ()
 \item 
-\mbox{\Hypertarget{classR6502_a6ca728f6f90c1f2ab643984bd50a4662}\label{classR6502_a6ca728f6f90c1f2ab643984bd50a4662}} 
-uint8\+\_\+t {\bfseries ROL} ()
+\mbox{\Hypertarget{classR6502_aaf46d9a5621e867ace88f43403ae47ed}\label{classR6502_aaf46d9a5621e867ace88f43403ae47ed}} 
+void {\bfseries ROL} ()
 \item 
-\mbox{\Hypertarget{classR6502_ad213711a289e1def04ebc8474d066f7a}\label{classR6502_ad213711a289e1def04ebc8474d066f7a}} 
-uint8\+\_\+t {\bfseries ROR} ()
+\mbox{\Hypertarget{classR6502_aa023084ccd52e19002472a4a842314ce}\label{classR6502_aa023084ccd52e19002472a4a842314ce}} 
+void {\bfseries ROR} ()
 \item 
-\mbox{\Hypertarget{classR6502_ad71b8266b8950d1a6099c92cf018d426}\label{classR6502_ad71b8266b8950d1a6099c92cf018d426}} 
-uint8\+\_\+t {\bfseries RTI} ()
+\mbox{\Hypertarget{classR6502_a85d274bc0e2433271494d88c3e7340da}\label{classR6502_a85d274bc0e2433271494d88c3e7340da}} 
+void {\bfseries RTI} ()
 \item 
-\mbox{\Hypertarget{classR6502_a694d9de5e7111157b467dc3995818857}\label{classR6502_a694d9de5e7111157b467dc3995818857}} 
-uint8\+\_\+t {\bfseries RTS} ()
+\mbox{\Hypertarget{classR6502_ad18eeb2a01414b45356209bf54f47b3a}\label{classR6502_ad18eeb2a01414b45356209bf54f47b3a}} 
+void {\bfseries RTS} ()
 \item 
-\mbox{\Hypertarget{classR6502_ac7ea7f05715918a5abbd8deeb70eabac}\label{classR6502_ac7ea7f05715918a5abbd8deeb70eabac}} 
-uint8\+\_\+t {\bfseries SBC} ()
+\mbox{\Hypertarget{classR6502_a4c2b7db6d2d154ebd542e65ad8cc56ed}\label{classR6502_a4c2b7db6d2d154ebd542e65ad8cc56ed}} 
+void {\bfseries SBC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a6dda6705b95f9300d6170c1df9df6a6e}\label{classR6502_a6dda6705b95f9300d6170c1df9df6a6e}} 
-uint8\+\_\+t {\bfseries SEC} ()
+\mbox{\Hypertarget{classR6502_a60e79041131380328fd9034692dc6c17}\label{classR6502_a60e79041131380328fd9034692dc6c17}} 
+void {\bfseries SEC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a69e183d32452ae20af6779f6b79e422b}\label{classR6502_a69e183d32452ae20af6779f6b79e422b}} 
-uint8\+\_\+t {\bfseries SED} ()
+\mbox{\Hypertarget{classR6502_ae44c5d4875b0eb49af014c1105283d1a}\label{classR6502_ae44c5d4875b0eb49af014c1105283d1a}} 
+void {\bfseries SED} ()
 \item 
-\mbox{\Hypertarget{classR6502_aa767b76b403a3b0256d4e09e69a5c5a7}\label{classR6502_aa767b76b403a3b0256d4e09e69a5c5a7}} 
-uint8\+\_\+t {\bfseries SEI} ()
+\mbox{\Hypertarget{classR6502_a76f5c92458063b9986c2d157d462fa24}\label{classR6502_a76f5c92458063b9986c2d157d462fa24}} 
+void {\bfseries SEI} ()
 \item 
-\mbox{\Hypertarget{classR6502_a970c111cb9c8bdfabf253df4a95691cc}\label{classR6502_a970c111cb9c8bdfabf253df4a95691cc}} 
-uint8\+\_\+t {\bfseries STA} ()
+\mbox{\Hypertarget{classR6502_a3242b36f7abf4653537be5667869105c}\label{classR6502_a3242b36f7abf4653537be5667869105c}} 
+void {\bfseries STA} ()
 \item 
-\mbox{\Hypertarget{classR6502_a39f3d9d7fb0f9e3311421a02aa2fb590}\label{classR6502_a39f3d9d7fb0f9e3311421a02aa2fb590}} 
-uint8\+\_\+t {\bfseries STX} ()
+\mbox{\Hypertarget{classR6502_a6699167ad314e61eb07bb1affd1394ea}\label{classR6502_a6699167ad314e61eb07bb1affd1394ea}} 
+void {\bfseries STX} ()
 \item 
-\mbox{\Hypertarget{classR6502_a4a97a84ff3923b5aa326b4c158cd1494}\label{classR6502_a4a97a84ff3923b5aa326b4c158cd1494}} 
-uint8\+\_\+t {\bfseries STY} ()
+\mbox{\Hypertarget{classR6502_ab6710991917efe5a6f2a6d1cef92641e}\label{classR6502_ab6710991917efe5a6f2a6d1cef92641e}} 
+void {\bfseries STY} ()
 \item 
-\mbox{\Hypertarget{classR6502_a475f6fe985ffa426ce3a9baad7bf897d}\label{classR6502_a475f6fe985ffa426ce3a9baad7bf897d}} 
-uint8\+\_\+t {\bfseries TAX} ()
+\mbox{\Hypertarget{classR6502_abbaa0dfa4d3f3e9fa4a51172e928213f}\label{classR6502_abbaa0dfa4d3f3e9fa4a51172e928213f}} 
+void {\bfseries TAX} ()
 \item 
-\mbox{\Hypertarget{classR6502_acebdbdef10ad3712aeb169bff0413cf3}\label{classR6502_acebdbdef10ad3712aeb169bff0413cf3}} 
-uint8\+\_\+t {\bfseries TAY} ()
+\mbox{\Hypertarget{classR6502_a005770a24cf36971738ea4c348c3d9e4}\label{classR6502_a005770a24cf36971738ea4c348c3d9e4}} 
+void {\bfseries TAY} ()
 \item 
-\mbox{\Hypertarget{classR6502_a0f38255ab71248abf0bd1477c1849042}\label{classR6502_a0f38255ab71248abf0bd1477c1849042}} 
-uint8\+\_\+t {\bfseries TSX} ()
+\mbox{\Hypertarget{classR6502_ad3508cc936e516bdfc900e33ddf2b060}\label{classR6502_ad3508cc936e516bdfc900e33ddf2b060}} 
+void {\bfseries TSX} ()
 \item 
-\mbox{\Hypertarget{classR6502_ae154492eea06645878b620d7dcf290f4}\label{classR6502_ae154492eea06645878b620d7dcf290f4}} 
-uint8\+\_\+t {\bfseries TXA} ()
+\mbox{\Hypertarget{classR6502_ab5345c3dc019d841d0272dd6b0ab6c50}\label{classR6502_ab5345c3dc019d841d0272dd6b0ab6c50}} 
+void {\bfseries TXA} ()
 \item 
-\mbox{\Hypertarget{classR6502_a6955f857f5a5e82b26ab43c21a958a05}\label{classR6502_a6955f857f5a5e82b26ab43c21a958a05}} 
-uint8\+\_\+t {\bfseries TXS} ()
+\mbox{\Hypertarget{classR6502_a32be7691c879a15ee3ca0015f0b6f5ca}\label{classR6502_a32be7691c879a15ee3ca0015f0b6f5ca}} 
+void {\bfseries TXS} ()
 \item 
-\mbox{\Hypertarget{classR6502_a7fa76b23af8ae0a3fb4d44b65f1c68d4}\label{classR6502_a7fa76b23af8ae0a3fb4d44b65f1c68d4}} 
-uint8\+\_\+t {\bfseries TYA} ()
+\mbox{\Hypertarget{classR6502_ae7632722832ae60db1357d896872b92f}\label{classR6502_ae7632722832ae60db1357d896872b92f}} 
+void {\bfseries TYA} ()
 \item 
-\mbox{\Hypertarget{classR6502_a96b4aa2484154365a018ab0e5978e1dd}\label{classR6502_a96b4aa2484154365a018ab0e5978e1dd}} 
-uint8\+\_\+t {\bfseries XXX} ()
+\mbox{\Hypertarget{classR6502_ae4064cf4d3b072fe287abe83998ba1d5}\label{classR6502_ae4064cf4d3b072fe287abe83998ba1d5}} 
+void {\bfseries XXX} ()
 \end{DoxyCompactItemize}
 \doxysubsection*{Static Private Member Functions}
 \begin{DoxyCompactItemize}
@@ -332,8 +345,8 @@ static uint8\+\_\+t \mbox{\hyperlink{classR6502_a5b29b84a3ee80be67dfa3bc16173e93
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classR6502_a713d0c9558f5c98567d76665b24c3e24}\label{classR6502_a713d0c9558f5c98567d76665b24c3e24}} 
-\mbox{\hyperlink{classBus}{Bus}} $\ast$ {\bfseries bus} = nullptr
+\mbox{\Hypertarget{classR6502_a1d9b89836cd21242ee126b3ebbaad434}\label{classR6502_a1d9b89836cd21242ee126b3ebbaad434}} 
+\mbox{\hyperlink{classMemory}{Memory}} {\bfseries memory}
 \item 
 \mbox{\Hypertarget{classR6502_a395e1c94a04aad0c34f5d6f58f1a8508}\label{classR6502_a395e1c94a04aad0c34f5d6f58f1a8508}} 
 uint8\+\_\+t {\bfseries opcode} = 0x00
@@ -376,67 +389,34 @@ uint8\+\_\+t {\bfseries P} = 0x00
 \item 
 \mbox{\Hypertarget{classR6502_a2a47e3114022c38dbee8203969333534}\label{classR6502_a2a47e3114022c38dbee8203969333534}} 
 std\+::vector$<$ \mbox{\hyperlink{structR6502_1_1Instruction}{Instruction}} $>$ {\bfseries instruction\+Matrix}
+\item 
+\mbox{\Hypertarget{classR6502_a4d0d5d8534818789c659c74e25b7aebf}\label{classR6502_a4d0d5d8534818789c659c74e25b7aebf}} 
+uint8\+\_\+t {\bfseries extra\+Cycle\+Prepped} = 0x00
 \end{DoxyCompactItemize}
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classR6502_a944c6b84e4408567085976fab3047479}\label{classR6502_a944c6b84e4408567085976fab3047479}} 
+\mbox{\Hypertarget{classR6502_ac93c1333174ccc6418b4b47c048e4031}\label{classR6502_ac93c1333174ccc6418b4b47c048e4031}} 
 \index{R6502@{R6502}!ABS@{ABS}}
 \index{ABS@{ABS}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{ABS()}{ABS()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+ABS (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily void R6502\+::\+ABS (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
 Absolute addressing mode. 
 
-Second byte has low order byte of effective address, third has higher order byte (reminder again\+: 6502 is little endian!!!) That means ABS instructions can acess all 64KB of address space. 2$^\wedge$8 = 0x100 2 byte addressing... 0x100 $\ast$ 0x100 = 0x10000 (64KB)
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_ac9113367a214712f21f5d54a6d4f86da}\label{classR6502_ac9113367a214712f21f5d54a6d4f86da}} 
-\index{R6502@{R6502}!ABX@{ABX}}
-\index{ABX@{ABX}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{ABX()}{ABX()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+ABX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+Second byte has low order byte of effective address, third has higher order byte (reminder again\+: 6502 is little endian!!!) That means ABS instructions can acess all 64KB of address space. 2$^\wedge$8 = 0x100 2 byte addressing... 0x100 $\ast$ 0x100 = 0x10000 (64KB) \mbox{\Hypertarget{classR6502_a9c30eaecaa00f48227068476d266ea3d}\label{classR6502_a9c30eaecaa00f48227068476d266ea3d}} 
+\index{R6502@{R6502}!ACC@{ACC}}
+\index{ACC@{ACC}!R6502@{R6502}}
+\doxysubsubsection{\texorpdfstring{ACC()}{ACC()}}
+{\footnotesize\ttfamily void R6502\+::\+ACC (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
-Absolute X addressing mode. 
+Accumulator addressing mode. 
 
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_ac4bfae4e389c9ec3d0f19a98c74b3e67}\label{classR6502_ac4bfae4e389c9ec3d0f19a98c74b3e67}} 
-\index{R6502@{R6502}!ABY@{ABY}}
-\index{ABY@{ABY}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{ABY()}{ABY()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+ABY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Absolute Y addressing mode. 
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_a82e3c80b625a84f3d1fe63885c35a204}\label{classR6502_a82e3c80b625a84f3d1fe63885c35a204}} 
-\index{R6502@{R6502}!connectBus@{connectBus}}
-\index{connectBus@{connectBus}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{connectBus()}{connectBus()}}
-{\footnotesize\ttfamily void R6502\+::connect\+Bus (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classBus}{Bus}} $\ast$}]{b }\end{DoxyParamCaption})}
-
-
-
-Sets the CPU\textquotesingle{}s bus. That\textquotesingle{}s all. 
-
-
-\begin{DoxyParams}{Parameters}
-{\em b} & \\
-\hline
-\end{DoxyParams}
-\mbox{\Hypertarget{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}\label{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}} 
+It\textquotesingle{}s just IMP... \mbox{\Hypertarget{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}\label{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}} 
 \index{R6502@{R6502}!doCycle@{doCycle}}
 \index{doCycle@{doCycle}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{doCycle()}{doCycle()}}
@@ -489,50 +469,27 @@ returns the BIT value of a flag
 \begin{DoxyReturn}{Returns}
 uint8\+\_\+t 1 or 0. 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_a92e0274aa230a47420fed88a0506806f}\label{classR6502_a92e0274aa230a47420fed88a0506806f}} 
+\mbox{\Hypertarget{classR6502_a3812901801ba1c1d2aead2c3e7bfb828}\label{classR6502_a3812901801ba1c1d2aead2c3e7bfb828}} 
 \index{R6502@{R6502}!IMM@{IMM}}
 \index{IMM@{IMM}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{IMM()}{IMM()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+IMM (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily void R6502\+::\+IMM (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
 Immediate addressing mode. 
 
-Next byte has operand. get current pc, then increment.
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_ad79d4ce2b810b29774438d2d9d77d793}\label{classR6502_ad79d4ce2b810b29774438d2d9d77d793}} 
-\index{R6502@{R6502}!IMP@{IMP}}
-\index{IMP@{IMP}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{IMP()}{IMP()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+IMP (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Implied addressing mode. 
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_a8334ab8b225ff897bf3c9a7e6ccff122}\label{classR6502_a8334ab8b225ff897bf3c9a7e6ccff122}} 
+Next byte has operand. get current pc, then increment. \mbox{\Hypertarget{classR6502_a6435b53748a3449c49638ee52efa98ab}\label{classR6502_a6435b53748a3449c49638ee52efa98ab}} 
 \index{R6502@{R6502}!IND@{IND}}
 \index{IND@{IND}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{IND()}{IND()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+IND (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily void R6502\+::\+IND (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
 Indirect addressing mode. 
 
-Things start to look weird here in order to simulate a bug in the CPU. From hnesdev.\+icequake.\+net/6502bugs.txt\+: \char`\"{}\+An indirect JMP (xx\+FF) will fail because the MSB will be fetched from address xx00 instead of page xx+1.\char`\"{} DO NOT simplify this. Need to make the bug clear and show details.
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}\label{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}} 
+Things start to look weird here in order to simulate a bug in the CPU. From hnesdev.\+icequake.\+net/6502bugs.txt\+: \char`\"{}\+An indirect JMP (xx\+FF) will fail because the MSB will be fetched from address xx00 instead of page xx+1.\char`\"{} DO NOT simplify this. Need to make the bug clear and show details. \mbox{\Hypertarget{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}\label{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}} 
 \index{R6502@{R6502}!IRQ@{IRQ}}
 \index{IRQ@{IRQ}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{IRQ()}{IRQ()}}
@@ -632,32 +589,6 @@ Is byte a zero?
 \begin{DoxyReturn}{Returns}
 uint8\+\_\+t -\/ Returns the Zero flag (true) if zero and zero (false) if not zero. 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_a316a5e5bd4a887464e1e6c713f535b2e}\label{classR6502_a316a5e5bd4a887464e1e6c713f535b2e}} 
-\index{R6502@{R6502}!IZX@{IZX}}
-\index{IZX@{IZX}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{IZX()}{IZX()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+IZX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Indirect (X-\/indexed) addressing mode. 
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_af126d97c49e41295b1eae184e4920143}\label{classR6502_af126d97c49e41295b1eae184e4920143}} 
-\index{R6502@{R6502}!IZY@{IZY}}
-\index{IZY@{IZY}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{IZY()}{IZY()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+IZY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Indirect (X-\/indexed) addressing mode. 
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
-\end{DoxyReturn}
 \mbox{\Hypertarget{classR6502_a343ece93fe35fa7f4c030a8352dc8e36}\label{classR6502_a343ece93fe35fa7f4c030a8352dc8e36}} 
 \index{R6502@{R6502}!NMI@{NMI}}
 \index{NMI@{NMI}!R6502@{R6502}}
@@ -678,7 +609,17 @@ NMI interrupt sequence command.
 
 Called everytime a register updates. 
 
-Useful for logging. \mbox{\Hypertarget{classR6502_a96bd67071c7f130a60a69b9008f8cae5}\label{classR6502_a96bd67071c7f130a60a69b9008f8cae5}} 
+Useful for logging. \mbox{\Hypertarget{classR6502_a1d04e292b825b6c39a048f2e4115a506}\label{classR6502_a1d04e292b825b6c39a048f2e4115a506}} 
+\index{R6502@{R6502}!prepExtraCycle@{prepExtraCycle}}
+\index{prepExtraCycle@{prepExtraCycle}!R6502@{R6502}}
+\doxysubsubsection{\texorpdfstring{prepExtraCycle()}{prepExtraCycle()}}
+{\footnotesize\ttfamily void R6502\+::prep\+Extra\+Cycle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Preps an extra cycle if asked by address mode. 
+
+Extra cycle will execute if instruction agrees on extra cycle. \mbox{\Hypertarget{classR6502_a96bd67071c7f130a60a69b9008f8cae5}\label{classR6502_a96bd67071c7f130a60a69b9008f8cae5}} 
 \index{R6502@{R6502}!pullStack@{pullStack}}
 \index{pullStack@{pullStack}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{pullStack()}{pullStack()}}
@@ -795,19 +736,6 @@ Read byte at address in PC, increment PC, and then repeat again for the double b
 
 \begin{DoxyReturn}{Returns}
 uint16\+\_\+t The double byte. 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_aa27a2fefb1cc2515d99a49019e4914d0}\label{classR6502_aa27a2fefb1cc2515d99a49019e4914d0}} 
-\index{R6502@{R6502}!REL@{REL}}
-\index{REL@{REL}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{REL()}{REL()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+REL (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Relative addressing mode. 
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
 \end{DoxyReturn}
 \mbox{\Hypertarget{classR6502_a2737d72976d543cd11d6d23531844b48}\label{classR6502_a2737d72976d543cd11d6d23531844b48}} 
 \index{R6502@{R6502}!RES@{RES}}
@@ -980,41 +908,15 @@ Write a byte at an address.
 {\em data} & The data to write. \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classR6502_a953a07c858ff31c929aa8fdf654fb4bd}\label{classR6502_a953a07c858ff31c929aa8fdf654fb4bd}} 
+\mbox{\Hypertarget{classR6502_a8d2547fe06bc528772ec844511990191}\label{classR6502_a8d2547fe06bc528772ec844511990191}} 
 \index{R6502@{R6502}!ZP0@{ZP0}}
 \index{ZP0@{ZP0}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{ZP0()}{ZP0()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+ZP0 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+{\footnotesize\ttfamily void R6502\+::\+ZP0 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
 Zero Page addressing mode. 
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_a4b4c37d06574c616ca54811db16fdeb3}\label{classR6502_a4b4c37d06574c616ca54811db16fdeb3}} 
-\index{R6502@{R6502}!ZPX@{ZPX}}
-\index{ZPX@{ZPX}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{ZPX()}{ZPX()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+ZPX (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Zero Page (X-\/indexed) addressing mode. 
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
-\end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_a5ab8e99ee00f7187d6831948dc26eaad}\label{classR6502_a5ab8e99ee00f7187d6831948dc26eaad}} 
-\index{R6502@{R6502}!ZPY@{ZPY}}
-\index{ZPY@{ZPY}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{ZPY()}{ZPY()}}
-{\footnotesize\ttfamily uint8\+\_\+t R6502\+::\+ZPY (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Zero Page (Y-\/indexed) addressing mode. 
 
 \begin{DoxyReturn}{Returns}
 uint8\+\_\+t Extra cycle possible? 
