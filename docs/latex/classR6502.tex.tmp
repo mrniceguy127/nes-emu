@@ -139,7 +139,8 @@ void {\bfseries IMP} ()
 \begin{DoxyCompactList}\small\item\em Implied addressing mode. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classR6502_a9c30eaecaa00f48227068476d266ea3d}{ACC}} ()
 \begin{DoxyCompactList}\small\item\em Accumulator addressing mode. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classR6502_a8d2547fe06bc528772ec844511990191}{ZP0}} ()
+\mbox{\Hypertarget{classR6502_a8d2547fe06bc528772ec844511990191}\label{classR6502_a8d2547fe06bc528772ec844511990191}} 
+void {\bfseries ZP0} ()
 \begin{DoxyCompactList}\small\item\em Zero Page addressing mode. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classR6502_a32109a816b54aa6a4f4c52146ebc7e7f}\label{classR6502_a32109a816b54aa6a4f4c52146ebc7e7f}} 
 void {\bfseries ZPX} ()
@@ -908,19 +909,6 @@ Write a byte at an address.
 {\em data} & The data to write. \\
 \hline
 \end{DoxyParams}
-\mbox{\Hypertarget{classR6502_a8d2547fe06bc528772ec844511990191}\label{classR6502_a8d2547fe06bc528772ec844511990191}} 
-\index{R6502@{R6502}!ZP0@{ZP0}}
-\index{ZP0@{ZP0}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{ZP0()}{ZP0()}}
-{\footnotesize\ttfamily void R6502\+::\+ZP0 (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Zero Page addressing mode. 
-
-\begin{DoxyReturn}{Returns}
-uint8\+\_\+t Extra cycle possible? 
-\end{DoxyReturn}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

@@ -594,7 +594,6 @@ void R6502::ACC() {
 /**
  * @brief Zero Page addressing mode.
  * 
- * @return uint8_t Extra cycle possible?
  */
 void R6502::ZP0() {
   absAddr = readPC();
