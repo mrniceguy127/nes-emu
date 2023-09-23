@@ -1,0 +1,18 @@
+\hypertarget{Bus_8h_source}{}\doxysection{Bus.\+h}
+\label{Bus_8h_source}\index{src/Bus.h@{src/Bus.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{1 \textcolor{preprocessor}{\#include "{}NESIncludes.h"{}}}
+\DoxyCodeLine{2 }
+\DoxyCodeLine{3 \textcolor{keyword}{class }\mbox{\hyperlink{classBus}{Bus}} \{}
+\DoxyCodeLine{4   \textcolor{keyword}{public}:}
+\DoxyCodeLine{5     \mbox{\hyperlink{classBus}{Bus}}();}
+\DoxyCodeLine{6     \mbox{\hyperlink{classBus}{\string~Bus}}();}
+\DoxyCodeLine{7   \textcolor{keyword}{public}:}
+\DoxyCodeLine{8     std::array<uint8\_t, 0x10000> ram;}
+\DoxyCodeLine{9   \textcolor{keyword}{public}:}
+\DoxyCodeLine{10     uint8\_t read(uint16\_t addr);}
+\DoxyCodeLine{11     \textcolor{keywordtype}{void} write(uint16\_t addr, uint8\_t data);}
+\DoxyCodeLine{12 \};}
+
+\end{DoxyCode}

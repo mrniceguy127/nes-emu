@@ -1,5 +1,5 @@
 # nes-emu
-NES emulator. A hobby project that I figured would be quite entertaining!!!
+Scope is currently just the 6502 with potential to expand to an NES emulator. A hobby project that I figured would be quite entertaining!!!
 
 Status: At the very early stages currently. I don't even have all of the CPU emulated yet.
 
@@ -15,4 +15,4 @@ Status: At the very early stages currently. I don't even have all of the CPU emu
 - These when I got stuck in the beginning and to help me get started:
   - Part 2 only of [this series](https://www.youtube.com/watch?v=8XmxKPJDGU0)
     - And part #2 directory of the [repo associated with the video](https://github.com/OneLoneCoder/olcNES/tree/master/Part%232%20-%20CPU)
-  - ^ These are the only references used when I got stuck in the beginning. Anymore than this and the challenge would be lost. Along with the fun!!!!
+  - ^ These are the only references used when I got stuck in the beginning. I needed to know the things I needed to keep in mind (e.g. emulating bugs) and resources that were available such as data sheets and manuals. Anymore than this and the challenge would be lost. Along with the fun!!!! This project is also to test my own knowledge and prove to myself that I can do these things.
