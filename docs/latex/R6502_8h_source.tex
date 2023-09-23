@@ -12,182 +12,287 @@
 \DoxyCodeLine{8     \mbox{\hyperlink{classR6502}{\string~R6502}}();}
 \DoxyCodeLine{9   \textcolor{keyword}{public}:}
 \DoxyCodeLine{10     \textcolor{comment}{// Initialization for outside programmer}}
-\DoxyCodeLine{11     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ac2c953dfe859abf412b739cba0ff8a8c}{init}}();}
-\DoxyCodeLine{12   \textcolor{keyword}{public}:}
-\DoxyCodeLine{13     \textcolor{comment}{// External events}}
-\DoxyCodeLine{14     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a901623838e58b817967948dbeba88c59}{clock}}();}
-\DoxyCodeLine{15     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a2737d72976d543cd11d6d23531844b48}{RES}}();}
-\DoxyCodeLine{16     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}{IRQ}}();}
-\DoxyCodeLine{17     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a343ece93fe35fa7f4c030a8352dc8e36}{NMI}}();}
-\DoxyCodeLine{18   \textcolor{keyword}{private}:}
-\DoxyCodeLine{19     \mbox{\hyperlink{classMemory}{Memory}} memory;}
-\DoxyCodeLine{20     uint8\_t \mbox{\hyperlink{classR6502_a885aedd2a3eedb5f5e3586b5cc5ccd47}{read}}(uint16\_t addr);}
-\DoxyCodeLine{21     uint16\_t \mbox{\hyperlink{classR6502_a4e1cd10e7f368135d54485d94d8cf657}{read16}}(uint16\_t addr);}
-\DoxyCodeLine{22     uint8\_t \mbox{\hyperlink{classR6502_a7b1c92c89fba856db7bf4ffdeccf8e04}{readPC}}();}
-\DoxyCodeLine{23     uint16\_t \mbox{\hyperlink{classR6502_afa22519b4597a38f78c4dd6cbf9f2980}{readPC16}}();}
-\DoxyCodeLine{24     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ac63aea4327d06c712e387355aa45634c}{write}}(uint16\_t addr, uint8\_t data);}
-\DoxyCodeLine{25   \textcolor{keyword}{private}:}
-\DoxyCodeLine{26     \textcolor{comment}{// Useful variables}}
-\DoxyCodeLine{27     uint8\_t opcode = 0x00;}
-\DoxyCodeLine{28     uint16\_t absAddr = 0x0000;}
-\DoxyCodeLine{29     uint16\_t relAddr = 0x0000;}
-\DoxyCodeLine{30     uint8\_t operand = 0x00;}
-\DoxyCodeLine{31     uint16\_t tmp = 0x0000;}
-\DoxyCodeLine{32 }
-\DoxyCodeLine{33     uint16\_t cycles = 0; \textcolor{comment}{// Cycles remaining for instruction. Will loop until 0.... removing, notes in doCycles implementation}}
-\DoxyCodeLine{34     uint64\_t totalCyclesPassed = 0;}
-\DoxyCodeLine{35 }
-\DoxyCodeLine{36     \textcolor{comment}{// Useful methods}}
-\DoxyCodeLine{37     uint8\_t \mbox{\hyperlink{classR6502_af23243f6579040097fb658e65b118cc8}{fetchOperand}}();}
-\DoxyCodeLine{38   \textcolor{keyword}{private}:}
-\DoxyCodeLine{39     \textcolor{comment}{// Registers}}
-\DoxyCodeLine{40     uint8\_t accumulator = 0x00; \textcolor{comment}{// Accumulator}}
-\DoxyCodeLine{41     uint8\_t x = 0x00; \textcolor{comment}{// X Index register}}
-\DoxyCodeLine{42     uint8\_t y = 0x00; \textcolor{comment}{// Y Index register}}
-\DoxyCodeLine{43     uint16\_t pc = 0x0000; \textcolor{comment}{// Program Counter (16 bits)}}
-\DoxyCodeLine{44     uint8\_t sp = 0x00; \textcolor{comment}{// Stack pointer}}
-\DoxyCodeLine{45     }
-\DoxyCodeLine{46     }
-\DoxyCodeLine{47     \textcolor{comment}{// Flags}}
-\DoxyCodeLine{48     uint8\_t P = 0x00; \textcolor{comment}{// Processor Status}}
-\DoxyCodeLine{49 }
-\DoxyCodeLine{50     \textcolor{keyword}{enum} FLAGS \{ \textcolor{comment}{// Never considered using enums for bit manipulation. Credit to OneLoneCoder for this strategy.}}
-\DoxyCodeLine{51       N = 0x01 << 7, \textcolor{comment}{// Negative?}}
-\DoxyCodeLine{52       V = 0x01 << 6, \textcolor{comment}{// Overflow?}}
-\DoxyCodeLine{53       U = 0x01 << 5, \textcolor{comment}{// UNUSED}}
-\DoxyCodeLine{54       B = 0x01 << 4, \textcolor{comment}{// BRK command?}}
-\DoxyCodeLine{55       D = 0x01 << 3, \textcolor{comment}{// Decimal mode?}}
-\DoxyCodeLine{56       I = 0x01 << 2, \textcolor{comment}{// IRQ disable?}}
-\DoxyCodeLine{57       Z = 0x01 << 1, \textcolor{comment}{// Result zero?}}
-\DoxyCodeLine{58       C = 0x01 << 0  \textcolor{comment}{// Carry?}}
-\DoxyCodeLine{59     \};}
-\DoxyCodeLine{60 }
-\DoxyCodeLine{61     uint8\_t \mbox{\hyperlink{classR6502_ac56bb2f19d81aa102131952138b834d2}{getFlag}}(FLAGS flag);}
-\DoxyCodeLine{62     uint8\_t \mbox{\hyperlink{classR6502_a1e8be351a6ef67497c7723af923ce311}{setBitsOfByte}}(uint8\_t bitsToChange, uint8\_t value, uint8\_t \textcolor{keywordtype}{byte});}
-\DoxyCodeLine{63     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a6167fd22e3883eb1343d4c874836d90b}{setFlags}}(uint8\_t flags, uint8\_t value);}
-\DoxyCodeLine{64     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a6167fd22e3883eb1343d4c874836d90b}{setFlags}}(uint8\_t flags);}
-\DoxyCodeLine{65 }
-\DoxyCodeLine{66   \textcolor{keyword}{private}:}
-\DoxyCodeLine{67     \textcolor{keyword}{struct }\mbox{\hyperlink{structR6502_1_1Instruction}{Instruction}} \{}
-\DoxyCodeLine{68       \textcolor{comment}{//char mnemonic[4];}}
-\DoxyCodeLine{69       void (\mbox{\hyperlink{classR6502}{R6502}}::*addressMode)(void) = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{70       void (\mbox{\hyperlink{classR6502}{R6502}}::*operation)(void) = \textcolor{keyword}{nullptr};}
-\DoxyCodeLine{71       uint8\_t machineCycles = 0;}
-\DoxyCodeLine{72     \};}
-\DoxyCodeLine{73 }
-\DoxyCodeLine{74     std::vector<Instruction> instructionMatrix;}
-\DoxyCodeLine{75 }
-\DoxyCodeLine{76   \textcolor{keyword}{private}:}
-\DoxyCodeLine{77     \textcolor{comment}{// Utility functions}}
-\DoxyCodeLine{78     uint8\_t \mbox{\hyperlink{classR6502_a96bd67071c7f130a60a69b9008f8cae5}{pullStack}}();}
-\DoxyCodeLine{79     uint16\_t \mbox{\hyperlink{classR6502_a41863794dd7b4df05c79ca459dae2704}{pullStack16}}();}
-\DoxyCodeLine{80     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a5b3741ac52180036e740e62092b54fa3}{pushStack}}(uint8\_t \textcolor{keywordtype}{byte});}
-\DoxyCodeLine{81     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a479df391455a114c43bcfba60c5f84d4}{pushStack16}}(uint16\_t dbyte);}
-\DoxyCodeLine{82     \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{classR6502_a1330df49e1dac7c1214471e46b72b799}{isZero}}(uint8\_t);}
-\DoxyCodeLine{83     \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{classR6502_a1330df49e1dac7c1214471e46b72b799}{isZero}}(uint16\_t);}
-\DoxyCodeLine{84     \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{classR6502_a423ffaca5454cc8d76aa257b941815c8}{isNegative}}(uint8\_t);}
-\DoxyCodeLine{85     \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{classR6502_a423ffaca5454cc8d76aa257b941815c8}{isNegative}}(uint16\_t);}
-\DoxyCodeLine{86     \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{classR6502_a5b29b84a3ee80be67dfa3bc16173e932}{isCarry}}(uint16\_t);}
-\DoxyCodeLine{87     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}{doCycle}}(); \textcolor{comment}{// Emulate cycle. Useful for capturing cycle "{}events"{}}}
-\DoxyCodeLine{88     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ae65b642474bd73978e218965c58dc45d}{doRelBranch}}(); \textcolor{comment}{// Relative branching is all done the same...}}
-\DoxyCodeLine{89     uint8\_t extraCyclePrepped = 0x00;}
-\DoxyCodeLine{90     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a1d04e292b825b6c39a048f2e4115a506}{prepExtraCycle}}();}
-\DoxyCodeLine{91     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a81adecf5be1bf7b7c56c031d5079b8d7}{doPossibleExtraCycle}}();}
-\DoxyCodeLine{92     uint16\_t cyclesPassed(); \textcolor{comment}{// Get total cycles passed...}}
-\DoxyCodeLine{93     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a2991b29e11c4d9c7bf28e0c3229a3056}{setPC}}(uint16\_t);}
-\DoxyCodeLine{94     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_aa71bb58c57c3b9dc43d0ae45f7844d69}{incPC}}();}
-\DoxyCodeLine{95     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a08803023a9a08dbdd4cc42bd7f84d823}{decPC}}();}
-\DoxyCodeLine{96     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_accad1075998275c1628a742c9d339222}{setSP}}(uint8\_t);}
-\DoxyCodeLine{97     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a6a37c46e49e1ed84447b999802d874c4}{incSP}}();}
-\DoxyCodeLine{98     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ab8d064d80d5d611b1c19c849ff8bcd45}{decSP}}();}
-\DoxyCodeLine{99     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a6c2db075d3eb24ee8228eef6da558cab}{setX}}(uint8\_t);}
-\DoxyCodeLine{100     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ab16b33ad7a39fe3640194bdebc115465}{incX}}();}
-\DoxyCodeLine{101     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a7780f0ffc686cbadbe59cf33de295217}{decX}}();}
-\DoxyCodeLine{102     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a9a779fd6556c39a4e0febd257da1e8ea}{setY}}(uint8\_t);}
-\DoxyCodeLine{103     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a63af9a115e47a7acdae0b57affddb5c7}{incY}}();}
-\DoxyCodeLine{104     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a3c8068f2edd32fd388ad38a5e246242c}{decY}}();}
-\DoxyCodeLine{105     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a60aaef21584079cd5d57f32ac4cf8f59}{setAccumulator}}(uint8\_t);}
-\DoxyCodeLine{106     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_aca7646723dc26712851a13a5e8f94c46}{setP}}(uint8\_t);}
-\DoxyCodeLine{107 }
-\DoxyCodeLine{108   \textcolor{keyword}{private}:}
-\DoxyCodeLine{109     \textcolor{comment}{// Events... Useful for logging, etc.}}
-\DoxyCodeLine{110     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ab832f67a5d15cacb32a6b718e735db39}{onRegisterUpdate}}();}
-\DoxyCodeLine{111 }
-\DoxyCodeLine{112   \textcolor{keyword}{private}:}
-\DoxyCodeLine{113     \textcolor{comment}{// Addressing modes}}
-\DoxyCodeLine{114     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a3812901801ba1c1d2aead2c3e7bfb828}{IMM}}();}
-\DoxyCodeLine{115     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ac93c1333174ccc6418b4b47c048e4031}{ABS}}();}
-\DoxyCodeLine{116     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a023bdb9739c5c398eeed6bee4762705c}{ABX}}();}
-\DoxyCodeLine{117     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_aff25c3746b34a675f0fbfdd01383219f}{ABY}}();}
-\DoxyCodeLine{118     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ad4048b908598050a4b1801fda801f4e2}{IMP}}();}
-\DoxyCodeLine{119     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a9c30eaecaa00f48227068476d266ea3d}{ACC}}();}
-\DoxyCodeLine{120     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a8d2547fe06bc528772ec844511990191}{ZP0}}();}
-\DoxyCodeLine{121     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a32109a816b54aa6a4f4c52146ebc7e7f}{ZPX}}();}
-\DoxyCodeLine{122     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a52ab5eba817da30fb09ef59ded9722d2}{ZPY}}();}
-\DoxyCodeLine{123     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a9895d87654e2fde3afa164f5535a897d}{REL}}();}
-\DoxyCodeLine{124     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_abd41fed822fd054081f8421890f4e820}{IZX}}();}
-\DoxyCodeLine{125     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a5b992eb2018cd87f93a72fc9d65ddf1c}{IZY}}();}
-\DoxyCodeLine{126     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a6435b53748a3449c49638ee52efa98ab}{IND}}();}
-\DoxyCodeLine{127 }
-\DoxyCodeLine{128   \textcolor{keyword}{private}:}
-\DoxyCodeLine{129     \textcolor{keywordtype}{void} ADC();}
-\DoxyCodeLine{130     \textcolor{keywordtype}{void} AND();}
-\DoxyCodeLine{131     \textcolor{keywordtype}{void} ASL();}
-\DoxyCodeLine{132     \textcolor{keywordtype}{void} BCC();}
-\DoxyCodeLine{133     \textcolor{keywordtype}{void} BCS();}
-\DoxyCodeLine{134     \textcolor{keywordtype}{void} BEQ();}
-\DoxyCodeLine{135     \textcolor{keywordtype}{void} BIT();}
-\DoxyCodeLine{136     \textcolor{keywordtype}{void} BMI();}
-\DoxyCodeLine{137     \textcolor{keywordtype}{void} BNE();}
-\DoxyCodeLine{138     \textcolor{keywordtype}{void} BPL();}
-\DoxyCodeLine{139     \textcolor{keywordtype}{void} BRK();}
-\DoxyCodeLine{140     \textcolor{keywordtype}{void} BVC();}
-\DoxyCodeLine{141     \textcolor{keywordtype}{void} BVS();}
-\DoxyCodeLine{142     \textcolor{keywordtype}{void} CLC();}
-\DoxyCodeLine{143     \textcolor{keywordtype}{void} CLD();}
-\DoxyCodeLine{144     \textcolor{keywordtype}{void} CLI();}
-\DoxyCodeLine{145     \textcolor{keywordtype}{void} CLV();}
-\DoxyCodeLine{146     \textcolor{keywordtype}{void} CMP();}
-\DoxyCodeLine{147     \textcolor{keywordtype}{void} CPX();}
-\DoxyCodeLine{148     \textcolor{keywordtype}{void} CPY();}
-\DoxyCodeLine{149     \textcolor{keywordtype}{void} DEC();}
-\DoxyCodeLine{150     \textcolor{keywordtype}{void} DEX();}
-\DoxyCodeLine{151     \textcolor{keywordtype}{void} DEY();}
-\DoxyCodeLine{152     \textcolor{keywordtype}{void} EOR();}
-\DoxyCodeLine{153     \textcolor{keywordtype}{void} INC();}
-\DoxyCodeLine{154     \textcolor{keywordtype}{void} INX();}
-\DoxyCodeLine{155     \textcolor{keywordtype}{void} INY();}
-\DoxyCodeLine{156     \textcolor{keywordtype}{void} JMP();}
-\DoxyCodeLine{157     \textcolor{keywordtype}{void} JSR();}
-\DoxyCodeLine{158     \textcolor{keywordtype}{void} LDA();}
-\DoxyCodeLine{159     \textcolor{keywordtype}{void} LDX();}
-\DoxyCodeLine{160     \textcolor{keywordtype}{void} LDY();}
-\DoxyCodeLine{161     \textcolor{keywordtype}{void} LSR();}
-\DoxyCodeLine{162     \textcolor{keywordtype}{void} NOP();}
-\DoxyCodeLine{163     \textcolor{keywordtype}{void} ORA();}
-\DoxyCodeLine{164     \textcolor{keywordtype}{void} PHA();}
-\DoxyCodeLine{165     \textcolor{keywordtype}{void} PHP();}
-\DoxyCodeLine{166     \textcolor{keywordtype}{void} PLA();}
-\DoxyCodeLine{167     \textcolor{keywordtype}{void} PLP();}
-\DoxyCodeLine{168     \textcolor{keywordtype}{void} ROL();}
-\DoxyCodeLine{169     \textcolor{keywordtype}{void} ROR();}
-\DoxyCodeLine{170     \textcolor{keywordtype}{void} RTI();}
-\DoxyCodeLine{171     \textcolor{keywordtype}{void} RTS();}
-\DoxyCodeLine{172     \textcolor{keywordtype}{void} SBC();}
-\DoxyCodeLine{173     \textcolor{keywordtype}{void} SEC();}
-\DoxyCodeLine{174     \textcolor{keywordtype}{void} SED();}
-\DoxyCodeLine{175     \textcolor{keywordtype}{void} SEI();}
-\DoxyCodeLine{176     \textcolor{keywordtype}{void} STA();}
-\DoxyCodeLine{177     \textcolor{keywordtype}{void} STX();}
-\DoxyCodeLine{178     \textcolor{keywordtype}{void} STY();}
-\DoxyCodeLine{179     \textcolor{keywordtype}{void} TAX();}
-\DoxyCodeLine{180     \textcolor{keywordtype}{void} TAY();}
-\DoxyCodeLine{181     \textcolor{keywordtype}{void} TSX();}
-\DoxyCodeLine{182     \textcolor{keywordtype}{void} TXA();}
-\DoxyCodeLine{183     \textcolor{keywordtype}{void} TXS();}
-\DoxyCodeLine{184     \textcolor{keywordtype}{void} TYA();}
-\DoxyCodeLine{185 }
-\DoxyCodeLine{186     \textcolor{keywordtype}{void} XXX();}
-\DoxyCodeLine{187 \};}
+\DoxyCodeLine{11 }
+\DoxyCodeLine{16     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ac2c953dfe859abf412b739cba0ff8a8c}{init}}();}
+\DoxyCodeLine{17   \textcolor{keyword}{public}:}
+\DoxyCodeLine{18     \textcolor{comment}{// External events}}
+\DoxyCodeLine{19 }
+\DoxyCodeLine{24     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a901623838e58b817967948dbeba88c59}{clock}}();}
+\DoxyCodeLine{25 }
+\DoxyCodeLine{33     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a2737d72976d543cd11d6d23531844b48}{RES}}();}
+\DoxyCodeLine{34 }
+\DoxyCodeLine{42     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}{IRQ}}();}
+\DoxyCodeLine{43 }
+\DoxyCodeLine{51     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a343ece93fe35fa7f4c030a8352dc8e36}{NMI}}();}
+\DoxyCodeLine{52   \textcolor{keyword}{private}:}
+\DoxyCodeLine{53     \mbox{\hyperlink{classMemory}{Memory}} memory;}
+\DoxyCodeLine{54 }
+\DoxyCodeLine{61     uint8\_t \mbox{\hyperlink{classR6502_a885aedd2a3eedb5f5e3586b5cc5ccd47}{read}}(uint16\_t addr);}
+\DoxyCodeLine{62 }
+\DoxyCodeLine{69     uint16\_t \mbox{\hyperlink{classR6502_a4e1cd10e7f368135d54485d94d8cf657}{read16}}(uint16\_t addr);}
+\DoxyCodeLine{70 }
+\DoxyCodeLine{76     uint8\_t \mbox{\hyperlink{classR6502_a7b1c92c89fba856db7bf4ffdeccf8e04}{readPC}}();}
+\DoxyCodeLine{77 }
+\DoxyCodeLine{78 }
+\DoxyCodeLine{84     uint16\_t \mbox{\hyperlink{classR6502_afa22519b4597a38f78c4dd6cbf9f2980}{readPC16}}();}
+\DoxyCodeLine{85 }
+\DoxyCodeLine{92     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ac63aea4327d06c712e387355aa45634c}{write}}(uint16\_t addr, uint8\_t data);}
+\DoxyCodeLine{93   \textcolor{keyword}{private}:}
+\DoxyCodeLine{94     \textcolor{comment}{// Useful variables}}
+\DoxyCodeLine{95     uint8\_t opcode = 0x00;}
+\DoxyCodeLine{96     uint16\_t absAddr = 0x0000;}
+\DoxyCodeLine{97     uint16\_t relAddr = 0x0000;}
+\DoxyCodeLine{98     uint8\_t operand = 0x00;}
+\DoxyCodeLine{99     uint16\_t tmp = 0x0000;}
+\DoxyCodeLine{100 }
+\DoxyCodeLine{101     uint16\_t cycles = 0; \textcolor{comment}{// Cycles remaining for instruction. Will loop until 0.... removing, notes in doCycles implementation}}
+\DoxyCodeLine{102     uint64\_t totalCyclesPassed = 0;}
+\DoxyCodeLine{103 }
+\DoxyCodeLine{104     \textcolor{comment}{// Useful methods}}
+\DoxyCodeLine{105 }
+\DoxyCodeLine{113     uint8\_t \mbox{\hyperlink{classR6502_af23243f6579040097fb658e65b118cc8}{fetchOperand}}();}
+\DoxyCodeLine{114   \textcolor{keyword}{private}:}
+\DoxyCodeLine{115     \textcolor{comment}{// Registers}}
+\DoxyCodeLine{116     uint8\_t accumulator = 0x00; \textcolor{comment}{// Accumulator}}
+\DoxyCodeLine{117     uint8\_t x = 0x00; \textcolor{comment}{// X Index register}}
+\DoxyCodeLine{118     uint8\_t y = 0x00; \textcolor{comment}{// Y Index register}}
+\DoxyCodeLine{119     uint16\_t pc = 0x0000; \textcolor{comment}{// Program Counter (16 bits)}}
+\DoxyCodeLine{120     uint8\_t sp = 0x00; \textcolor{comment}{// Stack pointer}}
+\DoxyCodeLine{121     }
+\DoxyCodeLine{122     }
+\DoxyCodeLine{123     \textcolor{comment}{// Flags}}
+\DoxyCodeLine{124     uint8\_t P = 0x00; \textcolor{comment}{// Processor Status}}
+\DoxyCodeLine{125 }
+\DoxyCodeLine{126     \textcolor{keyword}{enum} FLAGS \{ \textcolor{comment}{// Never considered using enums for bit manipulation. Credit to OneLoneCoder for this strategy.}}
+\DoxyCodeLine{127       N = 0x01 << 7, \textcolor{comment}{// Negative?}}
+\DoxyCodeLine{128       V = 0x01 << 6, \textcolor{comment}{// Overflow?}}
+\DoxyCodeLine{129       U = 0x01 << 5, \textcolor{comment}{// UNUSED}}
+\DoxyCodeLine{130       B = 0x01 << 4, \textcolor{comment}{// BRK command?}}
+\DoxyCodeLine{131       D = 0x01 << 3, \textcolor{comment}{// Decimal mode?}}
+\DoxyCodeLine{132       I = 0x01 << 2, \textcolor{comment}{// IRQ disable?}}
+\DoxyCodeLine{133       Z = 0x01 << 1, \textcolor{comment}{// Result zero?}}
+\DoxyCodeLine{134       C = 0x01 << 0  \textcolor{comment}{// Carry?}}
+\DoxyCodeLine{135     \};}
+\DoxyCodeLine{136 }
+\DoxyCodeLine{143     uint8\_t \mbox{\hyperlink{classR6502_ac56bb2f19d81aa102131952138b834d2}{getFlag}}(FLAGS flag);}
+\DoxyCodeLine{144 }
+\DoxyCodeLine{153     uint8\_t \mbox{\hyperlink{classR6502_a1e8be351a6ef67497c7723af923ce311}{setBitsOfByte}}(uint8\_t bitsToChange, uint8\_t value, uint8\_t \textcolor{keywordtype}{byte});}
+\DoxyCodeLine{154 }
+\DoxyCodeLine{161     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a6167fd22e3883eb1343d4c874836d90b}{setFlags}}(uint8\_t flags, uint8\_t value);}
+\DoxyCodeLine{162 }
+\DoxyCodeLine{168     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a6167fd22e3883eb1343d4c874836d90b}{setFlags}}(uint8\_t flags);}
+\DoxyCodeLine{169 }
+\DoxyCodeLine{170   \textcolor{keyword}{private}:}
+\DoxyCodeLine{171     \textcolor{keyword}{enum} MODES \{}
+\DoxyCodeLine{172       NULLMODE, \textcolor{comment}{// emulator utility. Not a real address mode}}
+\DoxyCodeLine{173 }
+\DoxyCodeLine{174       IMMEDIATE,}
+\DoxyCodeLine{175       ABSOLUTE, ABSOLUTEX, ABSOLUTEY,}
+\DoxyCodeLine{176       IMPLIED, ACCUMULATOR,}
+\DoxyCodeLine{177       ZEROPAGE, ZEROPAGEX, ZEROPAGEY,}
+\DoxyCodeLine{178       RELATIVE,}
+\DoxyCodeLine{179       INDIRECT, INDIRECTX, INDIRECTY,}
+\DoxyCodeLine{180     \};}
+\DoxyCodeLine{181 }
+\DoxyCodeLine{182     \textcolor{keyword}{enum} OPS \{}
+\DoxyCodeLine{183       NULLOP, \textcolor{comment}{// emulator utility. Not a real operation}}
+\DoxyCodeLine{184 }
+\DoxyCodeLine{185       ADC, AND, ASL, BCC, BCS, BEQ, BIT, BMI,}
+\DoxyCodeLine{186       BNE, BPL, BRK, BVC, BVS, CLC, CLD, CLI,}
+\DoxyCodeLine{187       CLV, CMP, CPX, CPY, DEC, DEX, DEY, EOR,}
+\DoxyCodeLine{188       INC, INX, INY, JMP, JSR, LDA, LDX, LDY,}
+\DoxyCodeLine{189       LSR, NOP, ORA, PHA, PHP, PLA, PLP, ROL,}
+\DoxyCodeLine{190       ROR, RTI, RTS, SBC, SEC, SED, SEI, STA,}
+\DoxyCodeLine{191       STX, STY, TAX, TAY, TSX, TXA, TXS, TYA,}
+\DoxyCodeLine{192     \};}
+\DoxyCodeLine{193 }
+\DoxyCodeLine{194     \textcolor{keyword}{struct }\mbox{\hyperlink{structR6502_1_1Instruction}{Instruction}} \{}
+\DoxyCodeLine{195       \textcolor{comment}{//char mnemonic[4];}}
+\DoxyCodeLine{196       MODES addressMode = NULLMODE;}
+\DoxyCodeLine{197       OPS operation = NULLOP;}
+\DoxyCodeLine{198       uint8\_t machineCycles = 0;}
+\DoxyCodeLine{199     \};}
+\DoxyCodeLine{200 }
+\DoxyCodeLine{201     \textcolor{keyword}{const} \mbox{\hyperlink{structR6502_1_1Instruction}{Instruction}} NULL\_INSTRUCTION = \{NULLMODE, NULLOP, 0\};}
+\DoxyCodeLine{202 }
+\DoxyCodeLine{203     std::vector<Instruction> instructionMatrix;}
+\DoxyCodeLine{204     Instruction currentInstruction = NULL\_INSTRUCTION;}
+\DoxyCodeLine{205 }
+\DoxyCodeLine{211     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a6d202cd149a1b2a54033968fe7737a9e}{doAddressMode}}(MODES);}
+\DoxyCodeLine{212 }
+\DoxyCodeLine{213 }
+\DoxyCodeLine{219     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_af37181a3e671da1e5158a2e9484df7ce}{doOperation}}(OPS);}
+\DoxyCodeLine{220 }
+\DoxyCodeLine{226     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a87e4590eec62dfe7c11c1c13a8f17744}{doInstruction}}(Instruction\&);}
+\DoxyCodeLine{227 }
+\DoxyCodeLine{228 }
+\DoxyCodeLine{233     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a9d143908c5d27dc5e0bbe73faed149d4}{doCurrentInstruction}}();}
+\DoxyCodeLine{234 }
+\DoxyCodeLine{235   \textcolor{keyword}{private}:}
+\DoxyCodeLine{236     \textcolor{comment}{// Utility functions}}
+\DoxyCodeLine{237 }
+\DoxyCodeLine{243     uint8\_t \mbox{\hyperlink{classR6502_a96bd67071c7f130a60a69b9008f8cae5}{pullStack}}();}
+\DoxyCodeLine{244 }
+\DoxyCodeLine{250     uint16\_t \mbox{\hyperlink{classR6502_a41863794dd7b4df05c79ca459dae2704}{pullStack16}}();}
+\DoxyCodeLine{251 }
+\DoxyCodeLine{257     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a5b3741ac52180036e740e62092b54fa3}{pushStack}}(uint8\_t \textcolor{keywordtype}{byte});}
+\DoxyCodeLine{258 }
+\DoxyCodeLine{264     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a479df391455a114c43bcfba60c5f84d4}{pushStack16}}(uint16\_t dbyte);}
+\DoxyCodeLine{265 }
+\DoxyCodeLine{272     \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{classR6502_a1330df49e1dac7c1214471e46b72b799}{isZero}}(uint8\_t);}
+\DoxyCodeLine{273 }
+\DoxyCodeLine{280     \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{classR6502_a1330df49e1dac7c1214471e46b72b799}{isZero}}(uint16\_t);}
+\DoxyCodeLine{281 }
+\DoxyCodeLine{288     \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{classR6502_a423ffaca5454cc8d76aa257b941815c8}{isNegative}}(uint8\_t);}
+\DoxyCodeLine{289 }
+\DoxyCodeLine{296     \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{classR6502_a423ffaca5454cc8d76aa257b941815c8}{isNegative}}(uint16\_t);}
+\DoxyCodeLine{297 }
+\DoxyCodeLine{304     \textcolor{keyword}{static} uint8\_t \mbox{\hyperlink{classR6502_a5b29b84a3ee80be67dfa3bc16173e932}{isCarry}}(uint16\_t);}
+\DoxyCodeLine{305 }
+\DoxyCodeLine{306 }
+\DoxyCodeLine{313     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}{doCycle}}();}
+\DoxyCodeLine{314 }
+\DoxyCodeLine{322     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ae65b642474bd73978e218965c58dc45d}{doRelBranch}}();}
+\DoxyCodeLine{323 }
+\DoxyCodeLine{324 }
+\DoxyCodeLine{325     uint8\_t extraCyclePrepped = 0x00;}
+\DoxyCodeLine{326 }
+\DoxyCodeLine{333     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a1d04e292b825b6c39a048f2e4115a506}{prepExtraCycle}}();}
+\DoxyCodeLine{334 }
+\DoxyCodeLine{339     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a81adecf5be1bf7b7c56c031d5079b8d7}{doPossibleExtraCycle}}();}
+\DoxyCodeLine{340     uint16\_t cyclesPassed();}
+\DoxyCodeLine{341 }
+\DoxyCodeLine{347     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a2991b29e11c4d9c7bf28e0c3229a3056}{setPC}}(uint16\_t);}
+\DoxyCodeLine{348 }
+\DoxyCodeLine{353     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_aa71bb58c57c3b9dc43d0ae45f7844d69}{incPC}}();}
+\DoxyCodeLine{354 }
+\DoxyCodeLine{359     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a08803023a9a08dbdd4cc42bd7f84d823}{decPC}}();}
+\DoxyCodeLine{360 }
+\DoxyCodeLine{366     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_accad1075998275c1628a742c9d339222}{setSP}}(uint8\_t);}
+\DoxyCodeLine{367 }
+\DoxyCodeLine{372     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a6a37c46e49e1ed84447b999802d874c4}{incSP}}();}
+\DoxyCodeLine{373 }
+\DoxyCodeLine{378     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ab8d064d80d5d611b1c19c849ff8bcd45}{decSP}}();}
+\DoxyCodeLine{379 }
+\DoxyCodeLine{385     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a6c2db075d3eb24ee8228eef6da558cab}{setX}}(uint8\_t);}
+\DoxyCodeLine{386 }
+\DoxyCodeLine{391     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ab16b33ad7a39fe3640194bdebc115465}{incX}}();}
+\DoxyCodeLine{392 }
+\DoxyCodeLine{397     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a7780f0ffc686cbadbe59cf33de295217}{decX}}();}
+\DoxyCodeLine{398     }
+\DoxyCodeLine{404     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a9a779fd6556c39a4e0febd257da1e8ea}{setY}}(uint8\_t);}
+\DoxyCodeLine{405 }
+\DoxyCodeLine{406 }
+\DoxyCodeLine{411     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a63af9a115e47a7acdae0b57affddb5c7}{incY}}();}
+\DoxyCodeLine{412 }
+\DoxyCodeLine{417     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a3c8068f2edd32fd388ad38a5e246242c}{decY}}();}
+\DoxyCodeLine{418 }
+\DoxyCodeLine{424     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a60aaef21584079cd5d57f32ac4cf8f59}{setAccumulator}}(uint8\_t);}
+\DoxyCodeLine{425 }
+\DoxyCodeLine{431     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_aca7646723dc26712851a13a5e8f94c46}{setP}}(uint8\_t);}
+\DoxyCodeLine{432 }
+\DoxyCodeLine{433   \textcolor{keyword}{private}:}
+\DoxyCodeLine{434     \textcolor{comment}{// Event handlers... Useful for logging, etc.}}
+\DoxyCodeLine{435 }
+\DoxyCodeLine{442     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ab832f67a5d15cacb32a6b718e735db39}{onRegisterUpdate}}();}
+\DoxyCodeLine{443 }
+\DoxyCodeLine{444   \textcolor{keyword}{private}:}
+\DoxyCodeLine{445     \textcolor{comment}{// Addressing modes}}
+\DoxyCodeLine{446 }
+\DoxyCodeLine{453     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a0234ea634f93c203b0d4df622c675a71}{modeImmediate}}();}
+\DoxyCodeLine{454 }
+\DoxyCodeLine{465     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_aa697ba62d9912ff710f8116840101dc8}{modeAbsolute}}();}
+\DoxyCodeLine{466 }
+\DoxyCodeLine{471     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a547154bcb1675afb4a49ab383b6c07eb}{modeAbsoluteX}}();}
+\DoxyCodeLine{472 }
+\DoxyCodeLine{477     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_af7611a264877c138652904790acde5aa}{modeAbsoluteY}}();}
+\DoxyCodeLine{478 }
+\DoxyCodeLine{479 }
+\DoxyCodeLine{484     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_ae16054a85b241d2055f202892d3e641a}{modeImplied}}();}
+\DoxyCodeLine{485 }
+\DoxyCodeLine{492     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_afb0e31aad2df919e7c6bca85b3b87cc7}{modeAccumulator}}();}
+\DoxyCodeLine{493 }
+\DoxyCodeLine{498     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_af69b4c2e44b7bab78a21c7c5fe1dd004}{modeZeroPage}}();}
+\DoxyCodeLine{499 }
+\DoxyCodeLine{500 }
+\DoxyCodeLine{505     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_af617d1ef7fde1b4bd29962fd8eb87e10}{modeZeroPageX}}();}
+\DoxyCodeLine{506 }
+\DoxyCodeLine{511     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a50ef7b5cb27d12930104bfa977b0e9c6}{modeZeroPageY}}();}
+\DoxyCodeLine{512 }
+\DoxyCodeLine{517     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a847b742fecd9cdf25fd2612c5d6c6ad2}{modeRelative}}();}
+\DoxyCodeLine{518 }
+\DoxyCodeLine{523     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a7ee0be66e72b02a7da3d19792d5254f1}{modeIndirectX}}();}
+\DoxyCodeLine{524 }
+\DoxyCodeLine{529     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_af7554b121fe67f5e57620a23ae85b810}{modeIndirectY}}();}
+\DoxyCodeLine{530 }
+\DoxyCodeLine{538     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a62fdc49984a4ac463b624ae7c7f282e2}{modeIndirect}}();}
+\DoxyCodeLine{539 }
+\DoxyCodeLine{540   \textcolor{keyword}{private}:}
+\DoxyCodeLine{541     \textcolor{comment}{// Opertions}}
+\DoxyCodeLine{542 }
+\DoxyCodeLine{543     \textcolor{keywordtype}{void} opADC();}
+\DoxyCodeLine{544     \textcolor{keywordtype}{void} opAND();}
+\DoxyCodeLine{545     \textcolor{keywordtype}{void} opASL();}
+\DoxyCodeLine{546     \textcolor{keywordtype}{void} opBCC();}
+\DoxyCodeLine{547     \textcolor{keywordtype}{void} opBCS();}
+\DoxyCodeLine{548     \textcolor{keywordtype}{void} opBEQ();}
+\DoxyCodeLine{549     \textcolor{keywordtype}{void} opBIT();}
+\DoxyCodeLine{550     \textcolor{keywordtype}{void} opBMI();}
+\DoxyCodeLine{551     \textcolor{keywordtype}{void} opBNE();}
+\DoxyCodeLine{552     \textcolor{keywordtype}{void} opBPL();}
+\DoxyCodeLine{553     \textcolor{keywordtype}{void} opBRK();}
+\DoxyCodeLine{554     \textcolor{keywordtype}{void} opBVC();}
+\DoxyCodeLine{555     \textcolor{keywordtype}{void} opBVS();}
+\DoxyCodeLine{556     \textcolor{keywordtype}{void} opCLC();}
+\DoxyCodeLine{557     \textcolor{keywordtype}{void} opCLD();}
+\DoxyCodeLine{558     \textcolor{keywordtype}{void} opCLI();}
+\DoxyCodeLine{559     \textcolor{keywordtype}{void} opCLV();}
+\DoxyCodeLine{560     \textcolor{keywordtype}{void} opCMP();}
+\DoxyCodeLine{561     \textcolor{keywordtype}{void} opCPX();}
+\DoxyCodeLine{562     \textcolor{keywordtype}{void} opCPY();}
+\DoxyCodeLine{563     \textcolor{keywordtype}{void} opDEC();}
+\DoxyCodeLine{564     \textcolor{keywordtype}{void} opDEX();}
+\DoxyCodeLine{565     \textcolor{keywordtype}{void} opDEY();}
+\DoxyCodeLine{566     \textcolor{keywordtype}{void} opEOR();}
+\DoxyCodeLine{567     \textcolor{keywordtype}{void} opINC();}
+\DoxyCodeLine{568     \textcolor{keywordtype}{void} opINX();}
+\DoxyCodeLine{569     \textcolor{keywordtype}{void} opINY();}
+\DoxyCodeLine{570     \textcolor{keywordtype}{void} opJMP();}
+\DoxyCodeLine{571     \textcolor{keywordtype}{void} opJSR();}
+\DoxyCodeLine{572     \textcolor{keywordtype}{void} opLDA();}
+\DoxyCodeLine{573     \textcolor{keywordtype}{void} opLDX();}
+\DoxyCodeLine{574     \textcolor{keywordtype}{void} opLDY();}
+\DoxyCodeLine{575     \textcolor{keywordtype}{void} opLSR();}
+\DoxyCodeLine{576     \textcolor{keywordtype}{void} opNOP();}
+\DoxyCodeLine{577     \textcolor{keywordtype}{void} opORA();}
+\DoxyCodeLine{578     \textcolor{keywordtype}{void} opPHA();}
+\DoxyCodeLine{579     \textcolor{keywordtype}{void} opPHP();}
+\DoxyCodeLine{580     \textcolor{keywordtype}{void} opPLA();}
+\DoxyCodeLine{581     \textcolor{keywordtype}{void} opPLP();}
+\DoxyCodeLine{582     \textcolor{keywordtype}{void} opROL();}
+\DoxyCodeLine{583     \textcolor{keywordtype}{void} opROR();}
+\DoxyCodeLine{584     \textcolor{keywordtype}{void} opRTI();}
+\DoxyCodeLine{585     \textcolor{keywordtype}{void} opRTS();}
+\DoxyCodeLine{586     \textcolor{keywordtype}{void} opSBC();}
+\DoxyCodeLine{587     \textcolor{keywordtype}{void} opSEC();}
+\DoxyCodeLine{588     \textcolor{keywordtype}{void} opSED();}
+\DoxyCodeLine{589     \textcolor{keywordtype}{void} opSEI();}
+\DoxyCodeLine{590     \textcolor{keywordtype}{void} opSTA();}
+\DoxyCodeLine{591     \textcolor{keywordtype}{void} opSTX();}
+\DoxyCodeLine{592     \textcolor{keywordtype}{void} opSTY();}
+\DoxyCodeLine{593     \textcolor{keywordtype}{void} opTAX();}
+\DoxyCodeLine{594     \textcolor{keywordtype}{void} opTAY();}
+\DoxyCodeLine{595     \textcolor{keywordtype}{void} opTSX();}
+\DoxyCodeLine{596     \textcolor{keywordtype}{void} opTXA();}
+\DoxyCodeLine{597     \textcolor{keywordtype}{void} opTXS();}
+\DoxyCodeLine{598     \textcolor{keywordtype}{void} opTYA();}
+\DoxyCodeLine{599 }
+\DoxyCodeLine{600   \textcolor{keyword}{private}:}
+\DoxyCodeLine{601     \textcolor{comment}{// Illegal instruction handling}}
+\DoxyCodeLine{602 }
+\DoxyCodeLine{607     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_a93248662abf248f9660f6375c4595ffc}{modeIllegal}}();}
+\DoxyCodeLine{608 }
+\DoxyCodeLine{613     \textcolor{keywordtype}{void} \mbox{\hyperlink{classR6502_aa479b48ea12de8ca049daa98f3b49200}{opIllegal}}();}
+\DoxyCodeLine{614 \};}
 
 \end{DoxyCode}

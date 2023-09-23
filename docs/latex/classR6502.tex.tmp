@@ -42,6 +42,102 @@ enum {\bfseries FLAGS} \{ \newline
 , {\bfseries Z} = 0x01 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 1
 , {\bfseries C} = 0x01 \texorpdfstring{$<$}{<}\texorpdfstring{$<$}{<} 0
  \}
+\item 
+\mbox{\Hypertarget{classR6502_ac0b772ec09dc191f0dcb44f7ba836730}\label{classR6502_ac0b772ec09dc191f0dcb44f7ba836730}} 
+enum {\bfseries MODES} \{ \newline
+{\bfseries NULLMODE}
+, {\bfseries IMMEDIATE}
+, {\bfseries ABSOLUTE}
+, {\bfseries ABSOLUTEX}
+, \newline
+{\bfseries ABSOLUTEY}
+, {\bfseries IMPLIED}
+, {\bfseries ACCUMULATOR}
+, {\bfseries ZEROPAGE}
+, \newline
+{\bfseries ZEROPAGEX}
+, {\bfseries ZEROPAGEY}
+, {\bfseries RELATIVE}
+, {\bfseries INDIRECT}
+, \newline
+{\bfseries INDIRECTX}
+, {\bfseries INDIRECTY}
+ \}
+\item 
+\mbox{\Hypertarget{classR6502_a11b1c791c7387dafddebf6b73b5b7d66}\label{classR6502_a11b1c791c7387dafddebf6b73b5b7d66}} 
+enum {\bfseries OPS} \{ \newline
+{\bfseries NULLOP}
+, {\bfseries ADC}
+, {\bfseries AND}
+, {\bfseries ASL}
+, \newline
+{\bfseries BCC}
+, {\bfseries BCS}
+, {\bfseries BEQ}
+, {\bfseries BIT}
+, \newline
+{\bfseries BMI}
+, {\bfseries BNE}
+, {\bfseries BPL}
+, {\bfseries BRK}
+, \newline
+{\bfseries BVC}
+, {\bfseries BVS}
+, {\bfseries CLC}
+, {\bfseries CLD}
+, \newline
+{\bfseries CLI}
+, {\bfseries CLV}
+, {\bfseries CMP}
+, {\bfseries CPX}
+, \newline
+{\bfseries CPY}
+, {\bfseries DEC}
+, {\bfseries DEX}
+, {\bfseries DEY}
+, \newline
+{\bfseries EOR}
+, {\bfseries INC}
+, {\bfseries INX}
+, {\bfseries INY}
+, \newline
+{\bfseries JMP}
+, {\bfseries JSR}
+, {\bfseries LDA}
+, {\bfseries LDX}
+, \newline
+{\bfseries LDY}
+, {\bfseries LSR}
+, {\bfseries NOP}
+, {\bfseries ORA}
+, \newline
+{\bfseries PHA}
+, {\bfseries PHP}
+, {\bfseries PLA}
+, {\bfseries PLP}
+, \newline
+{\bfseries ROL}
+, {\bfseries ROR}
+, {\bfseries RTI}
+, {\bfseries RTS}
+, \newline
+{\bfseries SBC}
+, {\bfseries SEC}
+, {\bfseries SED}
+, {\bfseries SEI}
+, \newline
+{\bfseries STA}
+, {\bfseries STX}
+, {\bfseries STY}
+, {\bfseries TAX}
+, \newline
+{\bfseries TAY}
+, {\bfseries TSX}
+, {\bfseries TXA}
+, {\bfseries TXS}
+, \newline
+{\bfseries TYA}
+ \}
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
@@ -66,6 +162,15 @@ void \mbox{\hyperlink{classR6502_a6167fd22e3883eb1343d4c874836d90b}{set\+Flags}}
 \begin{DoxyCompactList}\small\item\em Sets flags to a specific value. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classR6502_aa435f7321be2e8166f03c7fc0cd542f8}{set\+Flags}} (uint8\+\_\+t flags)
 \begin{DoxyCompactList}\small\item\em Set specific flags to 1. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classR6502_a6d202cd149a1b2a54033968fe7737a9e}{do\+Address\+Mode}} (MODES)
+\begin{DoxyCompactList}\small\item\em Execute code requiured for given address mode. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classR6502_af37181a3e671da1e5158a2e9484df7ce}{do\+Operation}} (OPS)
+\begin{DoxyCompactList}\small\item\em Executes the given operation. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classR6502_a87e4590eec62dfe7c11c1c13a8f17744}{do\+Instruction}} (\mbox{\hyperlink{structR6502_1_1Instruction}{Instruction}} \&)
+\begin{DoxyCompactList}\small\item\em Execute a given instruction. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classR6502_a9d143908c5d27dc5e0bbe73faed149d4}\label{classR6502_a9d143908c5d27dc5e0bbe73faed149d4}} 
+void {\bfseries do\+Current\+Instruction} ()
+\begin{DoxyCompactList}\small\item\em Execute the current instruction based on the current opcode. \end{DoxyCompactList}\item 
 uint8\+\_\+t \mbox{\hyperlink{classR6502_a96bd67071c7f130a60a69b9008f8cae5}{pull\+Stack}} ()
 \begin{DoxyCompactList}\small\item\em Pull the stack. \end{DoxyCompactList}\item 
 uint16\+\_\+t \mbox{\hyperlink{classR6502_a41863794dd7b4df05c79ca459dae2704}{pull\+Stack16}} ()
@@ -124,212 +229,215 @@ void \mbox{\hyperlink{classR6502_aca7646723dc26712851a13a5e8f94c46}{setP}} (uint
 \begin{DoxyCompactList}\small\item\em Set processor status directly. \end{DoxyCompactList}\item 
 void \mbox{\hyperlink{classR6502_ab832f67a5d15cacb32a6b718e735db39}{on\+Register\+Update}} ()
 \begin{DoxyCompactList}\small\item\em Called everytime a register updates. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classR6502_a3812901801ba1c1d2aead2c3e7bfb828}{IMM}} ()
+void \mbox{\hyperlink{classR6502_a0234ea634f93c203b0d4df622c675a71}{mode\+Immediate}} ()
 \begin{DoxyCompactList}\small\item\em Immediate addressing mode. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classR6502_ac93c1333174ccc6418b4b47c048e4031}{ABS}} ()
+void \mbox{\hyperlink{classR6502_aa697ba62d9912ff710f8116840101dc8}{mode\+Absolute}} ()
 \begin{DoxyCompactList}\small\item\em Absolute addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_a023bdb9739c5c398eeed6bee4762705c}\label{classR6502_a023bdb9739c5c398eeed6bee4762705c}} 
-void {\bfseries ABX} ()
+\mbox{\Hypertarget{classR6502_a547154bcb1675afb4a49ab383b6c07eb}\label{classR6502_a547154bcb1675afb4a49ab383b6c07eb}} 
+void {\bfseries mode\+AbsoluteX} ()
 \begin{DoxyCompactList}\small\item\em Absolute X addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_aff25c3746b34a675f0fbfdd01383219f}\label{classR6502_aff25c3746b34a675f0fbfdd01383219f}} 
-void {\bfseries ABY} ()
+\mbox{\Hypertarget{classR6502_af7611a264877c138652904790acde5aa}\label{classR6502_af7611a264877c138652904790acde5aa}} 
+void {\bfseries mode\+AbsoluteY} ()
 \begin{DoxyCompactList}\small\item\em Absolute Y addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_ad4048b908598050a4b1801fda801f4e2}\label{classR6502_ad4048b908598050a4b1801fda801f4e2}} 
-void {\bfseries IMP} ()
+\mbox{\Hypertarget{classR6502_ae16054a85b241d2055f202892d3e641a}\label{classR6502_ae16054a85b241d2055f202892d3e641a}} 
+void {\bfseries mode\+Implied} ()
 \begin{DoxyCompactList}\small\item\em Implied addressing mode. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classR6502_a9c30eaecaa00f48227068476d266ea3d}{ACC}} ()
+void \mbox{\hyperlink{classR6502_afb0e31aad2df919e7c6bca85b3b87cc7}{mode\+Accumulator}} ()
 \begin{DoxyCompactList}\small\item\em Accumulator addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_a8d2547fe06bc528772ec844511990191}\label{classR6502_a8d2547fe06bc528772ec844511990191}} 
-void {\bfseries ZP0} ()
+\mbox{\Hypertarget{classR6502_af69b4c2e44b7bab78a21c7c5fe1dd004}\label{classR6502_af69b4c2e44b7bab78a21c7c5fe1dd004}} 
+void {\bfseries mode\+Zero\+Page} ()
 \begin{DoxyCompactList}\small\item\em Zero Page addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_a32109a816b54aa6a4f4c52146ebc7e7f}\label{classR6502_a32109a816b54aa6a4f4c52146ebc7e7f}} 
-void {\bfseries ZPX} ()
+\mbox{\Hypertarget{classR6502_af617d1ef7fde1b4bd29962fd8eb87e10}\label{classR6502_af617d1ef7fde1b4bd29962fd8eb87e10}} 
+void {\bfseries mode\+Zero\+PageX} ()
 \begin{DoxyCompactList}\small\item\em Zero Page (X-\/indexed) addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_a52ab5eba817da30fb09ef59ded9722d2}\label{classR6502_a52ab5eba817da30fb09ef59ded9722d2}} 
-void {\bfseries ZPY} ()
+\mbox{\Hypertarget{classR6502_a50ef7b5cb27d12930104bfa977b0e9c6}\label{classR6502_a50ef7b5cb27d12930104bfa977b0e9c6}} 
+void {\bfseries mode\+Zero\+PageY} ()
 \begin{DoxyCompactList}\small\item\em Zero Page (Y-\/indexed) addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_a9895d87654e2fde3afa164f5535a897d}\label{classR6502_a9895d87654e2fde3afa164f5535a897d}} 
-void {\bfseries REL} ()
+\mbox{\Hypertarget{classR6502_a847b742fecd9cdf25fd2612c5d6c6ad2}\label{classR6502_a847b742fecd9cdf25fd2612c5d6c6ad2}} 
+void {\bfseries mode\+Relative} ()
 \begin{DoxyCompactList}\small\item\em Relative addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_abd41fed822fd054081f8421890f4e820}\label{classR6502_abd41fed822fd054081f8421890f4e820}} 
-void {\bfseries IZX} ()
+\mbox{\Hypertarget{classR6502_a7ee0be66e72b02a7da3d19792d5254f1}\label{classR6502_a7ee0be66e72b02a7da3d19792d5254f1}} 
+void {\bfseries mode\+IndirectX} ()
 \begin{DoxyCompactList}\small\item\em Indirect (X-\/indexed) addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_a5b992eb2018cd87f93a72fc9d65ddf1c}\label{classR6502_a5b992eb2018cd87f93a72fc9d65ddf1c}} 
-void {\bfseries IZY} ()
+\mbox{\Hypertarget{classR6502_af7554b121fe67f5e57620a23ae85b810}\label{classR6502_af7554b121fe67f5e57620a23ae85b810}} 
+void {\bfseries mode\+IndirectY} ()
 \begin{DoxyCompactList}\small\item\em Indirect (X-\/indexed) addressing mode. \end{DoxyCompactList}\item 
-void \mbox{\hyperlink{classR6502_a6435b53748a3449c49638ee52efa98ab}{IND}} ()
+void \mbox{\hyperlink{classR6502_a62fdc49984a4ac463b624ae7c7f282e2}{mode\+Indirect}} ()
 \begin{DoxyCompactList}\small\item\em Indirect addressing mode. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classR6502_adc4d8e2f1a7d8da904e2cc7c8f18c546}\label{classR6502_adc4d8e2f1a7d8da904e2cc7c8f18c546}} 
-void {\bfseries ADC} ()
+\mbox{\Hypertarget{classR6502_a135db8f892709ae470ac1257805a1a59}\label{classR6502_a135db8f892709ae470ac1257805a1a59}} 
+void {\bfseries op\+ADC} ()
 \item 
-\mbox{\Hypertarget{classR6502_aaca43cdbcf788046e391b052ac8cc0cc}\label{classR6502_aaca43cdbcf788046e391b052ac8cc0cc}} 
-void {\bfseries AND} ()
+\mbox{\Hypertarget{classR6502_a015d5fb4e938567f29bc6a4d8f87b2e9}\label{classR6502_a015d5fb4e938567f29bc6a4d8f87b2e9}} 
+void {\bfseries op\+AND} ()
 \item 
-\mbox{\Hypertarget{classR6502_a8bf8a223b860ab4b56dab442a1edad03}\label{classR6502_a8bf8a223b860ab4b56dab442a1edad03}} 
-void {\bfseries ASL} ()
+\mbox{\Hypertarget{classR6502_ac22594eb79b9b8a0d8b02570b01f4aad}\label{classR6502_ac22594eb79b9b8a0d8b02570b01f4aad}} 
+void {\bfseries op\+ASL} ()
 \item 
-\mbox{\Hypertarget{classR6502_a77c1bad167b7ab8cf1731499e7a1ad28}\label{classR6502_a77c1bad167b7ab8cf1731499e7a1ad28}} 
-void {\bfseries BCC} ()
+\mbox{\Hypertarget{classR6502_adc3605ac2d1737836352b17f32eedf49}\label{classR6502_adc3605ac2d1737836352b17f32eedf49}} 
+void {\bfseries op\+BCC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a5ec41f149a7e904fe553074df234c07f}\label{classR6502_a5ec41f149a7e904fe553074df234c07f}} 
-void {\bfseries BCS} ()
+\mbox{\Hypertarget{classR6502_a0680e9473050967bdb92fcfacbc2b563}\label{classR6502_a0680e9473050967bdb92fcfacbc2b563}} 
+void {\bfseries op\+BCS} ()
 \item 
-\mbox{\Hypertarget{classR6502_a27d7f75ef6fff879713720849b50f8ca}\label{classR6502_a27d7f75ef6fff879713720849b50f8ca}} 
-void {\bfseries BEQ} ()
+\mbox{\Hypertarget{classR6502_a9ef39d76f8ff1e4397ffc57dd1d6fd42}\label{classR6502_a9ef39d76f8ff1e4397ffc57dd1d6fd42}} 
+void {\bfseries op\+BEQ} ()
 \item 
-\mbox{\Hypertarget{classR6502_a67402b60c558deaa34a579df59bb1eeb}\label{classR6502_a67402b60c558deaa34a579df59bb1eeb}} 
-void {\bfseries BIT} ()
+\mbox{\Hypertarget{classR6502_a75fb36f9e04a75f511aac1362363a6cc}\label{classR6502_a75fb36f9e04a75f511aac1362363a6cc}} 
+void {\bfseries op\+BIT} ()
 \item 
-\mbox{\Hypertarget{classR6502_aa330d5adb2ef4849f554a05de8455de1}\label{classR6502_aa330d5adb2ef4849f554a05de8455de1}} 
-void {\bfseries BMI} ()
+\mbox{\Hypertarget{classR6502_aeb116fdf908cdba85a80eae0114a452f}\label{classR6502_aeb116fdf908cdba85a80eae0114a452f}} 
+void {\bfseries op\+BMI} ()
 \item 
-\mbox{\Hypertarget{classR6502_ab6038b88b429b8f6bc37eeced13a0292}\label{classR6502_ab6038b88b429b8f6bc37eeced13a0292}} 
-void {\bfseries BNE} ()
+\mbox{\Hypertarget{classR6502_a64f031149679e416158a3415962814aa}\label{classR6502_a64f031149679e416158a3415962814aa}} 
+void {\bfseries op\+BNE} ()
 \item 
-\mbox{\Hypertarget{classR6502_a67025ccbdd59f63a21c7d36005f5efe4}\label{classR6502_a67025ccbdd59f63a21c7d36005f5efe4}} 
-void {\bfseries BPL} ()
+\mbox{\Hypertarget{classR6502_a65d74218c721e4534e96b8560b8f2921}\label{classR6502_a65d74218c721e4534e96b8560b8f2921}} 
+void {\bfseries op\+BPL} ()
 \item 
-\mbox{\Hypertarget{classR6502_aff10b619e4ea7ff176a0a2bcd553926a}\label{classR6502_aff10b619e4ea7ff176a0a2bcd553926a}} 
-void {\bfseries BRK} ()
+\mbox{\Hypertarget{classR6502_a1d55197ba2c3b38f25615d95b81bc993}\label{classR6502_a1d55197ba2c3b38f25615d95b81bc993}} 
+void {\bfseries op\+BRK} ()
 \item 
-\mbox{\Hypertarget{classR6502_a3f4463ccbfa21219aff5233a2789e668}\label{classR6502_a3f4463ccbfa21219aff5233a2789e668}} 
-void {\bfseries BVC} ()
+\mbox{\Hypertarget{classR6502_a94935fd290188e2c74e3473e4338bf04}\label{classR6502_a94935fd290188e2c74e3473e4338bf04}} 
+void {\bfseries op\+BVC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a960054edad1320a11607e3cc7d5be30f}\label{classR6502_a960054edad1320a11607e3cc7d5be30f}} 
-void {\bfseries BVS} ()
+\mbox{\Hypertarget{classR6502_a99071f1d7d39314f2471f3f74dc778d0}\label{classR6502_a99071f1d7d39314f2471f3f74dc778d0}} 
+void {\bfseries op\+BVS} ()
 \item 
-\mbox{\Hypertarget{classR6502_a203ef5a0570aa8f432f4115fe126a407}\label{classR6502_a203ef5a0570aa8f432f4115fe126a407}} 
-void {\bfseries CLC} ()
+\mbox{\Hypertarget{classR6502_af0ca16bc594e9b6352ea7314e094d5e8}\label{classR6502_af0ca16bc594e9b6352ea7314e094d5e8}} 
+void {\bfseries op\+CLC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a8c4920043f744573a2b77ca5cbfcdb64}\label{classR6502_a8c4920043f744573a2b77ca5cbfcdb64}} 
-void {\bfseries CLD} ()
+\mbox{\Hypertarget{classR6502_ab04aa4cbb28711138e5c1193e2975d88}\label{classR6502_ab04aa4cbb28711138e5c1193e2975d88}} 
+void {\bfseries op\+CLD} ()
 \item 
-\mbox{\Hypertarget{classR6502_abc2c44abd2e635a995b21f9ba012b25e}\label{classR6502_abc2c44abd2e635a995b21f9ba012b25e}} 
-void {\bfseries CLI} ()
+\mbox{\Hypertarget{classR6502_ab91910418af1f41435e4654ff23aa3fc}\label{classR6502_ab91910418af1f41435e4654ff23aa3fc}} 
+void {\bfseries op\+CLI} ()
 \item 
-\mbox{\Hypertarget{classR6502_a6c8bb62ac48a2bd7304e298e9b018486}\label{classR6502_a6c8bb62ac48a2bd7304e298e9b018486}} 
-void {\bfseries CLV} ()
+\mbox{\Hypertarget{classR6502_a4f8c416bbae7d6ee045c72d8898b960f}\label{classR6502_a4f8c416bbae7d6ee045c72d8898b960f}} 
+void {\bfseries op\+CLV} ()
 \item 
-\mbox{\Hypertarget{classR6502_a6b01918eb906a2ca2f10c2c531846cc6}\label{classR6502_a6b01918eb906a2ca2f10c2c531846cc6}} 
-void {\bfseries CMP} ()
+\mbox{\Hypertarget{classR6502_a5e69f83a7120adb6afb6b4b817df396e}\label{classR6502_a5e69f83a7120adb6afb6b4b817df396e}} 
+void {\bfseries op\+CMP} ()
 \item 
-\mbox{\Hypertarget{classR6502_a6fd2bfa55f13b0cc020a2fab5a6807b7}\label{classR6502_a6fd2bfa55f13b0cc020a2fab5a6807b7}} 
-void {\bfseries CPX} ()
+\mbox{\Hypertarget{classR6502_a46562e75b26d7eebea862f7189d13a8b}\label{classR6502_a46562e75b26d7eebea862f7189d13a8b}} 
+void {\bfseries op\+CPX} ()
 \item 
-\mbox{\Hypertarget{classR6502_a7555ebfedb330a4ce754b0c2add929ad}\label{classR6502_a7555ebfedb330a4ce754b0c2add929ad}} 
-void {\bfseries CPY} ()
+\mbox{\Hypertarget{classR6502_a5dbe5b6af89974f8b2e434d25c138c0f}\label{classR6502_a5dbe5b6af89974f8b2e434d25c138c0f}} 
+void {\bfseries op\+CPY} ()
 \item 
-\mbox{\Hypertarget{classR6502_a62b92efa044391ae19ce0db4dd48d7c1}\label{classR6502_a62b92efa044391ae19ce0db4dd48d7c1}} 
-void {\bfseries DEC} ()
+\mbox{\Hypertarget{classR6502_a076177c282d4b8084197734b4ddf9af9}\label{classR6502_a076177c282d4b8084197734b4ddf9af9}} 
+void {\bfseries op\+DEC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a64547248c063fa139416e3fe62a0fcf7}\label{classR6502_a64547248c063fa139416e3fe62a0fcf7}} 
-void {\bfseries DEX} ()
+\mbox{\Hypertarget{classR6502_a7c0b3e9200b3148c6685e6a382555a28}\label{classR6502_a7c0b3e9200b3148c6685e6a382555a28}} 
+void {\bfseries op\+DEX} ()
 \item 
-\mbox{\Hypertarget{classR6502_a7df4987ecfad8fce996dfb43d2f334b4}\label{classR6502_a7df4987ecfad8fce996dfb43d2f334b4}} 
-void {\bfseries DEY} ()
+\mbox{\Hypertarget{classR6502_a60ff75d1abebc8bf6f05c930480fb719}\label{classR6502_a60ff75d1abebc8bf6f05c930480fb719}} 
+void {\bfseries op\+DEY} ()
 \item 
-\mbox{\Hypertarget{classR6502_ad6966dd96bae5fd78399ca33429cb30c}\label{classR6502_ad6966dd96bae5fd78399ca33429cb30c}} 
-void {\bfseries EOR} ()
+\mbox{\Hypertarget{classR6502_afafdec87238a8dc12de598ff43115d85}\label{classR6502_afafdec87238a8dc12de598ff43115d85}} 
+void {\bfseries op\+EOR} ()
 \item 
-\mbox{\Hypertarget{classR6502_afad06b3838d2dc3d3ab783b269ea8315}\label{classR6502_afad06b3838d2dc3d3ab783b269ea8315}} 
-void {\bfseries INC} ()
+\mbox{\Hypertarget{classR6502_aa20f2169548278365bd22de46f542fb8}\label{classR6502_aa20f2169548278365bd22de46f542fb8}} 
+void {\bfseries op\+INC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a757ccebd0c60e97a8dd9912c79dc23f5}\label{classR6502_a757ccebd0c60e97a8dd9912c79dc23f5}} 
-void {\bfseries INX} ()
+\mbox{\Hypertarget{classR6502_adb0fb4ab5290df95468c159f0c0cf1ad}\label{classR6502_adb0fb4ab5290df95468c159f0c0cf1ad}} 
+void {\bfseries op\+INX} ()
 \item 
-\mbox{\Hypertarget{classR6502_a675dba4d8a91277072f4b50c826f9f18}\label{classR6502_a675dba4d8a91277072f4b50c826f9f18}} 
-void {\bfseries INY} ()
+\mbox{\Hypertarget{classR6502_a7a251299371c724df55f1910d0fde8b4}\label{classR6502_a7a251299371c724df55f1910d0fde8b4}} 
+void {\bfseries op\+INY} ()
 \item 
-\mbox{\Hypertarget{classR6502_aa6b6e0d9938b8124b12bca3bbf643898}\label{classR6502_aa6b6e0d9938b8124b12bca3bbf643898}} 
-void {\bfseries JMP} ()
+\mbox{\Hypertarget{classR6502_a730cc2586321c2dbde0ca6cb41e7030c}\label{classR6502_a730cc2586321c2dbde0ca6cb41e7030c}} 
+void {\bfseries op\+JMP} ()
 \item 
-\mbox{\Hypertarget{classR6502_a237281abd6ac2d4d03668bb5b7e37267}\label{classR6502_a237281abd6ac2d4d03668bb5b7e37267}} 
-void {\bfseries JSR} ()
+\mbox{\Hypertarget{classR6502_ad81c751612e62347771fc7212b3a7136}\label{classR6502_ad81c751612e62347771fc7212b3a7136}} 
+void {\bfseries op\+JSR} ()
 \item 
-\mbox{\Hypertarget{classR6502_a066cca697589d3af640b28cea4ffd098}\label{classR6502_a066cca697589d3af640b28cea4ffd098}} 
-void {\bfseries LDA} ()
+\mbox{\Hypertarget{classR6502_aa3f09770fa589c7b643034cef606c0db}\label{classR6502_aa3f09770fa589c7b643034cef606c0db}} 
+void {\bfseries op\+LDA} ()
 \item 
-\mbox{\Hypertarget{classR6502_a72ef2bdeb01842bf5e7b440b5a8d473b}\label{classR6502_a72ef2bdeb01842bf5e7b440b5a8d473b}} 
-void {\bfseries LDX} ()
+\mbox{\Hypertarget{classR6502_af0d1a464bb5a6de150d85684239c71bb}\label{classR6502_af0d1a464bb5a6de150d85684239c71bb}} 
+void {\bfseries op\+LDX} ()
 \item 
-\mbox{\Hypertarget{classR6502_af0fdf3f8b4c81921e8364cc37a4e92be}\label{classR6502_af0fdf3f8b4c81921e8364cc37a4e92be}} 
-void {\bfseries LDY} ()
+\mbox{\Hypertarget{classR6502_a5897b1ab942a692a18e54f3fedd2bd8d}\label{classR6502_a5897b1ab942a692a18e54f3fedd2bd8d}} 
+void {\bfseries op\+LDY} ()
 \item 
-\mbox{\Hypertarget{classR6502_a2ecf90dc6b71755361e93dc759c0ee99}\label{classR6502_a2ecf90dc6b71755361e93dc759c0ee99}} 
-void {\bfseries LSR} ()
+\mbox{\Hypertarget{classR6502_a46a3e2538e8788d8473cc0e36430c7f4}\label{classR6502_a46a3e2538e8788d8473cc0e36430c7f4}} 
+void {\bfseries op\+LSR} ()
 \item 
-\mbox{\Hypertarget{classR6502_a246e6176f86f7ec7d1ed0182b3cb5aae}\label{classR6502_a246e6176f86f7ec7d1ed0182b3cb5aae}} 
-void {\bfseries NOP} ()
+\mbox{\Hypertarget{classR6502_a811d0ebce4815bb25666fe942471a8b1}\label{classR6502_a811d0ebce4815bb25666fe942471a8b1}} 
+void {\bfseries op\+NOP} ()
 \item 
-\mbox{\Hypertarget{classR6502_ae81c2c76e4334994e8ce30fc06ec9e62}\label{classR6502_ae81c2c76e4334994e8ce30fc06ec9e62}} 
-void {\bfseries ORA} ()
+\mbox{\Hypertarget{classR6502_a3c0fb7cb07f7cc3f46b5fa788f25506c}\label{classR6502_a3c0fb7cb07f7cc3f46b5fa788f25506c}} 
+void {\bfseries op\+ORA} ()
 \item 
-\mbox{\Hypertarget{classR6502_ae6770e3a64b941429fad069fd8a9a8ca}\label{classR6502_ae6770e3a64b941429fad069fd8a9a8ca}} 
-void {\bfseries PHA} ()
+\mbox{\Hypertarget{classR6502_a3b06ef7e0b41b2ce7de3d8718a318143}\label{classR6502_a3b06ef7e0b41b2ce7de3d8718a318143}} 
+void {\bfseries op\+PHA} ()
 \item 
-\mbox{\Hypertarget{classR6502_a704f17f5b3c17609e2fd31a99ed08f8d}\label{classR6502_a704f17f5b3c17609e2fd31a99ed08f8d}} 
-void {\bfseries PHP} ()
+\mbox{\Hypertarget{classR6502_a2ab21024481915259cf6c168d7b87e8b}\label{classR6502_a2ab21024481915259cf6c168d7b87e8b}} 
+void {\bfseries op\+PHP} ()
 \item 
-\mbox{\Hypertarget{classR6502_a0292876daad4efc2e802d43ec8e9b560}\label{classR6502_a0292876daad4efc2e802d43ec8e9b560}} 
-void {\bfseries PLA} ()
+\mbox{\Hypertarget{classR6502_ac2d68f27da2d3a6f3720122bc65a8c27}\label{classR6502_ac2d68f27da2d3a6f3720122bc65a8c27}} 
+void {\bfseries op\+PLA} ()
 \item 
-\mbox{\Hypertarget{classR6502_af7a1b7efd114384dd5b4c063028818bd}\label{classR6502_af7a1b7efd114384dd5b4c063028818bd}} 
-void {\bfseries PLP} ()
+\mbox{\Hypertarget{classR6502_a3cf8ee350b772d3dbc9fe6acfa825e67}\label{classR6502_a3cf8ee350b772d3dbc9fe6acfa825e67}} 
+void {\bfseries op\+PLP} ()
 \item 
-\mbox{\Hypertarget{classR6502_aaf46d9a5621e867ace88f43403ae47ed}\label{classR6502_aaf46d9a5621e867ace88f43403ae47ed}} 
-void {\bfseries ROL} ()
+\mbox{\Hypertarget{classR6502_aff3fcf02c68ac81a84efcd3ebf0d52a2}\label{classR6502_aff3fcf02c68ac81a84efcd3ebf0d52a2}} 
+void {\bfseries op\+ROL} ()
 \item 
-\mbox{\Hypertarget{classR6502_aa023084ccd52e19002472a4a842314ce}\label{classR6502_aa023084ccd52e19002472a4a842314ce}} 
-void {\bfseries ROR} ()
+\mbox{\Hypertarget{classR6502_a29e9135ceae57b58355d9740b2a54736}\label{classR6502_a29e9135ceae57b58355d9740b2a54736}} 
+void {\bfseries op\+ROR} ()
 \item 
-\mbox{\Hypertarget{classR6502_a85d274bc0e2433271494d88c3e7340da}\label{classR6502_a85d274bc0e2433271494d88c3e7340da}} 
-void {\bfseries RTI} ()
+\mbox{\Hypertarget{classR6502_a71b3ae1782f5b347d2fd47e581290e63}\label{classR6502_a71b3ae1782f5b347d2fd47e581290e63}} 
+void {\bfseries op\+RTI} ()
 \item 
-\mbox{\Hypertarget{classR6502_ad18eeb2a01414b45356209bf54f47b3a}\label{classR6502_ad18eeb2a01414b45356209bf54f47b3a}} 
-void {\bfseries RTS} ()
+\mbox{\Hypertarget{classR6502_ae789d704c60ca9ab78c14df4a2047916}\label{classR6502_ae789d704c60ca9ab78c14df4a2047916}} 
+void {\bfseries op\+RTS} ()
 \item 
-\mbox{\Hypertarget{classR6502_a4c2b7db6d2d154ebd542e65ad8cc56ed}\label{classR6502_a4c2b7db6d2d154ebd542e65ad8cc56ed}} 
-void {\bfseries SBC} ()
+\mbox{\Hypertarget{classR6502_a93a79f72cee4082ea537886f80ff5db1}\label{classR6502_a93a79f72cee4082ea537886f80ff5db1}} 
+void {\bfseries op\+SBC} ()
 \item 
-\mbox{\Hypertarget{classR6502_a60e79041131380328fd9034692dc6c17}\label{classR6502_a60e79041131380328fd9034692dc6c17}} 
-void {\bfseries SEC} ()
+\mbox{\Hypertarget{classR6502_aa3b5f0f02e7e369cfa44614467f76146}\label{classR6502_aa3b5f0f02e7e369cfa44614467f76146}} 
+void {\bfseries op\+SEC} ()
 \item 
-\mbox{\Hypertarget{classR6502_ae44c5d4875b0eb49af014c1105283d1a}\label{classR6502_ae44c5d4875b0eb49af014c1105283d1a}} 
-void {\bfseries SED} ()
+\mbox{\Hypertarget{classR6502_a715571e0876e7a50ded3eab5d7d7b538}\label{classR6502_a715571e0876e7a50ded3eab5d7d7b538}} 
+void {\bfseries op\+SED} ()
 \item 
-\mbox{\Hypertarget{classR6502_a76f5c92458063b9986c2d157d462fa24}\label{classR6502_a76f5c92458063b9986c2d157d462fa24}} 
-void {\bfseries SEI} ()
+\mbox{\Hypertarget{classR6502_a5d714b29b1138957a24bb7452d5e30c7}\label{classR6502_a5d714b29b1138957a24bb7452d5e30c7}} 
+void {\bfseries op\+SEI} ()
 \item 
-\mbox{\Hypertarget{classR6502_a3242b36f7abf4653537be5667869105c}\label{classR6502_a3242b36f7abf4653537be5667869105c}} 
-void {\bfseries STA} ()
+\mbox{\Hypertarget{classR6502_a0d4de0ba6e8b159eb5215a0bdb82ab29}\label{classR6502_a0d4de0ba6e8b159eb5215a0bdb82ab29}} 
+void {\bfseries op\+STA} ()
 \item 
-\mbox{\Hypertarget{classR6502_a6699167ad314e61eb07bb1affd1394ea}\label{classR6502_a6699167ad314e61eb07bb1affd1394ea}} 
-void {\bfseries STX} ()
+\mbox{\Hypertarget{classR6502_a1e56e20c2a5dca30ef625c0b014da7c4}\label{classR6502_a1e56e20c2a5dca30ef625c0b014da7c4}} 
+void {\bfseries op\+STX} ()
 \item 
-\mbox{\Hypertarget{classR6502_ab6710991917efe5a6f2a6d1cef92641e}\label{classR6502_ab6710991917efe5a6f2a6d1cef92641e}} 
-void {\bfseries STY} ()
+\mbox{\Hypertarget{classR6502_afbdfe111ee192ac28fda80562326449c}\label{classR6502_afbdfe111ee192ac28fda80562326449c}} 
+void {\bfseries op\+STY} ()
 \item 
-\mbox{\Hypertarget{classR6502_abbaa0dfa4d3f3e9fa4a51172e928213f}\label{classR6502_abbaa0dfa4d3f3e9fa4a51172e928213f}} 
-void {\bfseries TAX} ()
+\mbox{\Hypertarget{classR6502_aba0b108cdc67c37c609a677bf8d3e265}\label{classR6502_aba0b108cdc67c37c609a677bf8d3e265}} 
+void {\bfseries op\+TAX} ()
 \item 
-\mbox{\Hypertarget{classR6502_a005770a24cf36971738ea4c348c3d9e4}\label{classR6502_a005770a24cf36971738ea4c348c3d9e4}} 
-void {\bfseries TAY} ()
+\mbox{\Hypertarget{classR6502_abab74334ebdbeefd6c912cd402ff6c09}\label{classR6502_abab74334ebdbeefd6c912cd402ff6c09}} 
+void {\bfseries op\+TAY} ()
 \item 
-\mbox{\Hypertarget{classR6502_ad3508cc936e516bdfc900e33ddf2b060}\label{classR6502_ad3508cc936e516bdfc900e33ddf2b060}} 
-void {\bfseries TSX} ()
+\mbox{\Hypertarget{classR6502_a501e6163703165194d4d90523e63cdc0}\label{classR6502_a501e6163703165194d4d90523e63cdc0}} 
+void {\bfseries op\+TSX} ()
 \item 
-\mbox{\Hypertarget{classR6502_ab5345c3dc019d841d0272dd6b0ab6c50}\label{classR6502_ab5345c3dc019d841d0272dd6b0ab6c50}} 
-void {\bfseries TXA} ()
+\mbox{\Hypertarget{classR6502_a3ceac6be99c043b027d6718c48684cfb}\label{classR6502_a3ceac6be99c043b027d6718c48684cfb}} 
+void {\bfseries op\+TXA} ()
 \item 
-\mbox{\Hypertarget{classR6502_a32be7691c879a15ee3ca0015f0b6f5ca}\label{classR6502_a32be7691c879a15ee3ca0015f0b6f5ca}} 
-void {\bfseries TXS} ()
+\mbox{\Hypertarget{classR6502_a4ab7c12fde7504b180645ff3b0d58f1a}\label{classR6502_a4ab7c12fde7504b180645ff3b0d58f1a}} 
+void {\bfseries op\+TXS} ()
 \item 
-\mbox{\Hypertarget{classR6502_ae7632722832ae60db1357d896872b92f}\label{classR6502_ae7632722832ae60db1357d896872b92f}} 
-void {\bfseries TYA} ()
+\mbox{\Hypertarget{classR6502_aae6662bb57e7c374fa86809e773bba7d}\label{classR6502_aae6662bb57e7c374fa86809e773bba7d}} 
+void {\bfseries op\+TYA} ()
 \item 
-\mbox{\Hypertarget{classR6502_ae4064cf4d3b072fe287abe83998ba1d5}\label{classR6502_ae4064cf4d3b072fe287abe83998ba1d5}} 
-void {\bfseries XXX} ()
-\end{DoxyCompactItemize}
+\mbox{\Hypertarget{classR6502_a93248662abf248f9660f6375c4595ffc}\label{classR6502_a93248662abf248f9660f6375c4595ffc}} 
+void {\bfseries mode\+Illegal} ()
+\begin{DoxyCompactList}\small\item\em Executes when an illegal address mode is executed. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classR6502_aa479b48ea12de8ca049daa98f3b49200}\label{classR6502_aa479b48ea12de8ca049daa98f3b49200}} 
+void {\bfseries op\+Illegal} ()
+\begin{DoxyCompactList}\small\item\em Executes when an illegal operation is executed. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -388,8 +496,14 @@ uint8\+\_\+t {\bfseries sp} = 0x00
 \mbox{\Hypertarget{classR6502_a58b552e6f87135a80613b352e48f5282}\label{classR6502_a58b552e6f87135a80613b352e48f5282}} 
 uint8\+\_\+t {\bfseries P} = 0x00
 \item 
+\mbox{\Hypertarget{classR6502_a8322c8949aef21333d5cd8d709ba2379}\label{classR6502_a8322c8949aef21333d5cd8d709ba2379}} 
+const \mbox{\hyperlink{structR6502_1_1Instruction}{Instruction}} {\bfseries NULL\+\_\+\+INSTRUCTION} = \{NULLMODE, NULLOP, 0\}
+\item 
 \mbox{\Hypertarget{classR6502_a2a47e3114022c38dbee8203969333534}\label{classR6502_a2a47e3114022c38dbee8203969333534}} 
 std\+::vector$<$ \mbox{\hyperlink{structR6502_1_1Instruction}{Instruction}} $>$ {\bfseries instruction\+Matrix}
+\item 
+\mbox{\Hypertarget{classR6502_add57c12542d4c3bf5517aea7fca44e84}\label{classR6502_add57c12542d4c3bf5517aea7fca44e84}} 
+\mbox{\hyperlink{structR6502_1_1Instruction}{Instruction}} {\bfseries current\+Instruction} = NULL\+\_\+\+INSTRUCTION
 \item 
 \mbox{\Hypertarget{classR6502_a4d0d5d8534818789c659c74e25b7aebf}\label{classR6502_a4d0d5d8534818789c659c74e25b7aebf}} 
 uint8\+\_\+t {\bfseries extra\+Cycle\+Prepped} = 0x00
@@ -397,27 +511,22 @@ uint8\+\_\+t {\bfseries extra\+Cycle\+Prepped} = 0x00
 
 
 \doxysubsection{Member Function Documentation}
-\mbox{\Hypertarget{classR6502_ac93c1333174ccc6418b4b47c048e4031}\label{classR6502_ac93c1333174ccc6418b4b47c048e4031}} 
-\index{R6502@{R6502}!ABS@{ABS}}
-\index{ABS@{ABS}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{ABS()}{ABS()}}
-{\footnotesize\ttfamily void R6502\+::\+ABS (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+\mbox{\Hypertarget{classR6502_a6d202cd149a1b2a54033968fe7737a9e}\label{classR6502_a6d202cd149a1b2a54033968fe7737a9e}} 
+\index{R6502@{R6502}!doAddressMode@{doAddressMode}}
+\index{doAddressMode@{doAddressMode}!R6502@{R6502}}
+\doxysubsubsection{\texorpdfstring{doAddressMode()}{doAddressMode()}}
+{\footnotesize\ttfamily void R6502\+::do\+Address\+Mode (\begin{DoxyParamCaption}\item[{MODES}]{mode }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
 
 
 
-Absolute addressing mode. 
-
-Second byte has low order byte of effective address, third has higher order byte (reminder again\+: 6502 is little endian!!!) That means ABS instructions can acess all 64KB of address space. 2$^\wedge$8 = 0x100 2 byte addressing... 0x100 $\ast$ 0x100 = 0x10000 (64KB) \mbox{\Hypertarget{classR6502_a9c30eaecaa00f48227068476d266ea3d}\label{classR6502_a9c30eaecaa00f48227068476d266ea3d}} 
-\index{R6502@{R6502}!ACC@{ACC}}
-\index{ACC@{ACC}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{ACC()}{ACC()}}
-{\footnotesize\ttfamily void R6502\+::\+ACC (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+Execute code requiured for given address mode. 
 
 
-
-Accumulator addressing mode. 
-
-It\textquotesingle{}s just IMP... \mbox{\Hypertarget{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}\label{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}} 
+\begin{DoxyParams}{Parameters}
+{\em mode} & -\/ The mode. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}\label{classR6502_a372c35eb3f5e0f0666504a4b26bf9d88}} 
 \index{R6502@{R6502}!doCycle@{doCycle}}
 \index{doCycle@{doCycle}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{doCycle()}{doCycle()}}
@@ -427,7 +536,37 @@ It\textquotesingle{}s just IMP... \mbox{\Hypertarget{classR6502_a372c35eb3f5e0f0
 
 Executes when a cycle occurs. 
 
-Good for capturing clock cycles. \mbox{\Hypertarget{classR6502_ae65b642474bd73978e218965c58dc45d}\label{classR6502_ae65b642474bd73978e218965c58dc45d}} 
+Good for capturing clock cycles. \mbox{\Hypertarget{classR6502_a87e4590eec62dfe7c11c1c13a8f17744}\label{classR6502_a87e4590eec62dfe7c11c1c13a8f17744}} 
+\index{R6502@{R6502}!doInstruction@{doInstruction}}
+\index{doInstruction@{doInstruction}!R6502@{R6502}}
+\doxysubsubsection{\texorpdfstring{doInstruction()}{doInstruction()}}
+{\footnotesize\ttfamily void R6502\+::do\+Instruction (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{structR6502_1_1Instruction}{Instruction}} \&}]{instruction }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Execute a given instruction. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em instruction} & -\/ The instruction \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classR6502_af37181a3e671da1e5158a2e9484df7ce}\label{classR6502_af37181a3e671da1e5158a2e9484df7ce}} 
+\index{R6502@{R6502}!doOperation@{doOperation}}
+\index{doOperation@{doOperation}!R6502@{R6502}}
+\doxysubsubsection{\texorpdfstring{doOperation()}{doOperation()}}
+{\footnotesize\ttfamily void R6502\+::do\+Operation (\begin{DoxyParamCaption}\item[{OPS}]{op }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Executes the given operation. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em op} & -\/ The operation. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classR6502_ae65b642474bd73978e218965c58dc45d}\label{classR6502_ae65b642474bd73978e218965c58dc45d}} 
 \index{R6502@{R6502}!doRelBranch@{doRelBranch}}
 \index{doRelBranch@{doRelBranch}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{doRelBranch()}{doRelBranch()}}
@@ -437,7 +576,7 @@ Good for capturing clock cycles. \mbox{\Hypertarget{classR6502_ae65b642474bd7397
 
 Performs relative branching. 
 
-Very frequent operation in instructions... Useful method for cutting down on bugs. \mbox{\Hypertarget{classR6502_af23243f6579040097fb658e65b118cc8}\label{classR6502_af23243f6579040097fb658e65b118cc8}} 
+Very frequent operation in instructions... Useful method for cutting down on bugs / repetition. \mbox{\Hypertarget{classR6502_af23243f6579040097fb658e65b118cc8}\label{classR6502_af23243f6579040097fb658e65b118cc8}} 
 \index{R6502@{R6502}!fetchOperand@{fetchOperand}}
 \index{fetchOperand@{fetchOperand}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{fetchOperand()}{fetchOperand()}}
@@ -470,27 +609,7 @@ returns the BIT value of a flag
 \begin{DoxyReturn}{Returns}
 uint8\+\_\+t 1 or 0. 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_a3812901801ba1c1d2aead2c3e7bfb828}\label{classR6502_a3812901801ba1c1d2aead2c3e7bfb828}} 
-\index{R6502@{R6502}!IMM@{IMM}}
-\index{IMM@{IMM}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{IMM()}{IMM()}}
-{\footnotesize\ttfamily void R6502\+::\+IMM (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Immediate addressing mode. 
-
-Next byte has operand. get current pc, then increment. \mbox{\Hypertarget{classR6502_a6435b53748a3449c49638ee52efa98ab}\label{classR6502_a6435b53748a3449c49638ee52efa98ab}} 
-\index{R6502@{R6502}!IND@{IND}}
-\index{IND@{IND}!R6502@{R6502}}
-\doxysubsubsection{\texorpdfstring{IND()}{IND()}}
-{\footnotesize\ttfamily void R6502\+::\+IND (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
-
-
-
-Indirect addressing mode. 
-
-Things start to look weird here in order to simulate a bug in the CPU. From hnesdev.\+icequake.\+net/6502bugs.txt\+: \char`\"{}\+An indirect JMP (xx\+FF) will fail because the MSB will be fetched from address xx00 instead of page xx+1.\char`\"{} DO NOT simplify this. Need to make the bug clear and show details. \mbox{\Hypertarget{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}\label{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}} 
+\mbox{\Hypertarget{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}\label{classR6502_a4c3c8a2ba83550fdf78cc5fd090b4b08}} 
 \index{R6502@{R6502}!IRQ@{IRQ}}
 \index{IRQ@{IRQ}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{IRQ()}{IRQ()}}
@@ -590,7 +709,47 @@ Is byte a zero?
 \begin{DoxyReturn}{Returns}
 uint8\+\_\+t -\/ Returns the Zero flag (true) if zero and zero (false) if not zero. 
 \end{DoxyReturn}
-\mbox{\Hypertarget{classR6502_a343ece93fe35fa7f4c030a8352dc8e36}\label{classR6502_a343ece93fe35fa7f4c030a8352dc8e36}} 
+\mbox{\Hypertarget{classR6502_aa697ba62d9912ff710f8116840101dc8}\label{classR6502_aa697ba62d9912ff710f8116840101dc8}} 
+\index{R6502@{R6502}!modeAbsolute@{modeAbsolute}}
+\index{modeAbsolute@{modeAbsolute}!R6502@{R6502}}
+\doxysubsubsection{\texorpdfstring{modeAbsolute()}{modeAbsolute()}}
+{\footnotesize\ttfamily void R6502\+::mode\+Absolute (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Absolute addressing mode. 
+
+Second byte has low order byte of effective address, third has higher order byte (reminder again\+: 6502 is little endian!!!) That means ABS instructions can acess all 64KB of address space. 2$^\wedge$8 = 0x100 2 byte addressing... 0x100 $\ast$ 0x100 = 0x10000 (64KB) \mbox{\Hypertarget{classR6502_afb0e31aad2df919e7c6bca85b3b87cc7}\label{classR6502_afb0e31aad2df919e7c6bca85b3b87cc7}} 
+\index{R6502@{R6502}!modeAccumulator@{modeAccumulator}}
+\index{modeAccumulator@{modeAccumulator}!R6502@{R6502}}
+\doxysubsubsection{\texorpdfstring{modeAccumulator()}{modeAccumulator()}}
+{\footnotesize\ttfamily void R6502\+::mode\+Accumulator (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Accumulator addressing mode. 
+
+It\textquotesingle{}s just IMP... \mbox{\Hypertarget{classR6502_a0234ea634f93c203b0d4df622c675a71}\label{classR6502_a0234ea634f93c203b0d4df622c675a71}} 
+\index{R6502@{R6502}!modeImmediate@{modeImmediate}}
+\index{modeImmediate@{modeImmediate}!R6502@{R6502}}
+\doxysubsubsection{\texorpdfstring{modeImmediate()}{modeImmediate()}}
+{\footnotesize\ttfamily void R6502\+::mode\+Immediate (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Immediate addressing mode. 
+
+Next byte has operand. get current pc, then increment. \mbox{\Hypertarget{classR6502_a62fdc49984a4ac463b624ae7c7f282e2}\label{classR6502_a62fdc49984a4ac463b624ae7c7f282e2}} 
+\index{R6502@{R6502}!modeIndirect@{modeIndirect}}
+\index{modeIndirect@{modeIndirect}!R6502@{R6502}}
+\doxysubsubsection{\texorpdfstring{modeIndirect()}{modeIndirect()}}
+{\footnotesize\ttfamily void R6502\+::mode\+Indirect (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [private]}}
+
+
+
+Indirect addressing mode. 
+
+Intentionally bugged because that\textquotesingle{}s the way it is on the 6502 itself. hnesdev.\+icequake.\+net/6502bugs.txt\+: \mbox{\Hypertarget{classR6502_a343ece93fe35fa7f4c030a8352dc8e36}\label{classR6502_a343ece93fe35fa7f4c030a8352dc8e36}} 
 \index{R6502@{R6502}!NMI@{NMI}}
 \index{NMI@{NMI}!R6502@{R6502}}
 \doxysubsubsection{\texorpdfstring{NMI()}{NMI()}}

@@ -4,44 +4,49 @@ BEGIN {
 }
 
 NR!=1 {
-  ADDR_MODE="XXX"
+  OP=$1 "   "
+  if ($1=="ILLEGAL") {
+    OP="NULLOP"
+  }
+
+  ADDR_MODE="NULLMODE   "
   if ($2=="relative") {
-    ADDR_MODE="REL"
+    ADDR_MODE="RELATIVE   "
   } else if ($2=="abs") {
-    ADDR_MODE="ABS"
+    ADDR_MODE="ABSOLUTE   "
   } else if ($2=="absx") {
-    ADDR_MODE="ABX"
+    ADDR_MODE="ABSOLUTEX  "
   } else if ($2=="absy") {
-    ADDR_MODE="ABY"
+    ADDR_MODE="ABSOLUTEY  "
   } else if ($2=="indirect") {
-    ADDR_MODE="IND"
+    ADDR_MODE="INDIRECT   "
   } else if ($2=="indx") {
-    ADDR_MODE="IZX"
+    ADDR_MODE="INDIRECTX  "
   } else if ($2=="indy") {
-    ADDR_MODE="IZY"
+    ADDR_MODE="INDIRECTY  "
   } else if ($2=="imm") {
-    ADDR_MODE="IMM"
+    ADDR_MODE="IMMEDIATE  "
   } else if ($2=="implied") {
-    ADDR_MODE="IMP"
+    ADDR_MODE="IMPLIED    "
   } else if ($2=="zp") {
-    ADDR_MODE="ZP0"
+    ADDR_MODE="ZEROPAGE   "
   } else if ($2=="zpx") {
-    ADDR_MODE="ZPX"
+    ADDR_MODE="ZEROPAGEX  "
   } else if ($2=="zpy") {
-    ADDR_MODE="ZPY"
+    ADDR_MODE="ZEROPAGEY  "
   } else if ($2=="accum") {
-    ADDR_MODE="ACC"
+    ADDR_MODE="ACCUMULATOR"
   }
 }
 
 NR!=1 && NR <=256 {
     #print "  { \"" $1 "\", &" ADDR_MODE  ", &" $1 ", " $4 "},"
-    print "  { &R6502::" ADDR_MODE  ", &R6502::" $1 ", " $4 "},"
+    print "  { " ADDR_MODE  ", " OP ", " $4 "},"
 }
 
 NR==257 {
     #print "  { \"" $1 "\", &" ADDR_MODE  ", &" $1 ", " $4 "}"
-    print "  { &R6502::" ADDR_MODE  ", &R6502::" $1 ", " $4 "}"
+    print "  { " ADDR_MODE  ", " OP ", " $4 "}"
 }
 
 END {

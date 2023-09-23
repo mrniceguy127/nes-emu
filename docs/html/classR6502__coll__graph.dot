@@ -6,4 +6,6 @@ digraph "R6502"
   Node1 [label="R6502",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
   Node2 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" memory" ,fontname="Helvetica"];
   Node2 [label="Memory",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$classMemory.html",tooltip=" "];
+  Node3 -> Node1 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" NULL_INSTRUCTION\ncurrentInstruction" ,fontname="Helvetica"];
+  Node3 [label="R6502::Instruction",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structR6502_1_1Instruction.html",tooltip=" "];
 }

@@ -1,8 +1,9 @@
 var searchData=
 [
-  ['prepextracycle_0',['prepExtraCycle',['../classR6502.html#a1d04e292b825b6c39a048f2e4115a506',1,'R6502']]],
-  ['pullstack_1',['pullStack',['../classR6502.html#a96bd67071c7f130a60a69b9008f8cae5',1,'R6502']]],
-  ['pullstack16_2',['pullStack16',['../classR6502.html#a41863794dd7b4df05c79ca459dae2704',1,'R6502']]],
-  ['pushstack_3',['pushStack',['../classR6502.html#a5b3741ac52180036e740e62092b54fa3',1,'R6502']]],
-  ['pushstack16_4',['pushStack16',['../classR6502.html#a479df391455a114c43bcfba60c5f84d4',1,'R6502']]]
+  ['r6502_0',['R6502',['../classR6502.html',1,'']]],
+  ['read_1',['read',['../classR6502.html#a885aedd2a3eedb5f5e3586b5cc5ccd47',1,'R6502']]],
+  ['read16_2',['read16',['../classR6502.html#a4e1cd10e7f368135d54485d94d8cf657',1,'R6502']]],
+  ['readpc_3',['readPC',['../classR6502.html#a7b1c92c89fba856db7bf4ffdeccf8e04',1,'R6502']]],
+  ['readpc16_4',['readPC16',['../classR6502.html#afa22519b4597a38f78c4dd6cbf9f2980',1,'R6502']]],
+  ['res_5',['RES',['../classR6502.html#a2737d72976d543cd11d6d23531844b48',1,'R6502']]]
 ];

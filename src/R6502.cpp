@@ -6,50 +6,274 @@
 
 R6502::R6502(Memory& mem) : memory(mem) {
   // Generated using script located at util/generate-matrix.sh
-  instructionMatrix =
-  {
-        /* 0                               1                               2                               3                               4                               5                               6                               7                               8                               9                               A                               B                               C                               D                               E                               F                               */
-/* 0 */    { &R6502::IMP, &R6502::BRK, 7}, { &R6502::IZX, &R6502::ORA, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::ORA, 3}, { &R6502::ZP0, &R6502::ASL, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::PHP, 3}, { &R6502::IMM, &R6502::ORA, 2}, { &R6502::ACC, &R6502::ASL, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::ORA, 4}, { &R6502::ABS, &R6502::ASL, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* 1 */    { &R6502::REL, &R6502::BPL, 2}, { &R6502::IZY, &R6502::ORA, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::ORA, 4}, { &R6502::ZPX, &R6502::ASL, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::CLC, 2}, { &R6502::ABY, &R6502::ORA, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::ORA, 4}, { &R6502::ABX, &R6502::ASL, 7}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* 2 */    { &R6502::XXX, &R6502::JSR, 6}, { &R6502::IZX, &R6502::AND, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::BIT, 3}, { &R6502::ZP0, &R6502::AND, 3}, { &R6502::ZP0, &R6502::ROL, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::PLP, 4}, { &R6502::IMM, &R6502::AND, 2}, { &R6502::ACC, &R6502::ROL, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::BIT, 4}, { &R6502::ABS, &R6502::AND, 4}, { &R6502::ABS, &R6502::ROL, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* 3 */    { &R6502::REL, &R6502::BMI, 2}, { &R6502::IZY, &R6502::AND, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::AND, 4}, { &R6502::ZPX, &R6502::ROL, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::SEC, 2}, { &R6502::ABY, &R6502::AND, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::AND, 4}, { &R6502::ABX, &R6502::ROL, 7}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* 4 */    { &R6502::IMP, &R6502::RTI, 6}, { &R6502::IZX, &R6502::EOR, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::EOR, 3}, { &R6502::ZP0, &R6502::LSR, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::PHA, 3}, { &R6502::IMM, &R6502::EOR, 2}, { &R6502::ACC, &R6502::LSR, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::JMP, 3}, { &R6502::ABS, &R6502::EOR, 4}, { &R6502::ABS, &R6502::LSR, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* 5 */    { &R6502::REL, &R6502::BVC, 2}, { &R6502::IZY, &R6502::EOR, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::EOR, 4}, { &R6502::ZPX, &R6502::LSR, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::CLI, 2}, { &R6502::ABY, &R6502::EOR, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::EOR, 4}, { &R6502::ABX, &R6502::LSR, 7}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* 6 */    { &R6502::IMP, &R6502::RTS, 6}, { &R6502::IZX, &R6502::ADC, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::ADC, 3}, { &R6502::ZP0, &R6502::ROR, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::PLA, 4}, { &R6502::IMM, &R6502::ADC, 2}, { &R6502::ACC, &R6502::ROR, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::JMP, 5}, { &R6502::ABS, &R6502::ADC, 4}, { &R6502::ABS, &R6502::ROR, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* 7 */    { &R6502::REL, &R6502::BVS, 2}, { &R6502::IZY, &R6502::ADC, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::ADC, 4}, { &R6502::ZPX, &R6502::ROR, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::SEI, 2}, { &R6502::ABY, &R6502::ADC, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::ADC, 4}, { &R6502::ABX, &R6502::ROR, 7}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* 8 */    { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IZX, &R6502::STA, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::STY, 3}, { &R6502::ZP0, &R6502::STA, 3}, { &R6502::ZP0, &R6502::STX, 3}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::DEY, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::TXA, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::STY, 4}, { &R6502::ABS, &R6502::STA, 4}, { &R6502::ABS, &R6502::STX, 4}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* 9 */    { &R6502::REL, &R6502::BCC, 2}, { &R6502::IZY, &R6502::STA, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::STY, 4}, { &R6502::ZPX, &R6502::STA, 4}, { &R6502::ZPY, &R6502::STX, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::TYA, 2}, { &R6502::ABY, &R6502::STA, 5}, { &R6502::IMP, &R6502::TXS, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::STA, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* A */    { &R6502::IMM, &R6502::LDY, 2}, { &R6502::IZX, &R6502::LDA, 6}, { &R6502::IMM, &R6502::LDX, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::LDY, 3}, { &R6502::ZP0, &R6502::LDA, 3}, { &R6502::ZP0, &R6502::LDX, 3}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::TAY, 2}, { &R6502::IMM, &R6502::LDA, 2}, { &R6502::IMP, &R6502::TAX, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::LDY, 4}, { &R6502::ABS, &R6502::LDA, 4}, { &R6502::ABS, &R6502::LDX, 4}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* B */    { &R6502::REL, &R6502::BCS, 2}, { &R6502::IZY, &R6502::LDA, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::LDY, 4}, { &R6502::ZPX, &R6502::LDA, 4}, { &R6502::ZPY, &R6502::LDX, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::CLV, 2}, { &R6502::ABY, &R6502::LDA, 4}, { &R6502::IMP, &R6502::TSX, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::LDY, 4}, { &R6502::ABX, &R6502::LDA, 4}, { &R6502::ABY, &R6502::LDX, 4}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* C */    { &R6502::IMM, &R6502::CPY, 2}, { &R6502::IZX, &R6502::CMP, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::CPY, 3}, { &R6502::ZP0, &R6502::CMP, 3}, { &R6502::ZP0, &R6502::DEC, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::INY, 2}, { &R6502::IMM, &R6502::CMP, 2}, { &R6502::IMP, &R6502::DEX, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::CPY, 4}, { &R6502::ABS, &R6502::CMP, 4}, { &R6502::ABS, &R6502::DEC, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* D */    { &R6502::REL, &R6502::BNE, 2}, { &R6502::IZY, &R6502::CMP, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::CMP, 4}, { &R6502::ZPX, &R6502::DEC, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::CLD, 2}, { &R6502::ABY, &R6502::CMP, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::CMP, 4}, { &R6502::ABX, &R6502::DEC, 7}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* E */    { &R6502::IMM, &R6502::CPX, 2}, { &R6502::IZX, &R6502::SBC, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZP0, &R6502::CPX, 3}, { &R6502::ZP0, &R6502::SBC, 3}, { &R6502::ZP0, &R6502::INC, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::INX, 2}, { &R6502::IMM, &R6502::SBC, 2}, { &R6502::IMP, &R6502::NOP, 2}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABS, &R6502::CPX, 4}, { &R6502::ABS, &R6502::SBC, 4}, { &R6502::ABS, &R6502::INC, 6}, { &R6502::XXX, &R6502::XXX, 0}, 
-/* F */    { &R6502::REL, &R6502::BEQ, 2}, { &R6502::IZY, &R6502::SBC, 5}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ZPX, &R6502::SBC, 4}, { &R6502::ZPX, &R6502::INC, 6}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::IMP, &R6502::SED, 2}, { &R6502::ABY, &R6502::SBC, 4}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::XXX, &R6502::XXX, 0}, { &R6502::ABX, &R6502::SBC, 4}, { &R6502::ABX, &R6502::INC, 7}, { &R6502::XXX, &R6502::XXX, 0} 
+  instructionMatrix = {
+        /* 0                          1                          2                          3                          4                          5                          6                          7                          8                          9                          A                          B                          C                          D                          E                          F                          */
+/* 0 */    { IMPLIED    , BRK   , 7}, { INDIRECTX  , ORA   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , ORA   , 3}, { ZEROPAGE   , ASL   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PHP   , 3}, { IMMEDIATE  , ORA   , 2}, { ACCUMULATOR, ASL   , 2}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , ORA   , 4}, { ABSOLUTE   , ASL   , 6}, { NULLMODE   , NULLOP, 0}, 
+/* 1 */    { RELATIVE   , BPL   , 2}, { INDIRECTY  , ORA   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , ORA   , 4}, { ZEROPAGEX  , ASL   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLC   , 2}, { ABSOLUTEY  , ORA   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , ORA   , 4}, { ABSOLUTEX  , ASL   , 7}, { NULLMODE   , NULLOP, 0}, 
+/* 2 */    { NULLMODE   , JSR   , 6}, { INDIRECTX  , AND   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , BIT   , 3}, { ZEROPAGE   , AND   , 3}, { ZEROPAGE   , ROL   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PLP   , 4}, { IMMEDIATE  , AND   , 2}, { ACCUMULATOR, ROL   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , BIT   , 4}, { ABSOLUTE   , AND   , 4}, { ABSOLUTE   , ROL   , 6}, { NULLMODE   , NULLOP, 0}, 
+/* 3 */    { RELATIVE   , BMI   , 2}, { INDIRECTY  , AND   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , AND   , 4}, { ZEROPAGEX  , ROL   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , SEC   , 2}, { ABSOLUTEY  , AND   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , AND   , 4}, { ABSOLUTEX  , ROL   , 7}, { NULLMODE   , NULLOP, 0}, 
+/* 4 */    { IMPLIED    , RTI   , 6}, { INDIRECTX  , EOR   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , EOR   , 3}, { ZEROPAGE   , LSR   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PHA   , 3}, { IMMEDIATE  , EOR   , 2}, { ACCUMULATOR, LSR   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , JMP   , 3}, { ABSOLUTE   , EOR   , 4}, { ABSOLUTE   , LSR   , 6}, { NULLMODE   , NULLOP, 0}, 
+/* 5 */    { RELATIVE   , BVC   , 2}, { INDIRECTY  , EOR   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , EOR   , 4}, { ZEROPAGEX  , LSR   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLI   , 2}, { ABSOLUTEY  , EOR   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , EOR   , 4}, { ABSOLUTEX  , LSR   , 7}, { NULLMODE   , NULLOP, 0}, 
+/* 6 */    { IMPLIED    , RTS   , 6}, { INDIRECTX  , ADC   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , ADC   , 3}, { ZEROPAGE   , ROR   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PLA   , 4}, { IMMEDIATE  , ADC   , 2}, { ACCUMULATOR, ROR   , 2}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , JMP   , 5}, { ABSOLUTE   , ADC   , 4}, { ABSOLUTE   , ROR   , 6}, { NULLMODE   , NULLOP, 0}, 
+/* 7 */    { RELATIVE   , BVS   , 2}, { INDIRECTY  , ADC   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , ADC   , 4}, { ZEROPAGEX  , ROR   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , SEI   , 2}, { ABSOLUTEY  , ADC   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , ADC   , 4}, { ABSOLUTEX  , ROR   , 7}, { NULLMODE   , NULLOP, 0}, 
+/* 8 */    { NULLMODE   , NULLOP, 0}, { INDIRECTX  , STA   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , STY   , 3}, { ZEROPAGE   , STA   , 3}, { ZEROPAGE   , STX   , 3}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , DEY   , 2}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , TXA   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , STY   , 4}, { ABSOLUTE   , STA   , 4}, { ABSOLUTE   , STX   , 4}, { NULLMODE   , NULLOP, 0}, 
+/* 9 */    { RELATIVE   , BCC   , 2}, { INDIRECTY  , STA   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , STY   , 4}, { ZEROPAGEX  , STA   , 4}, { ZEROPAGEY  , STX   , 4}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , TYA   , 2}, { ABSOLUTEY  , STA   , 5}, { IMPLIED    , TXS   , 2}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , STA   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, 
+/* A */    { IMMEDIATE  , LDY   , 2}, { INDIRECTX  , LDA   , 6}, { IMMEDIATE  , LDX   , 2}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , LDY   , 3}, { ZEROPAGE   , LDA   , 3}, { ZEROPAGE   , LDX   , 3}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , TAY   , 2}, { IMMEDIATE  , LDA   , 2}, { IMPLIED    , TAX   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , LDY   , 4}, { ABSOLUTE   , LDA   , 4}, { ABSOLUTE   , LDX   , 4}, { NULLMODE   , NULLOP, 0}, 
+/* B */    { RELATIVE   , BCS   , 2}, { INDIRECTY  , LDA   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , LDY   , 4}, { ZEROPAGEX  , LDA   , 4}, { ZEROPAGEY  , LDX   , 4}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLV   , 2}, { ABSOLUTEY  , LDA   , 4}, { IMPLIED    , TSX   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , LDY   , 4}, { ABSOLUTEX  , LDA   , 4}, { ABSOLUTEY  , LDX   , 4}, { NULLMODE   , NULLOP, 0}, 
+/* C */    { IMMEDIATE  , CPY   , 2}, { INDIRECTX  , CMP   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , CPY   , 3}, { ZEROPAGE   , CMP   , 3}, { ZEROPAGE   , DEC   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , INY   , 2}, { IMMEDIATE  , CMP   , 2}, { IMPLIED    , DEX   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , CPY   , 4}, { ABSOLUTE   , CMP   , 4}, { ABSOLUTE   , DEC   , 6}, { NULLMODE   , NULLOP, 0}, 
+/* D */    { RELATIVE   , BNE   , 2}, { INDIRECTY  , CMP   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , CMP   , 4}, { ZEROPAGEX  , DEC   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLD   , 2}, { ABSOLUTEY  , CMP   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , CMP   , 4}, { ABSOLUTEX  , DEC   , 7}, { NULLMODE   , NULLOP, 0}, 
+/* E */    { IMMEDIATE  , CPX   , 2}, { INDIRECTX  , SBC   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , CPX   , 3}, { ZEROPAGE   , SBC   , 3}, { ZEROPAGE   , INC   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , INX   , 2}, { IMMEDIATE  , SBC   , 2}, { IMPLIED    , NOP   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , CPX   , 4}, { ABSOLUTE   , SBC   , 4}, { ABSOLUTE   , INC   , 6}, { NULLMODE   , NULLOP, 0}, 
+/* F */    { RELATIVE   , BEQ   , 2}, { INDIRECTY  , SBC   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , SBC   , 4}, { ZEROPAGEX  , INC   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , SED   , 2}, { ABSOLUTEY  , SBC   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , SBC   , 4}, { ABSOLUTEX  , INC   , 7}, { NULLMODE   , NULLOP, 0} 
   };
+}
+
+void R6502::doAddressMode(MODES mode) {
+  switch (mode) {
+    case IMMEDIATE:
+      modeImmediate();
+      break;
+    case ABSOLUTE:
+      modeAbsolute();
+      break;
+    case ABSOLUTEX:
+      modeAbsoluteX();
+      break;
+    case ABSOLUTEY:
+      modeAbsoluteY();
+      break;
+    case IMPLIED:
+      modeImplied();
+      break;
+    case ACCUMULATOR:
+      modeAccumulator();
+      break;
+    case ZEROPAGE:
+      modeZeroPage();
+      break;
+    case ZEROPAGEX:
+      modeZeroPageX();
+      break;
+    case ZEROPAGEY:
+      modeZeroPageY();
+      break;
+    case RELATIVE:
+      modeRelative();
+      break;
+    case INDIRECT:
+      modeIndirect();
+      break;
+    case INDIRECTX:
+      modeIndirectX();
+      break;
+    case INDIRECTY:
+      modeIndirectY();
+      break;
+    default:
+      modeIllegal();
+  }
+}
+
+void R6502::doOperation(OPS op) {
+  switch (op) {
+    case ADC:
+      opADC();
+      break;
+    case AND:
+      opAND();
+      break;
+    case ASL:
+      opASL();
+      break;
+    case BCC:
+      opBCC();
+      break;
+    case BCS:
+      opBCS();
+      break;
+    case BEQ:
+      opBEQ();
+      break;
+    case BIT:
+      opBIT();
+      break;
+    case BMI:
+      opBMI();
+      break;
+    case BNE:
+      opBNE();
+      break;
+    case BPL:
+      opBPL();
+      break;
+    case BRK:
+      opBRK();
+      break;
+    case BVC:
+      opBVC();
+      break;
+    case BVS:
+      opBVS();
+      break;
+    case CLC:
+      opCLC();
+      break;
+    case CLD:
+      opCLD();
+      break;
+    case CLI:
+      opCLI();
+      break;
+    case CLV:
+      opCLV();
+      break;
+    case CMP:
+      opCMP();
+      break;
+    case CPX:
+      opCPX();
+      break;
+    case CPY:
+      opCPY();
+      break;
+    case DEC:
+      opDEC();
+      break;
+    case DEX:
+      opDEX();
+      break;
+    case DEY:
+      opDEY();
+      break;
+    case EOR:
+      opEOR();
+      break;
+    case INC:
+      opINC();
+      break;
+    case INX:
+      opINX();
+      break;
+    case INY:
+      opINY();
+      break;
+    case JMP:
+      opJMP();
+      break;
+    case JSR:
+      opJSR();
+      break;
+    case LDA:
+      opLDA();
+      break;
+    case LDX:
+      opLDX();
+      break;
+    case LDY:
+      opLDY();
+      break;
+    case LSR:
+      opLSR();
+      break;
+    case NOP:
+      opNOP();
+      break;
+    case ORA:
+      opORA();
+      break;
+    case PHA:
+      opPHA();
+      break;
+    case PHP:
+      opPHP();
+      break;
+    case PLA:
+      opPLA();
+      break;
+    case PLP:
+      opPLP();
+      break;
+    case ROL:
+      opROL();
+      break;
+    case ROR:
+      opROR();
+      break;
+    case RTI:
+      opRTI();
+      break;
+    case RTS:
+      opRTS();
+      break;
+    case SBC:
+      opSBC();
+      break;
+    case SEC:
+      opSEC();
+      break;
+    case SED:
+      opSED();
+      break;
+    case SEI:
+      opSEI();
+      break;
+    case STA:
+      opSTA();
+      break;
+    case STX:
+      opSTX();
+      break;
+    case STY:
+      opSTY();
+      break;
+    case TAX:
+      opTAX();
+      break;
+    case TAY:
+      opTAY();
+      break;
+    case TSX:
+      opTSX();
+      break;
+    case TXA:
+      opTXA();
+      break;
+    case TXS:
+      opTXS();
+      break;
+    case TYA:
+      opTYA();
+      break;
+
+    default:
+      opIllegal();
+      break;
+  }
+}
+
+void R6502::doInstruction(Instruction& instruction) {
+  currentInstruction = instruction;
+  doAddressMode(currentInstruction.addressMode);
+  doOperation(currentInstruction.operation);
+
+  // TODO - TEMPORARY UNTIL THESE GET EXECUTED NATURALLY
+  int i = 0;
+  while (i < currentInstruction.machineCycles) doCycle();
+  currentInstruction = NULL_INSTRUCTION;
+}
+
+void R6502::doOpcode() {
+  doInstruction(instructionMatrix[opcode]);
 }
 
 R6502::~R6502() { }
 
 
-/**
- * @brief Executes when a cycle occurs.
- * 
- * Good for capturing clock cycles.
- * 
- */
 void R6502::doCycle() {
   // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
   cycles++; // This won't be needed because of this function. Remove later, but keep for now so I can actually visualize what I'm changing.
   totalCyclesPassed++;
 }
 
-/**
- * @brief Performs relative branching.
- * 
- * Very frequent operation in instructions...
- * Useful method for cutting down on bugs.
- * 
- */
 void R6502::doRelBranch() {
   doCycle(); // default cycle....
   absAddr = pc + relAddr;
@@ -60,36 +284,18 @@ void R6502::doRelBranch() {
   setPC(absAddr);
 }
 
-/**
- * @brief Preps an extra cycle if asked by address mode
- * 
- * Extra cycle will execute if instruction agrees on extra cycle.
- * 
- */
 void R6502::prepExtraCycle() {
   extraCyclePrepped = 0x01;
 }
 
 
-/**
- * @brief Performs extra clock cycle if agreed upon by the address mode.
- * 
- */
 void R6502::doPossibleExtraCycle() {
   if (extraCyclePrepped) doCycle();
   extraCyclePrepped = 0x00;
 }
 
-/**
- * @brief Start CPU clock.
- * 
- */
 void R6502::clock() { }
 
-/**
- * @brief Init CPU for emulation
- * 
- */
 void R6502::init() {
   // setting these manually... pre emulation stuff
   // Useful Variables
@@ -105,13 +311,6 @@ void R6502::init() {
   RES();
 }
 
-/**
- * @brief Reset command.
- * 
- * https://wiki.nesdev.org/w/index.php?title=CPU_power_up_state
- * (Page 2 under RESET (RES)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
- * 
- */
 void R6502::RES() {
   // SP is initialized to 0. // https://www.pagetable.com/?p=410
   setSP(0x00); 
@@ -135,13 +334,6 @@ void R6502::RES() {
   // Done!
 }
 
-/**
- * @brief IRQ interrupt sequence command
- * 
- * http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
- * https://www.nesdev.org/wiki/CPU_interrupts
- * 
- */
 void R6502::IRQ() {
   pushStack16(pc);
   pushStack(P & ~B);
@@ -149,13 +341,6 @@ void R6502::IRQ() {
   setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
 }
 
-/**
- * @brief NMI interrupt sequence command
- * 
- * http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
- * https://www.nesdev.org/wiki/CPU_interrupts
- * 
- */
 void R6502::NMI() {
   pushStack16(pc);
   pushStack(P & ~B);
@@ -163,23 +348,12 @@ void R6502::NMI() {
   setPC((uint16_t) read(0xFFFA) | (uint16_t) read(0xFFFB) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
 }
 
-/**
- * @brief Read byte at address
- * 
- * @param addr Address of data
- * @return uint8_t The data
- */
 uint8_t R6502::read(uint16_t addr) {
   //doCycle(); eventually, we'll count cy to onecles naturally. For now.... quick mafs
   memory.read(addr);
   return memory.read(addr); 
 }
 
-/**
- * @brief Read byte at address in PC and then increment PC
- * 
- * @return uint8_t The data
- */
 uint8_t R6502::readPC() {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
   uint8_t byte = read(pc);
@@ -187,22 +361,11 @@ uint8_t R6502::readPC() {
   return byte; 
 }
 
-/**
- * @brief Read a double byte and handle the 6502's little endian nature.
- * 
- * @param addr Initial address of double byte.
- * @return uint16_t The double byte.
- */
 uint16_t R6502::read16(uint16_t addr) {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
   return ((uint16_t) (memory.read(addr + 1) << 8)) | memory.read(addr); 
 }
 
-/**
- * @brief Read byte at address in PC, increment PC, and then repeat again for the double byte.
- * 
- * @return uint16_t The double byte.
- */
 uint16_t R6502::readPC16() {
   uint16_t lo = (uint16_t) readPC();
   uint16_t hi = (uint16_t) readPC();
@@ -210,178 +373,89 @@ uint16_t R6502::readPC16() {
   return (hi << 8) | lo;
 }
 
-/**
- * @brief Write a byte at an address.
- * 
- * @param addr The address to write to.
- * @param data The data to write.
- */
-
 void R6502::write(uint16_t addr, uint8_t data) {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
   memory.write(addr, data);
 }
 
-/**
- * @brief Set the value in the PC directly.
- * 
- * @param addr The address to store in the PC.
- */
 void R6502::setPC(uint16_t addr) {
   pc = addr;
   onRegisterUpdate();
 }
 
-/**
- * @brief Increment PC.
- * 
- */
 void R6502::incPC() {
   setPC(pc + 1);
 }
 
-/**
- * @brief Decrement the PC.
- * 
- */
 void R6502::decPC() {
   setPC(pc - 1);
 }
 
-/**
- * @brief Set the stack pointer directly.
- * 
- * @param byte New pointer value. 
- */
 void R6502::setSP(uint8_t byte) {
   sp = byte;
   onRegisterUpdate();
 }
 
-/**
- * @brief Increment stack pointer.
- * 
- */
 void R6502::incSP() {
   setSP(sp + 1);
 }
 
-/**
- * @brief Decrement stack pointer.
- * 
- */
 void R6502::decSP() {
   setSP(sp - 1);
 }
 
-/**
- * @brief Set the X index register value directly.
- * 
- * @param byte New X index value.
- */
 void R6502::setX(uint8_t byte) {
   x = byte;
   onRegisterUpdate();
 }
 
-/**
- * @brief Increment the X index register.
- * 
- */
 void R6502::incX() {
   setX(x + 1);
 }
 
-/**
- * @brief Decrement the X index register.
- * 
- */
 void R6502::decX() {
   setX(x - 1);
 }
 
-/**
- * @brief Set the Y index register directly.
- * 
- * @param byte New Y index value.
- */
 void R6502::setY(uint8_t byte) {
   y = byte;
   onRegisterUpdate();
 }
 
-/**
- * @brief Increment the Y index register.
- * 
- */
 void R6502::incY() {
   setY(y + 1);
 }
 
-/**
- * @brief Decrement the Y index register.
- * 
- */
 void R6502::decY() {
   setY(y - 1);
 }
 
-/**
- * @brief Set the value of the accumulator.
- * 
- * @param byte New accumulator value.
- */
 void R6502::setAccumulator(uint8_t byte) {
   accumulator = byte;
   onRegisterUpdate();
 }
 
-/**
- * @brief Set processor status directly.
- * 
- * @param byte New processor status.
- */
 void R6502::setP(uint8_t byte) {
   P = byte | U;
   onRegisterUpdate();
 }
 
-/**
- * @brief Pull the stack.
- * 
- * @return uint8_t Top value on stack.
- */
 uint8_t R6502::pullStack() {
   incSP();
   return read(0x0100 + sp);
 }
 
-/**
- * @brief Pull a double byute from the stack (2 pulls).
- * 
- * @return uint16_t The double byte on the stack.
- */
 uint16_t R6502::pullStack16() {
   uint16_t lo = (uint16_t) pullStack();
   uint16_t hi = (uint16_t) pullStack();
   return (hi << 8) | lo;
 }
 
-/**
- * @brief Push byte onto the stack.
- * 
- * @param byte The value to push to the stack.
- */
 void R6502::pushStack(uint8_t byte) {
   write(0x0100 + sp, byte);
   decSP();
 }
 
-/**
- * @brief Push double byte to the stack.
- * 
- * @param dbyte The double byte to push to the stack.
- */
 void R6502::pushStack16(uint16_t dbyte) {
   pushStack(dbyte >> 8); // Store higher order bits first
   pushStack(dbyte & 0x00FF); // Than lower.
@@ -393,93 +467,38 @@ void R6502::pushStack16(uint16_t dbyte) {
 // Flag utils
 // -------------
 
-/**
- * @brief Is byte a zero?
- * 
- * @param byte 
- * @return uint8_t - Returns the Zero flag (true) if zero and zero (false) if not zero.
- */
 uint8_t R6502::isZero(uint8_t byte) {
   return byte == 0x00 ? Z : 0x0;
 }
 
-/**
- * @brief Is double byte a zero?
- * 
- * @param byte 
- * @return uint8_t - Returns the Zero flag (true) if zero and zero (false) if not zero.
- */
 uint8_t R6502::isZero(uint16_t doubleByte) {
   return doubleByte == 0x0000 ? Z : 0x0;
 }
 
-/**
- * @brief Is byte negative?
- * 
- * @param byte 
- * @return uint8_t - Returns the Negative flag (true) if negative and zero (false) if not negative.
- */
 uint8_t R6502::isNegative(uint8_t byte) {
   return byte & 0x80 ? N : 0x0;
 }
 
-/**
- * @brief Is double byte negative?
- * 
- * @param byte 
- * @return uint8_t - Returns the Negative flag (true) if negative and zero (false) if not negative.
- */
 uint8_t R6502::isNegative(uint16_t doubleByte) {
   return doubleByte & 0x0080 ? N : 0x0;
 }
 
-/**
- * @brief Is double byte indicative of a carry occuring?
- * 
- * @param byte 
- * @return uint8_t - Returns the Carry flag (true) if a carry occured and zero (false) if no carry occured.
- */
 uint8_t R6502::isCarry(uint16_t doubleByte) {
   return doubleByte & 0xFF00 ? C : 0x0;
 }
 
-/**
- * @brief returns the BIT value of a flag
- * 
- * @param flag The flag of the bit you want.
- * @return uint8_t 1 or 0.
- */
 uint8_t R6502::getFlag(FLAGS flag) {
   return flag & P > 0 ? 1 : 0;
 }
 
-/**
- * @brief sets bits of a byte based on a mask byte and a byte representing what to change them to.
- * 
- * @param bitsToChange The byte mask.
- * @param value The values to set the bits specified by the mask to.
- * @param byte The original byte to modify.
- * @return uint8_t 
- */
 uint8_t R6502::setBitsOfByte(uint8_t bitsToChange, uint8_t value, uint8_t byte) {
   return (byte & ~bitsToChange) | (value & bitsToChange);
 }
 
-/**
- * @brief Sets flags to a specific value.
- * 
- * @param flags The flags to set. e.g. Z | N | C to set the Z, N, and C flags.
- * @param value The value to set them to. i.e. 1 or 0
- */
 void R6502::setFlags(uint8_t flags, uint8_t value) {
   setP(setBitsOfByte(flags, value, P));
 }
 
-/**
- * @brief Set specific flags to 1.
- * 
- * @param flags The flags to set. e.g. Z | N | C to set the Z, N, and C flags to one.
- */
 void R6502::setFlags(uint8_t flags) {
   setFlags(flags, flags);
 }
@@ -488,13 +507,6 @@ void R6502::setFlags(uint8_t flags) {
 // Intructions utils.
 // -----
 
-/**
- * @brief Reads from the currently relevant absolute address.
- * 
- * This is almost always the operand of an instruction)
- * 
- * @return uint8_t - The operand in most cases. 
- */
 uint8_t R6502::fetchOperand() {
   operand = read(absAddr);
   return operand;
@@ -506,12 +518,6 @@ uint8_t R6502::fetchOperand() {
 // "Emulation hooking utils"
 // -----
 
-/**
- * @brief Called everytime a register updates.
- * 
- * Useful for logging.
- * 
- */
 void R6502::onRegisterUpdate() {
   // Logging...
   return;
@@ -521,37 +527,16 @@ void R6502::onRegisterUpdate() {
 // Addressing modes - http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
 // -----
 
-
-/**
- * @brief Immediate addressing mode.
- *
- * Next byte has operand. get current pc, then increment.
- * 
- */
-void R6502::IMM() {
+void R6502::modeImmediate() {
   absAddr = pc;
   incPC();
 }  
 
-/**
- * @brief Absolute addressing mode.
- * 
- * Second byte has low order byte of effective address, third has higher order byte (reminder again: 6502 is little endian!!!)
- * That means ABS instructions can acess all 64KB of address space.
- * 2^8 = 0x100
- * 2 byte addressing...
- * 0x100 * 0x100 = 0x10000 (64KB)
- *
- */
-void R6502::ABS() {
+void R6502::modeAbsolute() {
   absAddr = readPC16();
 }
 
-/**
- * @brief Absolute X addressing mode.
- * 
- */
-void R6502::ABX() {
+void R6502::modeAbsoluteX() {
   absAddr = readPC16();
   uint8_t hi = absAddr >> 8;
   absAddr += x;
@@ -560,11 +545,7 @@ void R6502::ABX() {
   if (absAddr >> 8 != hi) prepExtraCycle();
 }
 
-/**
- * @brief Absolute Y addressing mode.
- * 
- */
-void R6502::ABY() {
+void R6502::modeAbsoluteY() {
   absAddr = readPC16();
   uint8_t hi = absAddr >> 8;
   absAddr += y;
@@ -573,75 +554,41 @@ void R6502::ABY() {
   if (absAddr >> 8 != hi) prepExtraCycle();
 }
 
-/**
- * @brief Implied addressing mode.
- * 
- */
-void R6502::IMP() {
+void R6502::modeImplied() {
   operand = accumulator;
 }
 
-/**
- * @brief Accumulator addressing mode.
- * 
- * It's just IMP...
- * 
- */
-void R6502::ACC() {
-  IMP();
+void R6502::modeAccumulator() {
+  modeImplied();
 }
 
-/**
- * @brief Zero Page addressing mode.
- * 
- */
-void R6502::ZP0() {
+void R6502::modeZeroPage() {
   absAddr = readPC();
 }
 
-/**
- * @brief Zero Page (X-indexed) addressing mode.
- * 
- */
-void R6502::ZPX() {
+void R6502::modeZeroPageX() {
   absAddr = readPC() + x;
   absAddr &= 0x00FF; // no paging past the zero page may occur
 }
 
-/**
- * @brief Zero Page (Y-indexed) addressing mode.
- * 
- */
-void R6502::ZPY() {
+void R6502::modeZeroPageY() {
   absAddr = readPC() + y;
   absAddr &= 0x00FF; // no paging past the zero page may occur
 }
 
-/**
- * @brief Relative addressing mode.
- * 
- */
-void R6502::REL() {
+void R6502::modeRelative() {
   relAddr = readPC();
   // if negative (MSB of lo byte == 1), set hi byte to FF since relAddr is 2 bytes, not 1 as read. This will keep the relative address negative when converted to 2 byte form.
   if (isNegative(relAddr)) relAddr |= 0xFF00;
 }
 
-/**
- * @brief Indirect (X-indexed) addressing mode.
- * 
- */
-void R6502::IZX() {
+void R6502::modeIndirectX() {
   uint16_t baseAddr = readPC();
   uint16_t loAddr = (baseAddr + x) & 0x00FF;
   absAddr = read16(loAddr);
 }
 
-/**
- * @brief Indirect (X-indexed) addressing mode.
- * 
- */
-void R6502::IZY() {
+void R6502::modeIndirectY() {
   uint16_t baseAddr = readPC();
   absAddr = read16(baseAddr & 0x00FF);
   uint8_t hi = absAddr >> 8;
@@ -650,17 +597,16 @@ void R6502::IZY() {
   if (absAddr >> 8 != hi) prepExtraCycle();
 }
 
-/**
- * @brief Indirect addressing mode.
- * 
- * Things start to look weird here in order to simulate a bug in the CPU.
- * From hnesdev.icequake.net/6502bugs.txt:
- * "An indirect JMP (xxFF) will fail because the MSB will be fetched from
- * address xx00 instead of page xx+1."
- * DO NOT simplify this. Need to make the bug clear and show details.
- *
- */
-void R6502::IND() {
+void R6502::modeIndirect() {
+
+  /*
+    * Things start to look weird here in order to simulate a bug in the CPU.
+    * From hnesdev.icequake.net/6502bugs.txt:
+    * "An indirect JMP (xxFF) will fail because the MSB will be fetched from
+    * address xx00 instead of page xx+1."
+    * DO NOT simplify this. Need to make the bug clear and show details.
+    */
+
   uint8_t pointerLo = read(pc);
   incPC();
   uint8_t pointerHi = read(pc);
@@ -686,7 +632,7 @@ void R6502::IND() {
 
 
 
-void R6502::ADC() {
+void R6502::opADC() {
   // A + M + C -> A, C
   // Flags changed: C Z N V
 
@@ -707,7 +653,7 @@ void R6502::ADC() {
   doPossibleExtraCycle();
 }
 
-void R6502::AND() {
+void R6502::opAND() {
   // A AND M -> A
   // Flags changed: Z N
   
@@ -719,7 +665,7 @@ void R6502::AND() {
   doPossibleExtraCycle();
 }
 
-void R6502::ASL() {
+void R6502::opASL() {
   // C <- [76543210] <- 0
   // Flags changed: C Z N
   
@@ -729,32 +675,32 @@ void R6502::ASL() {
 
   setFlags(C | Z | N, isCarry(tmp) | isZero(tmp) | isNegative(tmp));
 
-  if (instructionMatrix[opcode].addressMode == &R6502::ACC) setAccumulator(tmp & 0x00FF);
+  if (currentInstruction.addressMode == ACCUMULATOR) setAccumulator(tmp & 0x00FF);
   else write(absAddr, tmp & 0x00FF);
 }
 
-void R6502::BCC() {
+void R6502::opBCC() {
   // branch on C = 0
   // Flags changed: 
 
   if (getFlag(C) == 0) doRelBranch();
 }
 
-void R6502::BCS() {
+void R6502::opBCS() {
   // branch on C = 1
   // Flags changed: 
 
   if (getFlag(C) == 1) doRelBranch();
 }
 
-void R6502::BEQ() {
+void R6502::opBEQ() {
   // branch on Z = 1
   // Flags changed: 
 
   if (getFlag(Z) == 1) doRelBranch();
 }
 
-void R6502::BIT() {
+void R6502::opBIT() {
   // A AND M, M7 -> N, M6 -> V
   // Flags changed: Z N V
   
@@ -765,7 +711,7 @@ void R6502::BIT() {
   setFlags(Z | N | V, isZero(tmp) | isNegative(operand) | (operand & (1 << 6)));
 }
 
-void R6502::BMI() {
+void R6502::opBMI() {
   // branch on N = 1
   // Flags changed: 
 
@@ -774,7 +720,7 @@ void R6502::BMI() {
   if (getFlag(N) == 1) doRelBranch();
 }
 
-void R6502::BNE() {
+void R6502::opBNE() {
   // branch on Z = 0
   // Flags changed: 
 
@@ -783,7 +729,7 @@ void R6502::BNE() {
   if (getFlag(Z) == 0) doRelBranch();
 }
 
-void R6502::BPL() {
+void R6502::opBPL() {
   // branch on N = 0
   // Flags changed: 
 
@@ -792,7 +738,7 @@ void R6502::BPL() {
   if (getFlag(N) == 0) doRelBranch();
 }
 
-void R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki and then will come back after break :sweat_smile:
+void R6502::opBRK() { // Here we will be pushing to the stack. Back to the wiki and then will come back after break :sweat_smile:
   // interrupt, push PC+2, push SR
   // Flags Changed: I
   
@@ -811,7 +757,7 @@ void R6502::BRK() { // Here we will be pushing to the stack. Back to the wiki an
   setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
 }
 
-void R6502::BVC() {
+void R6502::opBVC() {
   // branch on V = 0
   // Flags changed: 
 
@@ -820,7 +766,7 @@ void R6502::BVC() {
   if (getFlag(V) == 0) doRelBranch();
 }
 
-void R6502::BVS() {
+void R6502::opBVS() {
   // branch on V = 1
   // Flags changed: 
 
@@ -829,31 +775,31 @@ void R6502::BVS() {
   if (getFlag(V) == 1) doRelBranch();
 }
 
-void R6502::CLC() {
+void R6502::opCLC() {
   // 0 -> C
   // Flags changed: C
   setFlags(C, 0);
 }
 
-void R6502::CLD() {
+void R6502::opCLD() {
   // 0 -> D
   // Flags changed: D
   setFlags(D, 0);
 }
 
-void R6502::CLI() {
+void R6502::opCLI() {
   // 0 -> I
   // Flags changed: I
   setFlags(I, 0);
 }
 
-void R6502::CLV() {
+void R6502::opCLV() {
   // 0 -> V
   // Flags changed: V
   setFlags(V, 0);
 }
 
-void R6502::CMP() {
+void R6502::opCMP() {
   // A - M
   // Flags changed: N Z C
   fetchOperand();
@@ -863,7 +809,7 @@ void R6502::CMP() {
   setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | accumulator >= operand ? C : 0x0);
 }
 
-void R6502::CPX() {
+void R6502::opCPX() {
   // X - M
   // Flags changed: N Z C
   fetchOperand();
@@ -873,7 +819,7 @@ void R6502::CPX() {
   setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | x >= operand ? C : 0x0);
 }
 
-void R6502::CPY() {
+void R6502::opCPY() {
   // Y - M
   // Flags changed: N Z C
   fetchOperand();
@@ -883,7 +829,7 @@ void R6502::CPY() {
   setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | y >= operand ? C : 0x0);
 }
 
-void R6502::DEC() {
+void R6502::opDEC() {
   // M - 1 -> M
   // Flags changed: Z N
   
@@ -895,7 +841,7 @@ void R6502::DEC() {
   setFlags(Z | N, isZero(tmp) | isNegative(tmp));
 }
 
-void R6502::DEX() {
+void R6502::opDEX() {
   // X - 1 -> X
   // Flags changed: Z N
 
@@ -903,7 +849,7 @@ void R6502::DEX() {
   setFlags(Z | N, isZero(x) | isNegative(x));
 }
 
-void R6502::DEY() {
+void R6502::opDEY() {
   // Y - 1 -> Y
   // Flags changed: Z N
 
@@ -911,7 +857,7 @@ void R6502::DEY() {
   setFlags(Z | N, isZero(y) | isNegative(y));
 }
 
-void R6502::EOR() {
+void R6502::opEOR() {
   // A EOR M -> A
   // Flags changed: Z N
 
@@ -923,7 +869,7 @@ void R6502::EOR() {
   doPossibleExtraCycle();
 }
 
-void R6502::INC() {
+void R6502::opINC() {
   // M + 1 -> M
   // Flags changed: Z N
   
@@ -934,7 +880,7 @@ void R6502::INC() {
   setFlags(Z | N, isZero(tmp) | isNegative(tmp));
 }
 
-void R6502::INX() {
+void R6502::opINX() {
   // X - 1 -> X
   // Flags changed: Z N
 
@@ -942,7 +888,7 @@ void R6502::INX() {
   setFlags(Z | N, isZero(x) | isNegative(x));
 }
 
-void R6502::INY() {
+void R6502::opINY() {
   // Y + 1 -> Y
   // Flags changed: Z N
 
@@ -950,14 +896,14 @@ void R6502::INY() {
   setFlags(Z | N, isZero(y) | isNegative(y));
 }
 
-void R6502::JMP() {
+void R6502::opJMP() {
   // (PC+1) -> PCL
   // (PC+2) -> PCH
   // Flags changed:
   setPC(absAddr);
 }
 
-void R6502::JSR() {
+void R6502::opJSR() {
   // push (PC+2),
   // (PC+1) -> PCL
   // (PC+2) -> PCH
@@ -968,7 +914,7 @@ void R6502::JSR() {
   setPC(absAddr);
 }
 
-void R6502::LDA() {
+void R6502::opLDA() {
   // M -> A
   // Flags changed: Z N
 
@@ -978,7 +924,7 @@ void R6502::LDA() {
   doPossibleExtraCycle();
 }
 
-void R6502::LDX() {
+void R6502::opLDX() {
   // M -> X
   // Flags changed: Z N
 
@@ -988,7 +934,7 @@ void R6502::LDX() {
   doPossibleExtraCycle();
 }
 
-void R6502::LDY() {
+void R6502::opLDY() {
   // M -> Y
   // Flags changed: Z N
 
@@ -998,7 +944,7 @@ void R6502::LDY() {
   doPossibleExtraCycle();
 }
 
-void R6502::LSR() {
+void R6502::opLSR() {
   // 0 -> [76543210] -> C
   // Flags changed: Z N C
   
@@ -1008,17 +954,17 @@ void R6502::LSR() {
 
   setFlags(C | Z | N, isZero(tmp) | isCarry(tmp));
 
-  if (instructionMatrix[opcode].addressMode == &R6502::ACC) setAccumulator(tmp & 0x00FF);
+  if (currentInstruction.addressMode == ACCUMULATOR) setAccumulator(tmp & 0x00FF);
   else write(absAddr, tmp & 0x00FF);
 }
 
-void R6502::NOP() {
+void R6502::opNOP() {
   // No operation.
   // Flags changed: 
   return;
 }
 
-void R6502::ORA() {
+void R6502::opORA() {
   // A OR M -> A
   // Flags changed: Z N
   
@@ -1030,21 +976,21 @@ void R6502::ORA() {
   doPossibleExtraCycle();
 }
 
-void R6502::PHA() {
+void R6502::opPHA() {
   // push A
   // Flags changed:
   
   pushStack(accumulator);
 }
 
-void R6502::PHP() {
+void R6502::opPHP() {
   // push P
   // Flags changed:
   
   pushStack(P);
 }
 
-void R6502::PLA() {
+void R6502::opPLA() {
   // pull A
   // Flags changed: Z N
 
@@ -1052,14 +998,14 @@ void R6502::PLA() {
   setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 }
 
-void R6502::PLP() {
+void R6502::opPLP() {
   // pull P
   // Flags changed: FROM STACK
 
   setP(pullStack());
 }
 
-void R6502::ROL() {
+void R6502::opROL() {
   // C <- [76543210] <- C
   // Flags Changed: C Z N
   
@@ -1069,11 +1015,11 @@ void R6502::ROL() {
 
   setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | operand & 0x80 ? C : 0x0);
   
-  if (instructionMatrix[opcode].addressMode == &R6502::ACC) setAccumulator(tmp);
+  if (currentInstruction.addressMode == ACCUMULATOR) setAccumulator(tmp);
   else write(absAddr, tmp);
 }
 
-void R6502::ROR() {
+void R6502::opROR() {
   // C -> [76543210] -> C
   // Flags Changed: C Z N
   
@@ -1083,11 +1029,11 @@ void R6502::ROR() {
 
   setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | operand & 0x01 ? C : 0x0);
   
-  if (instructionMatrix[opcode].addressMode == &R6502::ACC) setAccumulator(tmp);
+  if (currentInstruction.addressMode == ACCUMULATOR) setAccumulator(tmp);
   else write(absAddr, tmp);
 }
 
-void R6502::RTI() {
+void R6502::opRTI() {
   // pull P, pull PC
   // Flags changed: FROM STACK
   // "The status register is pulled with the break flag
@@ -1097,12 +1043,12 @@ void R6502::RTI() {
   setPC(pullStack16());
 }
 
-void R6502::RTS() {
+void R6502::opRTS() {
   // pull PC, PC+1 -> PC
   setPC(pullStack16() + 1);
 }
 
-void R6502::SBC() {
+void R6502::opSBC() {
   // A - M - (1 - C) -> A
   // C is a single bit. 1 - C is the inverse of C (C(bar)).
   // A - M - (1 - C) == A + (-M - (1 - C)) == A + (-M - 1 + C)
@@ -1127,49 +1073,49 @@ void R6502::SBC() {
   doPossibleExtraCycle();
 }
 
-void R6502::SEC() {
+void R6502::opSEC() {
   // 1 -> C
   // Flags changed: C
 
   setFlags(C);
 }
 
-void R6502::SED() {
+void R6502::opSED() {
   // 1 -> D
   // Flags changed: D
 
   setFlags(D);
 }
 
-void R6502::SEI() {
+void R6502::opSEI() {
   // 1 -> I
   // Flags changed: I
 
   setFlags(I);
 }
 
-void R6502::STA() {
+void R6502::opSTA() {
   // A -> M
   // Flags changed: 
 
   write(absAddr, accumulator);
 }
 
-void R6502::STX() {
+void R6502::opSTX() {
   // X -> M
   // Flags changed: 
 
   write(absAddr, x);
 }
 
-void R6502::STY() {
+void R6502::opSTY() {
   // Y -> M
   // Flags changed: 
 
   write(absAddr, y);
 }
 
-void R6502::TAX() {
+void R6502::opTAX() {
   // A -> X
   // Flags changed: Z N
 
@@ -1177,7 +1123,7 @@ void R6502::TAX() {
   setFlags(Z | N, isZero(x) | isNegative(x));
 }
 
-void R6502::TAY() {
+void R6502::opTAY() {
   // A -> Y
   // Flags changed: Z N
 
@@ -1185,7 +1131,7 @@ void R6502::TAY() {
   setFlags(Z | N, isZero(y) | isNegative(y));
 }
 
-void R6502::TSX() {
+void R6502::opTSX() {
   // SP -> X
   // Flags changed: Z N
 
@@ -1193,7 +1139,7 @@ void R6502::TSX() {
   setFlags(Z | N, isZero(x) | isNegative(x));
 }
 
-void R6502::TXA() {
+void R6502::opTXA() {
   // X -> A
   // Flags changed: Z N
 
@@ -1201,7 +1147,7 @@ void R6502::TXA() {
   setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 }
 
-void R6502::TXS() {
+void R6502::opTXS() {
   // X -> SP
   // Flags changed: Z N
 
@@ -1209,7 +1155,7 @@ void R6502::TXS() {
   setFlags(Z | N, isZero(sp) | isNegative(sp));
 }
 
-void R6502::TYA() {
+void R6502::opTYA() {
   // Y -> A
   // Flags changed: Z N
 
@@ -1225,7 +1171,12 @@ void R6502::TYA() {
 
 
 
-void R6502::XXX() { // Does nothing, illegal instruction
+void R6502::modeIllegal()
+{
+  
+}
+
+void R6502::opIllegal() { // Does nothing, illegal instruction
   return;
 }
 

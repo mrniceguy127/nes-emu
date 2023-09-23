@@ -65,14 +65,6 @@ $(function() {
 <div class="contents">
 &#160;
 
-<h3><a id="index_a" name="index_a"></a>- a -</h3><ul>
-<li>ABS()&#160;:&#160;<a class="el" href="classR6502.html#ac93c1333174ccc6418b4b47c048e4031">R6502</a></li>
-<li>ABX()&#160;:&#160;<a class="el" href="classR6502.html#a023bdb9739c5c398eeed6bee4762705c">R6502</a></li>
-<li>ABY()&#160;:&#160;<a class="el" href="classR6502.html#aff25c3746b34a675f0fbfdd01383219f">R6502</a></li>
-<li>ACC()&#160;:&#160;<a class="el" href="classR6502.html#a9c30eaecaa00f48227068476d266ea3d">R6502</a></li>
-</ul>
-
-
 <h3><a id="index_c" name="index_c"></a>- c -</h3><ul>
 <li>clock()&#160;:&#160;<a class="el" href="classR6502.html#a901623838e58b817967948dbeba88c59">R6502</a></li>
 </ul>
@@ -83,7 +75,11 @@ $(function() {
 <li>decSP()&#160;:&#160;<a class="el" href="classR6502.html#ab8d064d80d5d611b1c19c849ff8bcd45">R6502</a></li>
 <li>decX()&#160;:&#160;<a class="el" href="classR6502.html#a7780f0ffc686cbadbe59cf33de295217">R6502</a></li>
 <li>decY()&#160;:&#160;<a class="el" href="classR6502.html#a3c8068f2edd32fd388ad38a5e246242c">R6502</a></li>
+<li>doAddressMode()&#160;:&#160;<a class="el" href="classR6502.html#a6d202cd149a1b2a54033968fe7737a9e">R6502</a></li>
+<li>doCurrentInstruction()&#160;:&#160;<a class="el" href="classR6502.html#a9d143908c5d27dc5e0bbe73faed149d4">R6502</a></li>
 <li>doCycle()&#160;:&#160;<a class="el" href="classR6502.html#a372c35eb3f5e0f0666504a4b26bf9d88">R6502</a></li>
+<li>doInstruction()&#160;:&#160;<a class="el" href="classR6502.html#a87e4590eec62dfe7c11c1c13a8f17744">R6502</a></li>
+<li>doOperation()&#160;:&#160;<a class="el" href="classR6502.html#af37181a3e671da1e5158a2e9484df7ce">R6502</a></li>
 <li>doPossibleExtraCycle()&#160;:&#160;<a class="el" href="classR6502.html#a81adecf5be1bf7b7c56c031d5079b8d7">R6502</a></li>
 <li>doRelBranch()&#160;:&#160;<a class="el" href="classR6502.html#ae65b642474bd73978e218965c58dc45d">R6502</a></li>
 </ul>
@@ -100,20 +96,33 @@ $(function() {
 
 
 <h3><a id="index_i" name="index_i"></a>- i -</h3><ul>
-<li>IMM()&#160;:&#160;<a class="el" href="classR6502.html#a3812901801ba1c1d2aead2c3e7bfb828">R6502</a></li>
-<li>IMP()&#160;:&#160;<a class="el" href="classR6502.html#ad4048b908598050a4b1801fda801f4e2">R6502</a></li>
 <li>incPC()&#160;:&#160;<a class="el" href="classR6502.html#aa71bb58c57c3b9dc43d0ae45f7844d69">R6502</a></li>
 <li>incSP()&#160;:&#160;<a class="el" href="classR6502.html#a6a37c46e49e1ed84447b999802d874c4">R6502</a></li>
 <li>incX()&#160;:&#160;<a class="el" href="classR6502.html#ab16b33ad7a39fe3640194bdebc115465">R6502</a></li>
 <li>incY()&#160;:&#160;<a class="el" href="classR6502.html#a63af9a115e47a7acdae0b57affddb5c7">R6502</a></li>
-<li>IND()&#160;:&#160;<a class="el" href="classR6502.html#a6435b53748a3449c49638ee52efa98ab">R6502</a></li>
 <li>init()&#160;:&#160;<a class="el" href="classR6502.html#ac2c953dfe859abf412b739cba0ff8a8c">R6502</a></li>
 <li>IRQ()&#160;:&#160;<a class="el" href="classR6502.html#a4c3c8a2ba83550fdf78cc5fd090b4b08">R6502</a></li>
 <li>isCarry()&#160;:&#160;<a class="el" href="classR6502.html#a5b29b84a3ee80be67dfa3bc16173e932">R6502</a></li>
 <li>isNegative()&#160;:&#160;<a class="el" href="classR6502.html#a423ffaca5454cc8d76aa257b941815c8">R6502</a></li>
 <li>isZero()&#160;:&#160;<a class="el" href="classR6502.html#a1330df49e1dac7c1214471e46b72b799">R6502</a></li>
-<li>IZX()&#160;:&#160;<a class="el" href="classR6502.html#abd41fed822fd054081f8421890f4e820">R6502</a></li>
-<li>IZY()&#160;:&#160;<a class="el" href="classR6502.html#a5b992eb2018cd87f93a72fc9d65ddf1c">R6502</a></li>
+</ul>
+
+
+<h3><a id="index_m" name="index_m"></a>- m -</h3><ul>
+<li>modeAbsolute()&#160;:&#160;<a class="el" href="classR6502.html#aa697ba62d9912ff710f8116840101dc8">R6502</a></li>
+<li>modeAbsoluteX()&#160;:&#160;<a class="el" href="classR6502.html#a547154bcb1675afb4a49ab383b6c07eb">R6502</a></li>
+<li>modeAbsoluteY()&#160;:&#160;<a class="el" href="classR6502.html#af7611a264877c138652904790acde5aa">R6502</a></li>
+<li>modeAccumulator()&#160;:&#160;<a class="el" href="classR6502.html#afb0e31aad2df919e7c6bca85b3b87cc7">R6502</a></li>
+<li>modeIllegal()&#160;:&#160;<a class="el" href="classR6502.html#a93248662abf248f9660f6375c4595ffc">R6502</a></li>
+<li>modeImmediate()&#160;:&#160;<a class="el" href="classR6502.html#a0234ea634f93c203b0d4df622c675a71">R6502</a></li>
+<li>modeImplied()&#160;:&#160;<a class="el" href="classR6502.html#ae16054a85b241d2055f202892d3e641a">R6502</a></li>
+<li>modeIndirect()&#160;:&#160;<a class="el" href="classR6502.html#a62fdc49984a4ac463b624ae7c7f282e2">R6502</a></li>
+<li>modeIndirectX()&#160;:&#160;<a class="el" href="classR6502.html#a7ee0be66e72b02a7da3d19792d5254f1">R6502</a></li>
+<li>modeIndirectY()&#160;:&#160;<a class="el" href="classR6502.html#af7554b121fe67f5e57620a23ae85b810">R6502</a></li>
+<li>modeRelative()&#160;:&#160;<a class="el" href="classR6502.html#a847b742fecd9cdf25fd2612c5d6c6ad2">R6502</a></li>
+<li>modeZeroPage()&#160;:&#160;<a class="el" href="classR6502.html#af69b4c2e44b7bab78a21c7c5fe1dd004">R6502</a></li>
+<li>modeZeroPageX()&#160;:&#160;<a class="el" href="classR6502.html#af617d1ef7fde1b4bd29962fd8eb87e10">R6502</a></li>
+<li>modeZeroPageY()&#160;:&#160;<a class="el" href="classR6502.html#a50ef7b5cb27d12930104bfa977b0e9c6">R6502</a></li>
 </ul>
 
 
@@ -124,6 +133,7 @@ $(function() {
 
 <h3><a id="index_o" name="index_o"></a>- o -</h3><ul>
 <li>onRegisterUpdate()&#160;:&#160;<a class="el" href="classR6502.html#ab832f67a5d15cacb32a6b718e735db39">R6502</a></li>
+<li>opIllegal()&#160;:&#160;<a class="el" href="classR6502.html#aa479b48ea12de8ca049daa98f3b49200">R6502</a></li>
 </ul>
 
 
@@ -141,7 +151,6 @@ $(function() {
 <li>read16()&#160;:&#160;<a class="el" href="classR6502.html#a4e1cd10e7f368135d54485d94d8cf657">R6502</a></li>
 <li>readPC()&#160;:&#160;<a class="el" href="classR6502.html#a7b1c92c89fba856db7bf4ffdeccf8e04">R6502</a></li>
 <li>readPC16()&#160;:&#160;<a class="el" href="classR6502.html#afa22519b4597a38f78c4dd6cbf9f2980">R6502</a></li>
-<li>REL()&#160;:&#160;<a class="el" href="classR6502.html#a9895d87654e2fde3afa164f5535a897d">R6502</a></li>
 <li>RES()&#160;:&#160;<a class="el" href="classR6502.html#a2737d72976d543cd11d6d23531844b48">R6502</a></li>
 </ul>
 
@@ -160,13 +169,6 @@ $(function() {
 
 <h3><a id="index_w" name="index_w"></a>- w -</h3><ul>
 <li>write()&#160;:&#160;<a class="el" href="classR6502.html#ac63aea4327d06c712e387355aa45634c">R6502</a></li>
-</ul>
-
-
-<h3><a id="index_z" name="index_z"></a>- z -</h3><ul>
-<li>ZP0()&#160;:&#160;<a class="el" href="classR6502.html#a8d2547fe06bc528772ec844511990191">R6502</a></li>
-<li>ZPX()&#160;:&#160;<a class="el" href="classR6502.html#a32109a816b54aa6a4f4c52146ebc7e7f">R6502</a></li>
-<li>ZPY()&#160;:&#160;<a class="el" href="classR6502.html#a52ab5eba817da30fb09ef59ded9722d2">R6502</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
