@@ -49,6 +49,7 @@ class R6502 {
      * 
      */
     void NMI();
+
   private:
     Memory memory;
 
@@ -167,7 +168,10 @@ class R6502 {
      */
     void setFlags(uint8_t flags);
 
-  private:
+    static const char* opMnemonics[57];
+    static const char* addressModeNames[14];
+
+  public:
     enum MODES {
       NULLMODE, // emulator utility. Not a real address mode
 
@@ -176,7 +180,7 @@ class R6502 {
       IMPLIED, ACCUMULATOR,
       ZEROPAGE, ZEROPAGEX, ZEROPAGEY,
       RELATIVE,
-      INDIRECT, INDIRECTX, INDIRECTY,
+      INDIRECT, INDIRECTX, INDIRECTY
     };
 
     enum OPS {
@@ -188,7 +192,7 @@ class R6502 {
       INC, INX, INY, JMP, JSR, LDA, LDX, LDY,
       LSR, NOP, ORA, PHA, PHP, PLA, PLP, ROL,
       ROR, RTI, RTS, SBC, SEC, SED, SEI, STA,
-      STX, STY, TAX, TAY, TSX, TXA, TXS, TYA,
+      STX, STY, TAX, TAY, TSX, TXA, TXS, TYA
     };
 
     struct Instruction {
@@ -198,9 +202,38 @@ class R6502 {
       uint8_t machineCycles = 0;
     };
 
-    const Instruction NULL_INSTRUCTION = {NULLMODE, NULLOP, 0};
+    static const Instruction NULL_INSTRUCTION;
 
-    std::vector<Instruction> instructionMatrix;
+    struct InstructionMetadata {
+      const char* mnemonic;
+      const char* addressModeName;
+    };
+
+    /**
+     * @brief Get the address mode name for a given address mode enum
+     * 
+     * @return const char* 
+     */
+    static const char* getAddressModeName(MODES);
+
+    /**
+     * @brief Get the operation mnemonic given an operation enum
+     * 
+     * @return const char* 
+     */
+
+    static const char* getOpMnemonic(OPS);
+    
+    /**
+     * @brief Get the Instruction Meta Data for a given instruction
+     * 
+     * Returns the mnemonic for the operation and the address mode name
+     * 
+     * @return InstructionMetadata 
+     */
+    static InstructionMetadata getInstructionMetadata(Instruction);
+  private:
+    static const Instruction instructionMatrix[0x100];
     Instruction currentInstruction = NULL_INSTRUCTION;
 
     /**
@@ -219,35 +252,55 @@ class R6502 {
     void doOperation(OPS);
 
     /**
-     * @brief Execute a given instruction.
-     * 
-     * @param instruction - The instruction
-     */
-    void doInstruction(Instruction&);
-
-
-    /**
      * @brief Execute the current instruction based on the current opcode.
      * 
      */
     void doOpcode();
 
+  public:
+    /**
+     * @brief Execute a given instruction.
+     * 
+     * @param instruction - The instruction
+     */
+    void doInstruction(const Instruction&);
+
+    /**
+     * @brief Get the 6502 Instruction Matrx 
+     * 
+     * @return Instruction*
+     */
+    static const Instruction* getInstructionMatrix();
+
+    /**
+     * @brief Get the number of instructions on the 6502
+     * 
+     * @return const uint16_t 
+     */
+    static const uint16_t getInstructionCount();
+
   private:
     // Utility functions
 
     /**
-     * @brief Pull the stack.
+     * @brief Used for pulling from the stack in a "chain" fashion. Stack pulling logic is difficult to fit into a function elegantly.
      * 
-     * @return uint8_t Top value on stack.
+     * @return uint8_t 
      */
-    uint8_t pullStack();
+    uint8_t pullStackChain();
 
     /**
-     * @brief Pull a double byute from the stack (2 pulls).
+     * @brief Used for pulling from the stack in a "chain" fashion for a double byte
      * 
-     * @return uint16_t The double byte on the stack.
+     * @return uint8_t 
      */
-    uint16_t pullStack16();
+    uint16_t pullStackChain16();
+
+    /**
+     * @brief End the stack pulling chain.
+     * 
+     */
+    void endPullStackChain();
 
     /**
      * @brief Push byte onto the stack.
@@ -312,6 +365,9 @@ class R6502 {
      */
     void doCycle();
 
+    uint8_t cyclesPassedThisInstruction = 0x00;
+    uint8_t extraCyclesPassedThisInstruction = 0x00;
+
     /**
      * @brief Performs relative branching.
      * 
@@ -337,7 +393,6 @@ class R6502 {
      * 
      */
     void doPossibleExtraCycle();
-    uint16_t cyclesPassed();
 
     /**
      * @brief Set the value in the PC directly.
@@ -429,6 +484,21 @@ class R6502 {
      * @param byte New processor status.
      */
     void setP(uint8_t);
+
+  public:
+    /**
+     * @brief Get the number of Cycles Passed This Instruction
+     * 
+     * @return uint8_t 
+     */
+    uint8_t getCyclesPassedThisInstruction();
+
+    /**
+     * @brief Get the number of extra Cycles Passed This Instruction
+     * 
+     * @return uint8_t 
+     */
+    uint8_t getExtraCyclesPassedThisInstruction();
 
   private:
     // Event handlers... Useful for logging, etc.

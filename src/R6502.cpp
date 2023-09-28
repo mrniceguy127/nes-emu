@@ -1,20 +1,20 @@
 #include "NESIncludes.h"
+#include <iostream>
 
 // -----
 // External event functions
 // -----
 
-R6502::R6502(Memory& mem) : memory(mem) {
-  // Generated using script located at util/generate-matrix.sh
-  instructionMatrix = {
+// Generated using script located at util/generate-matrix.sh
+const R6502::Instruction R6502::instructionMatrix[0x100] = {
         /* 0                          1                          2                          3                          4                          5                          6                          7                          8                          9                          A                          B                          C                          D                          E                          F                          */
 /* 0 */    { IMPLIED    , BRK   , 7}, { INDIRECTX  , ORA   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , ORA   , 3}, { ZEROPAGE   , ASL   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PHP   , 3}, { IMMEDIATE  , ORA   , 2}, { ACCUMULATOR, ASL   , 2}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , ORA   , 4}, { ABSOLUTE   , ASL   , 6}, { NULLMODE   , NULLOP, 0}, 
 /* 1 */    { RELATIVE   , BPL   , 2}, { INDIRECTY  , ORA   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , ORA   , 4}, { ZEROPAGEX  , ASL   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLC   , 2}, { ABSOLUTEY  , ORA   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , ORA   , 4}, { ABSOLUTEX  , ASL   , 7}, { NULLMODE   , NULLOP, 0}, 
-/* 2 */    { NULLMODE   , JSR   , 6}, { INDIRECTX  , AND   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , BIT   , 3}, { ZEROPAGE   , AND   , 3}, { ZEROPAGE   , ROL   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PLP   , 4}, { IMMEDIATE  , AND   , 2}, { ACCUMULATOR, ROL   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , BIT   , 4}, { ABSOLUTE   , AND   , 4}, { ABSOLUTE   , ROL   , 6}, { NULLMODE   , NULLOP, 0}, 
+/* 2 */    { ABSOLUTE   , JSR   , 6}, { INDIRECTX  , AND   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , BIT   , 3}, { ZEROPAGE   , AND   , 3}, { ZEROPAGE   , ROL   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PLP   , 4}, { IMMEDIATE  , AND   , 2}, { ACCUMULATOR, ROL   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , BIT   , 4}, { ABSOLUTE   , AND   , 4}, { ABSOLUTE   , ROL   , 6}, { NULLMODE   , NULLOP, 0}, 
 /* 3 */    { RELATIVE   , BMI   , 2}, { INDIRECTY  , AND   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , AND   , 4}, { ZEROPAGEX  , ROL   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , SEC   , 2}, { ABSOLUTEY  , AND   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , AND   , 4}, { ABSOLUTEX  , ROL   , 7}, { NULLMODE   , NULLOP, 0}, 
 /* 4 */    { IMPLIED    , RTI   , 6}, { INDIRECTX  , EOR   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , EOR   , 3}, { ZEROPAGE   , LSR   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PHA   , 3}, { IMMEDIATE  , EOR   , 2}, { ACCUMULATOR, LSR   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , JMP   , 3}, { ABSOLUTE   , EOR   , 4}, { ABSOLUTE   , LSR   , 6}, { NULLMODE   , NULLOP, 0}, 
 /* 5 */    { RELATIVE   , BVC   , 2}, { INDIRECTY  , EOR   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , EOR   , 4}, { ZEROPAGEX  , LSR   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLI   , 2}, { ABSOLUTEY  , EOR   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , EOR   , 4}, { ABSOLUTEX  , LSR   , 7}, { NULLMODE   , NULLOP, 0}, 
-/* 6 */    { IMPLIED    , RTS   , 6}, { INDIRECTX  , ADC   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , ADC   , 3}, { ZEROPAGE   , ROR   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PLA   , 4}, { IMMEDIATE  , ADC   , 2}, { ACCUMULATOR, ROR   , 2}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , JMP   , 5}, { ABSOLUTE   , ADC   , 4}, { ABSOLUTE   , ROR   , 6}, { NULLMODE   , NULLOP, 0}, 
+/* 6 */    { IMPLIED    , RTS   , 6}, { INDIRECTX  , ADC   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , ADC   , 3}, { ZEROPAGE   , ROR   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PLA   , 4}, { IMMEDIATE  , ADC   , 2}, { ACCUMULATOR, ROR   , 2}, { NULLMODE   , NULLOP, 0}, { INDIRECT   , JMP   , 5}, { ABSOLUTE   , ADC   , 4}, { ABSOLUTE   , ROR   , 6}, { NULLMODE   , NULLOP, 0}, 
 /* 7 */    { RELATIVE   , BVS   , 2}, { INDIRECTY  , ADC   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , ADC   , 4}, { ZEROPAGEX  , ROR   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , SEI   , 2}, { ABSOLUTEY  , ADC   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , ADC   , 4}, { ABSOLUTEX  , ROR   , 7}, { NULLMODE   , NULLOP, 0}, 
 /* 8 */    { NULLMODE   , NULLOP, 0}, { INDIRECTX  , STA   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , STY   , 3}, { ZEROPAGE   , STA   , 3}, { ZEROPAGE   , STX   , 3}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , DEY   , 2}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , TXA   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , STY   , 4}, { ABSOLUTE   , STA   , 4}, { ABSOLUTE   , STX   , 4}, { NULLMODE   , NULLOP, 0}, 
 /* 9 */    { RELATIVE   , BCC   , 2}, { INDIRECTY  , STA   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , STY   , 4}, { ZEROPAGEX  , STA   , 4}, { ZEROPAGEY  , STX   , 4}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , TYA   , 2}, { ABSOLUTEY  , STA   , 5}, { IMPLIED    , TXS   , 2}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , STA   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, 
@@ -24,8 +24,36 @@ R6502::R6502(Memory& mem) : memory(mem) {
 /* D */    { RELATIVE   , BNE   , 2}, { INDIRECTY  , CMP   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , CMP   , 4}, { ZEROPAGEX  , DEC   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLD   , 2}, { ABSOLUTEY  , CMP   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , CMP   , 4}, { ABSOLUTEX  , DEC   , 7}, { NULLMODE   , NULLOP, 0}, 
 /* E */    { IMMEDIATE  , CPX   , 2}, { INDIRECTX  , SBC   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , CPX   , 3}, { ZEROPAGE   , SBC   , 3}, { ZEROPAGE   , INC   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , INX   , 2}, { IMMEDIATE  , SBC   , 2}, { IMPLIED    , NOP   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , CPX   , 4}, { ABSOLUTE   , SBC   , 4}, { ABSOLUTE   , INC   , 6}, { NULLMODE   , NULLOP, 0}, 
 /* F */    { RELATIVE   , BEQ   , 2}, { INDIRECTY  , SBC   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , SBC   , 4}, { ZEROPAGEX  , INC   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , SED   , 2}, { ABSOLUTEY  , SBC   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , SBC   , 4}, { ABSOLUTEX  , INC   , 7}, { NULLMODE   , NULLOP, 0} 
-  };
-}
+};
+
+R6502::R6502(Memory& mem) : memory(mem) { }
+
+R6502::~R6502() { }
+
+const R6502::Instruction R6502::NULL_INSTRUCTION = {NULLMODE, NULLOP, 0};
+
+const char* R6502::opMnemonics[57] = {
+  "ILLEGAL", // Fake emulator null mnemonic...
+
+  "ADC", "AND", "ASL", "BCC", "BCS", "BEQ", "BIT", "BMI",
+  "BNE", "BPL", "BRK", "BVC", "BVS", "CLC", "CLD", "CLI",
+  "CLV", "CMP", "CPX", "CPY", "DEC", "DEX", "DEY", "EOR",
+  "INC", "INX", "INY", "JMP", "JSR", "LDA", "LDX", "LDY",
+  "LSR", "NOP", "ORA", "PHA", "PHP", "PLA", "PLP", "ROL",
+  "ROR", "RTI", "RTS", "SBC", "SEC", "SED", "SEI", "STA",
+  "STX", "STY", "TAX", "TAY", "TSX", "TXA", "TXS", "TYA"
+};
+
+const char* R6502::addressModeNames[14] = {
+  "ILLEGAL", // Fake emulator null address mode...
+
+  "IMMEDIATE",
+  "ABSOLUTE", "ABSOLUTEX", "ABSOLUTEY",
+  "IMPLIED", "ACCUMULATOR",
+  "ZEROPAGE", "ZEROPAGEX", "ZEROPAGEY",
+  "RELATIVE",
+  "INDIRECT", "INDIRECTX", "INDIRECTY"
+};
 
 void R6502::doAddressMode(MODES mode) {
   switch (mode) {
@@ -250,14 +278,21 @@ void R6502::doOperation(OPS op) {
   }
 }
 
-void R6502::doInstruction(Instruction& instruction) {
+void R6502::doInstruction(const Instruction& instruction) {
+  cyclesPassedThisInstruction = 0x00;
+  extraCyclesPassedThisInstruction = 0x00;
+  doCycle(); // Fill in with opcode fetch....
+  //doCycle();
   currentInstruction = instruction;
   doAddressMode(currentInstruction.addressMode);
   doOperation(currentInstruction.operation);
 
   // TODO - TEMPORARY UNTIL THESE GET EXECUTED NATURALLY
   int i = 0;
-  while (i < currentInstruction.machineCycles) doCycle();
+  while (i < currentInstruction.machineCycles) {
+    //doCycle();
+    i++;
+  }
   currentInstruction = NULL_INSTRUCTION;
 }
 
@@ -265,20 +300,54 @@ void R6502::doOpcode() {
   doInstruction(instructionMatrix[opcode]);
 }
 
-R6502::~R6502() { }
+const char* R6502::getOpMnemonic(OPS op) {
+  return opMnemonics[op];
+}
+
+const char* R6502::getAddressModeName(MODES mode) {
+  return addressModeNames[mode];
+}
+
+R6502::InstructionMetadata R6502::getInstructionMetadata(Instruction instruction) {
+  return {
+    getOpMnemonic(instruction.operation),
+    getAddressModeName(instruction.addressMode)
+  };
+}
+
+
+const R6502::Instruction* R6502::getInstructionMatrix() {
+  return instructionMatrix;
+}
+
+const uint16_t R6502::getInstructionCount() {
+  return 0x100;
+}
 
 
 void R6502::doCycle() {
   // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
   cycles++; // This won't be needed because of this function. Remove later, but keep for now so I can actually visualize what I'm changing.
   totalCyclesPassed++;
+  cyclesPassedThisInstruction++;
+}
+
+uint8_t R6502::getCyclesPassedThisInstruction() {
+  return cyclesPassedThisInstruction;
+}
+
+uint8_t R6502::getExtraCyclesPassedThisInstruction() {
+  return extraCyclesPassedThisInstruction;
 }
 
 void R6502::doRelBranch() {
-  doCycle(); // default cycle....
+  std::cout << "TEST" << std::endl;
+  prepExtraCycle();
+  doPossibleExtraCycle(); // default cycle....
   absAddr = pc + relAddr;
   if (absAddr & 0xFF00 != absAddr & 0xFF00) {
-    doCycle(); // branch on different page, so extra cycle
+    prepExtraCycle();
+    doPossibleExtraCycle(); // branch on different page, so extra cycle
   }
 
   setPC(absAddr);
@@ -290,7 +359,10 @@ void R6502::prepExtraCycle() {
 
 
 void R6502::doPossibleExtraCycle() {
-  if (extraCyclePrepped) doCycle();
+  if (extraCyclePrepped) {
+    doCycle();
+    extraCyclesPassedThisInstruction++;
+  }
   extraCyclePrepped = 0x00;
 }
 
@@ -349,8 +421,7 @@ void R6502::NMI() {
 }
 
 uint8_t R6502::read(uint16_t addr) {
-  //doCycle(); eventually, we'll count cy to onecles naturally. For now.... quick mafs
-  memory.read(addr);
+  doCycle(); // eventually, we'll count cy to onecles naturally. For now.... quick mafs
   return memory.read(addr); 
 }
 
@@ -363,7 +434,7 @@ uint8_t R6502::readPC() {
 
 uint16_t R6502::read16(uint16_t addr) {
   //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
-  return ((uint16_t) (memory.read(addr + 1) << 8)) | memory.read(addr); 
+  return ((uint16_t) (read(addr + 1) << 8)) | read(addr); 
 }
 
 uint16_t R6502::readPC16() {
@@ -374,7 +445,7 @@ uint16_t R6502::readPC16() {
 }
 
 void R6502::write(uint16_t addr, uint8_t data) {
-  //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
+  doCycle(); // eventually, we'll count cycles naturally. For now.... quick mafs
   memory.write(addr, data);
 }
 
@@ -440,15 +511,20 @@ void R6502::setP(uint8_t byte) {
   onRegisterUpdate();
 }
 
-uint8_t R6502::pullStack() {
+uint8_t R6502::pullStackChain() {
   incSP();
-  return read(0x0100 + sp);
+  doCycle();
+  return memory.read(0x0100 + sp);
 }
 
-uint16_t R6502::pullStack16() {
-  uint16_t lo = (uint16_t) pullStack();
-  uint16_t hi = (uint16_t) pullStack();
+uint16_t R6502::pullStackChain16() {
+  uint16_t lo = (uint16_t) pullStackChain();
+  uint16_t hi = (uint16_t) pullStackChain();
   return (hi << 8) | lo;
+}
+
+void R6502::endPullStackChain() {
+  doCycle();
 }
 
 void R6502::pushStack(uint8_t byte) {
@@ -508,7 +584,7 @@ void R6502::setFlags(uint8_t flags) {
 // -----
 
 uint8_t R6502::fetchOperand() {
-  operand = read(absAddr);
+  if (currentInstruction.addressMode != ACCUMULATOR) operand = read(absAddr);
   return operand;
 }
 
@@ -533,7 +609,7 @@ void R6502::modeImmediate() {
 }  
 
 void R6502::modeAbsolute() {
-  absAddr = readPC16();
+  if (currentInstruction.operation != JSR) absAddr = readPC16();
 }
 
 void R6502::modeAbsoluteX() {
@@ -555,6 +631,7 @@ void R6502::modeAbsoluteY() {
 }
 
 void R6502::modeImplied() {
+  readPC(); // Read byte and throw it away <- https://www.nesdev.org/6502_cpu.txt
   operand = accumulator;
 }
 
@@ -567,24 +644,27 @@ void R6502::modeZeroPage() {
 }
 
 void R6502::modeZeroPageX() {
-  absAddr = readPC() + x;
+  absAddr = read(readPC()) + x;
   absAddr &= 0x00FF; // no paging past the zero page may occur
 }
 
 void R6502::modeZeroPageY() {
-  absAddr = readPC() + y;
+  absAddr = read(readPC()) + y;
   absAddr &= 0x00FF; // no paging past the zero page may occur
 }
 
 void R6502::modeRelative() {
   relAddr = readPC();
   // if negative (MSB of lo byte == 1), set hi byte to FF since relAddr is 2 bytes, not 1 as read. This will keep the relative address negative when converted to 2 byte form.
-  if (isNegative(relAddr)) relAddr |= 0xFF00;
+  if (isNegative(relAddr)) {
+    std::cout << "test" << std::endl;
+    relAddr |= 0xFF00;
+  }
 }
 
 void R6502::modeIndirectX() {
   uint16_t baseAddr = readPC();
-  uint16_t loAddr = (baseAddr + x) & 0x00FF;
+  uint16_t loAddr = (read(baseAddr) + x) & 0x00FF;
   absAddr = read16(loAddr);
 }
 
@@ -594,7 +674,11 @@ void R6502::modeIndirectY() {
   uint8_t hi = absAddr >> 8;
   absAddr += y;
 
-  if (absAddr >> 8 != hi) prepExtraCycle();
+  std::cout << "cycle " << (int) getCyclesPassedThisInstruction() << std::endl;
+  if (absAddr >> 8 != hi) {
+    std::cout << "page crossed" << std::endl;
+    prepExtraCycle();
+  }
 }
 
 void R6502::modeIndirect() {
@@ -670,8 +754,13 @@ void R6502::opASL() {
   // Flags changed: C Z N
   
   fetchOperand();
+
+  if (currentInstruction.addressMode == ABSOLUTEX
+      || currentInstruction.addressMode == ABSOLUTEY) read(absAddr);
+  if (currentInstruction.addressMode != ACCUMULATOR) write(absAddr, operand);
   
   tmp = (uint16_t) operand << 1;
+  //doCycle(); // Internal operation cycle (3a) <- https://the-dreams.de/aay64.txt
 
   setFlags(C | Z | N, isCarry(tmp) | isZero(tmp) | isNegative(tmp));
 
@@ -715,8 +804,6 @@ void R6502::opBMI() {
   // branch on N = 1
   // Flags changed: 
 
-  fetchOperand();
-  
   if (getFlag(N) == 1) doRelBranch();
 }
 
@@ -724,16 +811,12 @@ void R6502::opBNE() {
   // branch on Z = 0
   // Flags changed: 
 
-  fetchOperand();
-  
   if (getFlag(Z) == 0) doRelBranch();
 }
 
 void R6502::opBPL() {
   // branch on N = 0
   // Flags changed: 
-
-  fetchOperand();
   
   if (getFlag(N) == 0) doRelBranch();
 }
@@ -744,7 +827,6 @@ void R6502::opBRK() { // Here we will be pushing to the stack. Back to the wiki 
   
   // https://www.pagetable.com/?p=410
   // http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
-  incPC();
 
   pushStack16(pc);
   // https://www.masswerk.at/6502/6502_instruction_set.html#BRK
@@ -761,16 +843,12 @@ void R6502::opBVC() {
   // branch on V = 0
   // Flags changed: 
 
-  fetchOperand();
-  
   if (getFlag(V) == 0) doRelBranch();
 }
 
 void R6502::opBVS() {
   // branch on V = 1
   // Flags changed: 
-
-  fetchOperand();
   
   if (getFlag(V) == 1) doRelBranch();
 }
@@ -834,6 +912,12 @@ void R6502::opDEC() {
   // Flags changed: Z N
   
   fetchOperand();
+
+  if (currentInstruction.addressMode == ABSOLUTEX)
+    fetchOperand();
+
+  write(absAddr, operand);
+
   tmp = ((uint16_t) operand - 1) & 0x00FF;
 
   write(absAddr, tmp);
@@ -874,6 +958,12 @@ void R6502::opINC() {
   // Flags changed: Z N
   
   fetchOperand();
+
+  if (currentInstruction.addressMode == ABSOLUTEX)
+    fetchOperand();
+
+  write(absAddr, operand);
+
   tmp = ((uint16_t) operand + 1) & 0x00FF;
 
   write(absAddr, tmp);
@@ -909,8 +999,10 @@ void R6502::opJSR() {
   // (PC+2) -> PCH
   // Flags changed:
 
-  decPC();
+  absAddr = readPC();
+  read(sp); // Internal Operation <- https://the-dreams.de/aay64.txt (LOL?????? No way they designed a wasted cpu cycle... come back if you have errors)
   pushStack16(pc);
+  absAddr = absAddr | (((uint16_t) readPC()) << 8);
   setPC(absAddr);
 }
 
@@ -949,7 +1041,11 @@ void R6502::opLSR() {
   // Flags changed: Z N C
   
   fetchOperand();
+  if (currentInstruction.addressMode == ABSOLUTEX
+    || currentInstruction.addressMode == ABSOLUTEY) fetchOperand(); 
   
+  if (currentInstruction.addressMode != ACCUMULATOR) write(absAddr, operand);
+
   tmp = (uint16_t) operand >> 1;
 
   setFlags(C | Z | N, isZero(tmp) | isCarry(tmp));
@@ -994,15 +1090,16 @@ void R6502::opPLA() {
   // pull A
   // Flags changed: Z N
 
-  setAccumulator(pullStack());
+  setAccumulator(pullStackChain());
+  endPullStackChain();
   setFlags(Z | N, isZero(accumulator) | isNegative(accumulator));
 }
 
 void R6502::opPLP() {
   // pull P
   // Flags changed: FROM STACK
-
-  setP(pullStack());
+  setP(pullStackChain());
+  endPullStackChain();
 }
 
 void R6502::opROL() {
@@ -1010,6 +1107,10 @@ void R6502::opROL() {
   // Flags Changed: C Z N
   
   fetchOperand();
+  if (currentInstruction.addressMode == ABSOLUTEX
+    || currentInstruction.addressMode == ABSOLUTEY) fetchOperand();
+
+  if (currentInstruction.addressMode != ACCUMULATOR) write(absAddr, operand);
 
   tmp = ((uint16_t) (operand << 1) | (uint16_t) (operand >> 7)) & 0x00FF;
 
@@ -1024,6 +1125,10 @@ void R6502::opROR() {
   // Flags Changed: C Z N
   
   fetchOperand();
+  if (currentInstruction.addressMode == ABSOLUTEX
+    || currentInstruction.addressMode == ABSOLUTEY) fetchOperand();
+
+  if (currentInstruction.addressMode != ACCUMULATOR) write(absAddr, operand);
 
   tmp = ((uint16_t) (operand >> 1) | (uint16_t) (operand << 7)) & 0x00FF;
 
@@ -1039,13 +1144,19 @@ void R6502::opRTI() {
   // "The status register is pulled with the break flag
   // ...and bit 5 ignored. Then PC is pulled from the stack."
   
-  setP(setBitsOfByte(U | B, P, pullStack()));
-  setPC(pullStack16());
+  setP(setBitsOfByte(U | B, P, pullStackChain()));
+  setPC(pullStackChain16());
+  endPullStackChain();
 }
 
 void R6502::opRTS() {
   // pull PC, PC+1 -> PC
-  setPC(pullStack16() + 1);
+
+  
+  setPC(pullStackChain16());
+  endPullStackChain();
+  incPC();
+  doCycle();
 }
 
 void R6502::opSBC() {
@@ -1097,6 +1208,13 @@ void R6502::opSEI() {
 void R6502::opSTA() {
   // A -> M
   // Flags changed: 
+
+  if (
+    currentInstruction.addressMode == INDIRECTY ||
+    currentInstruction.addressMode == ABSOLUTEY ||
+    currentInstruction.addressMode == ABSOLUTEX
+  )
+    fetchOperand(); // Read from effective address...? <- https://www.nesdev.org/6502_cpu.txt
 
   write(absAddr, accumulator);
 }

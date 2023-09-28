@@ -18,7 +18,7 @@ NR!=1 {
     ADDR_MODE="ABSOLUTEX  "
   } else if ($2=="absy") {
     ADDR_MODE="ABSOLUTEY  "
-  } else if ($2=="indirect") {
+  } else if ($2=="ind") {
     ADDR_MODE="INDIRECT   "
   } else if ($2=="indx") {
     ADDR_MODE="INDIRECTX  "
