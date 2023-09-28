@@ -40,13 +40,11 @@ NR!=1 {
 }
 
 NR!=1 && NR <=256 {
-    #print "  { \"" $1 "\", &" ADDR_MODE  ", &" $1 ", " $4 "},"
-    print "  { " ADDR_MODE  ", " OP ", " $4 "},"
+    print "  { " ADDR_MODE  ", " OP " },"
 }
 
 NR==257 {
-    #print "  { \"" $1 "\", &" ADDR_MODE  ", &" $1 ", " $4 "}"
-    print "  { " ADDR_MODE  ", " OP ", " $4 "}"
+    print "  { " ADDR_MODE  ", " OP " }"
 }
 
 END {

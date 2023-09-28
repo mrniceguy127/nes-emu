@@ -196,10 +196,8 @@ class R6502 {
     };
 
     struct Instruction {
-      //char mnemonic[4];
       MODES addressMode = NULLMODE;
       OPS operation = NULLOP;
-      uint8_t machineCycles = 0;
     };
 
     static const Instruction NULL_INSTRUCTION;

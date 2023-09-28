@@ -7,30 +7,30 @@
 
 // Generated using script located at util/generate-matrix.sh
 const R6502::Instruction R6502::instructionMatrix[0x100] = {
-        /* 0                          1                          2                          3                          4                          5                          6                          7                          8                          9                          A                          B                          C                          D                          E                          F                          */
-/* 0 */    { IMPLIED    , BRK   , 7}, { INDIRECTX  , ORA   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , ORA   , 3}, { ZEROPAGE   , ASL   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PHP   , 3}, { IMMEDIATE  , ORA   , 2}, { ACCUMULATOR, ASL   , 2}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , ORA   , 4}, { ABSOLUTE   , ASL   , 6}, { NULLMODE   , NULLOP, 0}, 
-/* 1 */    { RELATIVE   , BPL   , 2}, { INDIRECTY  , ORA   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , ORA   , 4}, { ZEROPAGEX  , ASL   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLC   , 2}, { ABSOLUTEY  , ORA   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , ORA   , 4}, { ABSOLUTEX  , ASL   , 7}, { NULLMODE   , NULLOP, 0}, 
-/* 2 */    { ABSOLUTE   , JSR   , 6}, { INDIRECTX  , AND   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , BIT   , 3}, { ZEROPAGE   , AND   , 3}, { ZEROPAGE   , ROL   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PLP   , 4}, { IMMEDIATE  , AND   , 2}, { ACCUMULATOR, ROL   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , BIT   , 4}, { ABSOLUTE   , AND   , 4}, { ABSOLUTE   , ROL   , 6}, { NULLMODE   , NULLOP, 0}, 
-/* 3 */    { RELATIVE   , BMI   , 2}, { INDIRECTY  , AND   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , AND   , 4}, { ZEROPAGEX  , ROL   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , SEC   , 2}, { ABSOLUTEY  , AND   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , AND   , 4}, { ABSOLUTEX  , ROL   , 7}, { NULLMODE   , NULLOP, 0}, 
-/* 4 */    { IMPLIED    , RTI   , 6}, { INDIRECTX  , EOR   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , EOR   , 3}, { ZEROPAGE   , LSR   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PHA   , 3}, { IMMEDIATE  , EOR   , 2}, { ACCUMULATOR, LSR   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , JMP   , 3}, { ABSOLUTE   , EOR   , 4}, { ABSOLUTE   , LSR   , 6}, { NULLMODE   , NULLOP, 0}, 
-/* 5 */    { RELATIVE   , BVC   , 2}, { INDIRECTY  , EOR   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , EOR   , 4}, { ZEROPAGEX  , LSR   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLI   , 2}, { ABSOLUTEY  , EOR   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , EOR   , 4}, { ABSOLUTEX  , LSR   , 7}, { NULLMODE   , NULLOP, 0}, 
-/* 6 */    { IMPLIED    , RTS   , 6}, { INDIRECTX  , ADC   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , ADC   , 3}, { ZEROPAGE   , ROR   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , PLA   , 4}, { IMMEDIATE  , ADC   , 2}, { ACCUMULATOR, ROR   , 2}, { NULLMODE   , NULLOP, 0}, { INDIRECT   , JMP   , 5}, { ABSOLUTE   , ADC   , 4}, { ABSOLUTE   , ROR   , 6}, { NULLMODE   , NULLOP, 0}, 
-/* 7 */    { RELATIVE   , BVS   , 2}, { INDIRECTY  , ADC   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , ADC   , 4}, { ZEROPAGEX  , ROR   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , SEI   , 2}, { ABSOLUTEY  , ADC   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , ADC   , 4}, { ABSOLUTEX  , ROR   , 7}, { NULLMODE   , NULLOP, 0}, 
-/* 8 */    { NULLMODE   , NULLOP, 0}, { INDIRECTX  , STA   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , STY   , 3}, { ZEROPAGE   , STA   , 3}, { ZEROPAGE   , STX   , 3}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , DEY   , 2}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , TXA   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , STY   , 4}, { ABSOLUTE   , STA   , 4}, { ABSOLUTE   , STX   , 4}, { NULLMODE   , NULLOP, 0}, 
-/* 9 */    { RELATIVE   , BCC   , 2}, { INDIRECTY  , STA   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , STY   , 4}, { ZEROPAGEX  , STA   , 4}, { ZEROPAGEY  , STX   , 4}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , TYA   , 2}, { ABSOLUTEY  , STA   , 5}, { IMPLIED    , TXS   , 2}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , STA   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, 
-/* A */    { IMMEDIATE  , LDY   , 2}, { INDIRECTX  , LDA   , 6}, { IMMEDIATE  , LDX   , 2}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , LDY   , 3}, { ZEROPAGE   , LDA   , 3}, { ZEROPAGE   , LDX   , 3}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , TAY   , 2}, { IMMEDIATE  , LDA   , 2}, { IMPLIED    , TAX   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , LDY   , 4}, { ABSOLUTE   , LDA   , 4}, { ABSOLUTE   , LDX   , 4}, { NULLMODE   , NULLOP, 0}, 
-/* B */    { RELATIVE   , BCS   , 2}, { INDIRECTY  , LDA   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , LDY   , 4}, { ZEROPAGEX  , LDA   , 4}, { ZEROPAGEY  , LDX   , 4}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLV   , 2}, { ABSOLUTEY  , LDA   , 4}, { IMPLIED    , TSX   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , LDY   , 4}, { ABSOLUTEX  , LDA   , 4}, { ABSOLUTEY  , LDX   , 4}, { NULLMODE   , NULLOP, 0}, 
-/* C */    { IMMEDIATE  , CPY   , 2}, { INDIRECTX  , CMP   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , CPY   , 3}, { ZEROPAGE   , CMP   , 3}, { ZEROPAGE   , DEC   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , INY   , 2}, { IMMEDIATE  , CMP   , 2}, { IMPLIED    , DEX   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , CPY   , 4}, { ABSOLUTE   , CMP   , 4}, { ABSOLUTE   , DEC   , 6}, { NULLMODE   , NULLOP, 0}, 
-/* D */    { RELATIVE   , BNE   , 2}, { INDIRECTY  , CMP   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , CMP   , 4}, { ZEROPAGEX  , DEC   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , CLD   , 2}, { ABSOLUTEY  , CMP   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , CMP   , 4}, { ABSOLUTEX  , DEC   , 7}, { NULLMODE   , NULLOP, 0}, 
-/* E */    { IMMEDIATE  , CPX   , 2}, { INDIRECTX  , SBC   , 6}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGE   , CPX   , 3}, { ZEROPAGE   , SBC   , 3}, { ZEROPAGE   , INC   , 5}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , INX   , 2}, { IMMEDIATE  , SBC   , 2}, { IMPLIED    , NOP   , 2}, { NULLMODE   , NULLOP, 0}, { ABSOLUTE   , CPX   , 4}, { ABSOLUTE   , SBC   , 4}, { ABSOLUTE   , INC   , 6}, { NULLMODE   , NULLOP, 0}, 
-/* F */    { RELATIVE   , BEQ   , 2}, { INDIRECTY  , SBC   , 5}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ZEROPAGEX  , SBC   , 4}, { ZEROPAGEX  , INC   , 6}, { NULLMODE   , NULLOP, 0}, { IMPLIED    , SED   , 2}, { ABSOLUTEY  , SBC   , 4}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { NULLMODE   , NULLOP, 0}, { ABSOLUTEX  , SBC   , 4}, { ABSOLUTEX  , INC   , 7}, { NULLMODE   , NULLOP, 0} 
+        /* 0                        1                        2                        3                        4                        5                        6                        7                        8                        9                        A                        B                        C                        D                        E                        F                        */
+/* 0 */    { IMPLIED    , BRK    }, { INDIRECTX  , ORA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , ORA    }, { ZEROPAGE   , ASL    }, { NULLMODE   , NULLOP }, { IMPLIED    , PHP    }, { IMMEDIATE  , ORA    }, { ACCUMULATOR, ASL    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTE   , ORA    }, { ABSOLUTE   , ASL    }, { NULLMODE   , NULLOP }, 
+/* 1 */    { RELATIVE   , BPL    }, { INDIRECTY  , ORA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , ORA    }, { ZEROPAGEX  , ASL    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLC    }, { ABSOLUTEY  , ORA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , ORA    }, { ABSOLUTEX  , ASL    }, { NULLMODE   , NULLOP }, 
+/* 2 */    { ABSOLUTE   , JSR    }, { INDIRECTX  , AND    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , BIT    }, { ZEROPAGE   , AND    }, { ZEROPAGE   , ROL    }, { NULLMODE   , NULLOP }, { IMPLIED    , PLP    }, { IMMEDIATE  , AND    }, { ACCUMULATOR, ROL    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , BIT    }, { ABSOLUTE   , AND    }, { ABSOLUTE   , ROL    }, { NULLMODE   , NULLOP }, 
+/* 3 */    { RELATIVE   , BMI    }, { INDIRECTY  , AND    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , AND    }, { ZEROPAGEX  , ROL    }, { NULLMODE   , NULLOP }, { IMPLIED    , SEC    }, { ABSOLUTEY  , AND    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , AND    }, { ABSOLUTEX  , ROL    }, { NULLMODE   , NULLOP }, 
+/* 4 */    { IMPLIED    , RTI    }, { INDIRECTX  , EOR    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , EOR    }, { ZEROPAGE   , LSR    }, { NULLMODE   , NULLOP }, { IMPLIED    , PHA    }, { IMMEDIATE  , EOR    }, { ACCUMULATOR, LSR    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , JMP    }, { ABSOLUTE   , EOR    }, { ABSOLUTE   , LSR    }, { NULLMODE   , NULLOP }, 
+/* 5 */    { RELATIVE   , BVC    }, { INDIRECTY  , EOR    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , EOR    }, { ZEROPAGEX  , LSR    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLI    }, { ABSOLUTEY  , EOR    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , EOR    }, { ABSOLUTEX  , LSR    }, { NULLMODE   , NULLOP }, 
+/* 6 */    { IMPLIED    , RTS    }, { INDIRECTX  , ADC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , ADC    }, { ZEROPAGE   , ROR    }, { NULLMODE   , NULLOP }, { IMPLIED    , PLA    }, { IMMEDIATE  , ADC    }, { ACCUMULATOR, ROR    }, { NULLMODE   , NULLOP }, { INDIRECT   , JMP    }, { ABSOLUTE   , ADC    }, { ABSOLUTE   , ROR    }, { NULLMODE   , NULLOP }, 
+/* 7 */    { RELATIVE   , BVS    }, { INDIRECTY  , ADC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , ADC    }, { ZEROPAGEX  , ROR    }, { NULLMODE   , NULLOP }, { IMPLIED    , SEI    }, { ABSOLUTEY  , ADC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , ADC    }, { ABSOLUTEX  , ROR    }, { NULLMODE   , NULLOP }, 
+/* 8 */    { NULLMODE   , NULLOP }, { INDIRECTX  , STA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , STY    }, { ZEROPAGE   , STA    }, { ZEROPAGE   , STX    }, { NULLMODE   , NULLOP }, { IMPLIED    , DEY    }, { NULLMODE   , NULLOP }, { IMPLIED    , TXA    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , STY    }, { ABSOLUTE   , STA    }, { ABSOLUTE   , STX    }, { NULLMODE   , NULLOP }, 
+/* 9 */    { RELATIVE   , BCC    }, { INDIRECTY  , STA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , STY    }, { ZEROPAGEX  , STA    }, { ZEROPAGEY  , STX    }, { NULLMODE   , NULLOP }, { IMPLIED    , TYA    }, { ABSOLUTEY  , STA    }, { IMPLIED    , TXS    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , STA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, 
+/* A */    { IMMEDIATE  , LDY    }, { INDIRECTX  , LDA    }, { IMMEDIATE  , LDX    }, { NULLMODE   , NULLOP }, { ZEROPAGE   , LDY    }, { ZEROPAGE   , LDA    }, { ZEROPAGE   , LDX    }, { NULLMODE   , NULLOP }, { IMPLIED    , TAY    }, { IMMEDIATE  , LDA    }, { IMPLIED    , TAX    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , LDY    }, { ABSOLUTE   , LDA    }, { ABSOLUTE   , LDX    }, { NULLMODE   , NULLOP }, 
+/* B */    { RELATIVE   , BCS    }, { INDIRECTY  , LDA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , LDY    }, { ZEROPAGEX  , LDA    }, { ZEROPAGEY  , LDX    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLV    }, { ABSOLUTEY  , LDA    }, { IMPLIED    , TSX    }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , LDY    }, { ABSOLUTEX  , LDA    }, { ABSOLUTEY  , LDX    }, { NULLMODE   , NULLOP }, 
+/* C */    { IMMEDIATE  , CPY    }, { INDIRECTX  , CMP    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , CPY    }, { ZEROPAGE   , CMP    }, { ZEROPAGE   , DEC    }, { NULLMODE   , NULLOP }, { IMPLIED    , INY    }, { IMMEDIATE  , CMP    }, { IMPLIED    , DEX    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , CPY    }, { ABSOLUTE   , CMP    }, { ABSOLUTE   , DEC    }, { NULLMODE   , NULLOP }, 
+/* D */    { RELATIVE   , BNE    }, { INDIRECTY  , CMP    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , CMP    }, { ZEROPAGEX  , DEC    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLD    }, { ABSOLUTEY  , CMP    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , CMP    }, { ABSOLUTEX  , DEC    }, { NULLMODE   , NULLOP }, 
+/* E */    { IMMEDIATE  , CPX    }, { INDIRECTX  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , CPX    }, { ZEROPAGE   , SBC    }, { ZEROPAGE   , INC    }, { NULLMODE   , NULLOP }, { IMPLIED    , INX    }, { IMMEDIATE  , SBC    }, { IMPLIED    , NOP    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , CPX    }, { ABSOLUTE   , SBC    }, { ABSOLUTE   , INC    }, { NULLMODE   , NULLOP }, 
+/* F */    { RELATIVE   , BEQ    }, { INDIRECTY  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , SBC    }, { ZEROPAGEX  , INC    }, { NULLMODE   , NULLOP }, { IMPLIED    , SED    }, { ABSOLUTEY  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , SBC    }, { ABSOLUTEX  , INC    }, { NULLMODE   , NULLOP } 
 };
 
 R6502::R6502(Memory& mem) : memory(mem) { }
 
 R6502::~R6502() { }
 
-const R6502::Instruction R6502::NULL_INSTRUCTION = {NULLMODE, NULLOP, 0};
+const R6502::Instruction R6502::NULL_INSTRUCTION = { NULLMODE, NULLOP };
 
 const char* R6502::opMnemonics[57] = {
   "ILLEGAL", // Fake emulator null mnemonic...
@@ -282,17 +282,10 @@ void R6502::doInstruction(const Instruction& instruction) {
   cyclesPassedThisInstruction = 0x00;
   extraCyclesPassedThisInstruction = 0x00;
   doCycle(); // Fill in with opcode fetch....
-  //doCycle();
   currentInstruction = instruction;
   doAddressMode(currentInstruction.addressMode);
   doOperation(currentInstruction.operation);
 
-  // TODO - TEMPORARY UNTIL THESE GET EXECUTED NATURALLY
-  int i = 0;
-  while (i < currentInstruction.machineCycles) {
-    //doCycle();
-    i++;
-  }
   currentInstruction = NULL_INSTRUCTION;
 }
 
@@ -341,7 +334,6 @@ uint8_t R6502::getExtraCyclesPassedThisInstruction() {
 }
 
 void R6502::doRelBranch() {
-  std::cout << "TEST" << std::endl;
   prepExtraCycle();
   doPossibleExtraCycle(); // default cycle....
   absAddr = pc + relAddr;
@@ -657,7 +649,6 @@ void R6502::modeRelative() {
   relAddr = readPC();
   // if negative (MSB of lo byte == 1), set hi byte to FF since relAddr is 2 bytes, not 1 as read. This will keep the relative address negative when converted to 2 byte form.
   if (isNegative(relAddr)) {
-    std::cout << "test" << std::endl;
     relAddr |= 0xFF00;
   }
 }
@@ -674,9 +665,7 @@ void R6502::modeIndirectY() {
   uint8_t hi = absAddr >> 8;
   absAddr += y;
 
-  std::cout << "cycle " << (int) getCyclesPassedThisInstruction() << std::endl;
   if (absAddr >> 8 != hi) {
-    std::cout << "page crossed" << std::endl;
     prepExtraCycle();
   }
 }
