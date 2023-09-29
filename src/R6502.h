@@ -4,7 +4,7 @@ class Memory; // Fixes circular inclusion problem
 
 class R6502 {
   public:
-    R6502(Memory&);
+    R6502(Memory *);
     ~R6502();
   public:
     // Initialization for outside programmer
@@ -51,7 +51,7 @@ class R6502 {
     void NMI();
 
   private:
-    Memory memory;
+    Memory* memory;
 
     /**
      * @brief Read byte at address
@@ -262,6 +262,12 @@ class R6502 {
      * @param instruction - The instruction
      */
     void doInstruction(const Instruction&);
+
+    /**
+     * @brief Do next instruction pointed at by the PC.
+     * 
+     */
+    void doNextInstruction();
 
     /**
      * @brief Get the 6502 Instruction Matrx 

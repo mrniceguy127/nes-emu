@@ -13,7 +13,7 @@ Status: At the very early stages currently. I don't even have all of the CPU emu
 - [6502 Manual](http://archive.6502.org/datasheets/synertek_programming_manual.pdf)
 - [NES architecture reference](http://fms.komkon.org/EMUL8/NES.html)
 - [CPU address mode cycles breakdown](https://www.nesdev.org/6502_cpu.txt)
-- [CPU instruction cycles breakdown](https://the-dreams.de/aay64.txt)
+- [6510 CPU (still somewhat useful) instruction cycles breakdown](https://the-dreams.de/aay64.txt)
 - These when I got stuck in the beginning and to help me get started:
   - Part 2 only of [this series](https://www.youtube.com/watch?v=8XmxKPJDGU0)
     - And part #2 directory of the [repo associated with the video](https://github.com/OneLoneCoder/olcNES/tree/master/Part%232%20-%20CPU)

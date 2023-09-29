@@ -26,7 +26,9 @@ const R6502::Instruction R6502::instructionMatrix[0x100] = {
 /* F */    { RELATIVE   , BEQ    }, { INDIRECTY  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , SBC    }, { ZEROPAGEX  , INC    }, { NULLMODE   , NULLOP }, { IMPLIED    , SED    }, { ABSOLUTEY  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , SBC    }, { ABSOLUTEX  , INC    }, { NULLMODE   , NULLOP } 
 };
 
-R6502::R6502(Memory& mem) : memory(mem) { }
+R6502::R6502(Memory* mem) {
+  memory = mem;
+}
 
 R6502::~R6502() { }
 
@@ -279,14 +281,17 @@ void R6502::doOperation(OPS op) {
 }
 
 void R6502::doInstruction(const Instruction& instruction) {
-  cyclesPassedThisInstruction = 0x00;
-  extraCyclesPassedThisInstruction = 0x00;
-  doCycle(); // Fill in with opcode fetch....
   currentInstruction = instruction;
   doAddressMode(currentInstruction.addressMode);
   doOperation(currentInstruction.operation);
-
   currentInstruction = NULL_INSTRUCTION;
+}
+
+void R6502::doNextInstruction() {
+  cyclesPassedThisInstruction = 0x00;
+  extraCyclesPassedThisInstruction = 0x00;
+  Instruction instruction = instructionMatrix[readPC()];
+  doInstruction(instruction);
 }
 
 void R6502::doOpcode() {
@@ -414,7 +419,7 @@ void R6502::NMI() {
 
 uint8_t R6502::read(uint16_t addr) {
   doCycle(); // eventually, we'll count cy to onecles naturally. For now.... quick mafs
-  return memory.read(addr); 
+  return memory->read(addr); 
 }
 
 uint8_t R6502::readPC() {
@@ -438,7 +443,7 @@ uint16_t R6502::readPC16() {
 
 void R6502::write(uint16_t addr, uint8_t data) {
   doCycle(); // eventually, we'll count cycles naturally. For now.... quick mafs
-  memory.write(addr, data);
+  memory->write(addr, data);
 }
 
 void R6502::setPC(uint16_t addr) {
@@ -506,7 +511,7 @@ void R6502::setP(uint8_t byte) {
 uint8_t R6502::pullStackChain() {
   incSP();
   doCycle();
-  return memory.read(0x0100 + sp);
+  return memory->read(0x0100 + sp);
 }
 
 uint16_t R6502::pullStackChain16() {

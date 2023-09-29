@@ -2,17 +2,17 @@
 #include <iostream>
 #include <iomanip>
 
-uint8_t test(R6502& cpu, Memory& memory);
+uint8_t test(R6502& cpu, Memory * mem);
 void printInstruction(int instructionMatrixIndex);
 
 int main() {
-  Memory memory = Memory();
+  Memory * memory = new Memory();
   R6502 cpu = R6502(memory);
   cpu.init();
   test(cpu, memory);
 }
 
-uint8_t testCycleAccuracy(R6502& cpu, Memory& memory) {
+uint8_t testCycleAccuracy(R6502& cpu, Memory * mem) {
   uint8_t expectedCycleCountMatrix[0x100] = {
         /* 0  1  2  3  4  5  6  7  8  9  A  B  C  D  E  F  */
 /* 0 */    7, 6, 0, 0, 0, 3, 5, 0, 3, 2, 2, 0, 0, 4, 6, 0, 
@@ -38,7 +38,7 @@ uint8_t testCycleAccuracy(R6502& cpu, Memory& memory) {
 
   R6502::Instruction instruction = R6502::NULL_INSTRUCTION;
   uint8_t expectedMachineCycles = 0;
-  int i = 0;
+  uint16_t i = 0;
   for (i = 0; i < R6502::getInstructionCount(); i++) {
     instruction = instructionMatrix[i];
     expectedMachineCycles = expectedCycleCountMatrix[i];
@@ -47,9 +47,11 @@ uint8_t testCycleAccuracy(R6502& cpu, Memory& memory) {
       printInstruction(i);
       std::cout << std::endl;
 
+      mem->write(0x0000, i);
+      mem->write(0xFFFC, 0x00);
+      mem->write(0xFFFD, 0x00);
       cpu.init();
-      cpu.doInstruction(instruction);
-
+      cpu.doNextInstruction();
 
       uint8_t extraCycles = cpu.getExtraCyclesPassedThisInstruction();
       if (cpu.getCyclesPassedThisInstruction() != expectedMachineCycles + extraCycles) {
@@ -77,10 +79,10 @@ uint8_t testCycleAccuracy(R6502& cpu, Memory& memory) {
 
 
 
-uint8_t test(R6502& cpu, Memory& memory) {
+uint8_t test(R6502& cpu, Memory * mem) {
   // Load up test program. Returns true if success.
   //std::cout << "I do nothing yet! :D" << std::endl;
-  if (testCycleAccuracy(cpu, memory)) {
+  if (testCycleAccuracy(cpu, mem)) {
     std::cout << "Tests passed!" << std::endl;
   } else {
     std::cout << "Tests failed..." << std::endl;
