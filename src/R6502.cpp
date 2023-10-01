@@ -325,7 +325,6 @@ const uint16_t R6502::getInstructionCount() {
 
 void R6502::doCycle() {
   // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
-  cycles++; // This won't be needed because of this function. Remove later, but keep for now so I can actually visualize what I'm changing.
   totalCyclesPassed++;
   cyclesPassedThisInstruction++;
 }

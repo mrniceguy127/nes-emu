@@ -99,7 +99,6 @@ class R6502 {
     uint8_t operand = 0x00;
     uint16_t tmp = 0x0000;
 
-    uint16_t cycles = 0; // Cycles remaining for instruction. Will loop until 0.... removing, notes in doCycles implementation
     uint64_t totalCyclesPassed = 0;
 
     // Useful methods
