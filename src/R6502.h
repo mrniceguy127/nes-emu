@@ -228,7 +228,16 @@ class R6502 {
      * 
      * @return InstructionMetadata 
      */
-    static InstructionMetadata getInstructionMetadata(Instruction);
+    static InstructionMetadata getInstructionMetadata(Instruction&);
+
+    /**
+     * @brief Get the Instruction Meta Data for a given op code
+     * 
+     * Returns the mnemonic for the operation and the address mode name
+     * 
+     * @return InstructionMetadata 
+     */
+    static InstructionMetadata getInstructionMetadata(uint8_t);
   private:
     static const Instruction instructionMatrix[0x100];
     Instruction currentInstruction = NULL_INSTRUCTION;

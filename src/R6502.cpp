@@ -306,22 +306,17 @@ const char* R6502::getAddressModeName(MODES mode) {
   return addressModeNames[mode];
 }
 
-R6502::InstructionMetadata R6502::getInstructionMetadata(Instruction instruction) {
+R6502::InstructionMetadata R6502::getInstructionMetadata(Instruction& instruction) {
   return {
     getOpMnemonic(instruction.operation),
     getAddressModeName(instruction.addressMode)
   };
 }
 
-
-const R6502::Instruction* R6502::getInstructionMatrix() {
-  return instructionMatrix;
+R6502::InstructionMetadata R6502::getInstructionMetadata(uint8_t opCode) {
+  Instruction instruction = instructionMatrix[opCode];
+  return getInstructionMetadata(instruction);
 }
-
-const uint16_t R6502::getInstructionCount() {
-  return 0x100;
-}
-
 
 void R6502::doCycle() {
   // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
@@ -814,7 +809,7 @@ void R6502::opBPL() {
   if (getFlag(N) == 0) doRelBranch();
 }
 
-void R6502::opBRK() { // Here we will be pushing to the stack. Back to the wiki and then will come back after break :sweat_smile:
+void R6502::opBRK() {
   // interrupt, push PC+2, push SR
   // Flags Changed: I
   
