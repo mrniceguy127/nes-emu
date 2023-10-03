@@ -1,7 +1,9 @@
 #include "NESIncludes.h"
 #include <iostream>
 #include <iomanip>
+#include "Debugger.h"
 
+void debug(R6502 * cpu);
 uint8_t test(R6502& cpu, Memory * mem);
 uint8_t assertEqual(uint8_t expected, uint8_t actual);
 void printExpectedAndActual(uint8_t expected, uint8_t actual);
@@ -11,7 +13,20 @@ int main() {
   Memory * memory = new Memory();
   R6502 cpu = R6502(memory);
   cpu.init();
-  test(cpu, memory);
+  //test(cpu, memory);
+  debug(&cpu);
+}
+
+void debug(R6502 * cpu) {
+  ConsoleDebugger debugger = ConsoleDebugger(cpu);
+  int i = 0;
+  while (i < 10) {
+    std::cout << "Instruction executed: ";
+    printInstruction(cpu->getCurrentOpCode());
+    std::cout << std::endl;
+    debugger.step();
+    i++;
+  }
 }
 
 void prepCPUForInstructionCyclesTest(uint8_t opCode, R6502& cpu, Memory * mem) {

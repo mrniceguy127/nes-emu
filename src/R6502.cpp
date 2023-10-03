@@ -34,6 +34,19 @@ R6502::~R6502() { }
 
 const R6502::Instruction R6502::NULL_INSTRUCTION = { NULLMODE, NULLOP };
 
+
+R6502::State R6502::getState() {
+  State state = {
+    accumulator,
+    x,
+    y,
+    pc,
+    sp
+  };
+
+  return state;
+}  
+
 const char* R6502::opMnemonics[57] = {
   "ILLEGAL", // Fake emulator null mnemonic...
 
@@ -290,12 +303,9 @@ void R6502::doInstruction(const Instruction& instruction) {
 void R6502::doNextInstruction() {
   cyclesPassedThisInstruction = 0x00;
   extraCyclesPassedThisInstruction = 0x00;
-  Instruction instruction = instructionMatrix[readPC()];
+  opcode = readPC();
+  Instruction instruction = instructionMatrix[opcode];
   doInstruction(instruction);
-}
-
-void R6502::doOpcode() {
-  doInstruction(instructionMatrix[opcode]);
 }
 
 const char* R6502::getOpMnemonic(OPS op) {
@@ -316,6 +326,10 @@ R6502::InstructionMetadata R6502::getInstructionMetadata(Instruction& instructio
 R6502::InstructionMetadata R6502::getInstructionMetadata(uint8_t opCode) {
   Instruction instruction = instructionMatrix[opCode];
   return getInstructionMetadata(instruction);
+}
+
+uint8_t R6502::getCurrentOpCode() {
+  return opcode;
 }
 
 void R6502::doCycle() {
@@ -412,19 +426,17 @@ void R6502::NMI() {
 }
 
 uint8_t R6502::read(uint16_t addr) {
-  doCycle(); // eventually, we'll count cy to onecles naturally. For now.... quick mafs
+  doCycle();
   return memory->read(addr); 
 }
 
 uint8_t R6502::readPC() {
-  //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
   uint8_t byte = read(pc);
   incPC();
   return byte; 
 }
 
 uint16_t R6502::read16(uint16_t addr) {
-  //doCycle(); eventually, we'll count cycles naturally. For now.... quick mafs
   return ((uint16_t) (read(addr + 1) << 8)) | read(addr); 
 }
 
@@ -436,7 +448,7 @@ uint16_t R6502::readPC16() {
 }
 
 void R6502::write(uint16_t addr, uint8_t data) {
-  doCycle(); // eventually, we'll count cycles naturally. For now.... quick mafs
+  doCycle();
   memory->write(addr, data);
 }
 

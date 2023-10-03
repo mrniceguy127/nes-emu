@@ -118,8 +118,7 @@ class R6502 {
     uint8_t y = 0x00; // Y Index register
     uint16_t pc = 0x0000; // Program Counter (16 bits)
     uint8_t sp = 0x00; // Stack pointer
-    
-    
+
     // Flags
     uint8_t P = 0x00; // Processor Status
 
@@ -171,6 +170,22 @@ class R6502 {
     static const char* addressModeNames[14];
 
   public:
+    struct State {
+      uint8_t accumulator = 0x00;
+      uint8_t x = 0x00;
+      uint8_t y = 0x00;
+      uint16_t pc = 0x0000;
+      uint8_t sp = 0x00;
+    }; 
+
+    /**
+     * @brief Get the state of registers
+     * 
+     * @return State 
+     */
+
+    State getState();
+
     enum MODES {
       NULLMODE, // emulator utility. Not a real address mode
 
@@ -256,13 +271,6 @@ class R6502 {
      * @param op - The operation.
      */
     void doOperation(OPS);
-
-    /**
-     * @brief Execute the current instruction based on the current opcode.
-     * 
-     */
-    void doOpcode();
-
   public:
     /**
      * @brief Execute a given instruction.
@@ -285,11 +293,11 @@ class R6502 {
     static const Instruction* getInstructionMatrix();
 
     /**
-     * @brief Get the number of instructions on the 6502
+     * @brief Get the current Op Code 
      * 
-     * @return const uint16_t 
+     * @return uint8_t - Current opcode
      */
-    static const uint16_t getInstructionCount();
+    uint8_t getCurrentOpCode();
 
   private:
     // Utility functions
