@@ -65,11 +65,15 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
+<a href="#pub-types">Public Types</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
+<a href="#pub-static-attribs">Static Public Attributes</a> &#124;
 <a href="#pri-types">Private Types</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="classR6502-members.html">List of all members</a>  </div>
   <div class="headertitle"><div class="title">R6502 Class Reference</div></div>
 </div><!--header-->
@@ -84,45 +88,13 @@ Collaboration diagram for R6502:</div>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structR6502_1_1Instruction.html">Instruction</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structR6502_1_1InstructionMetadata.html">InstructionMetadata</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structR6502_1_1State.html">State</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:ae4140f2a4a989aee58a94b6e015a965f"><td class="memItemLeft" align="right" valign="top"><a id="ae4140f2a4a989aee58a94b6e015a965f" name="ae4140f2a4a989aee58a94b6e015a965f"></a>
-&#160;</td><td class="memItemRight" valign="bottom"><b>R6502</b> (<a class="el" href="classMemory.html">Memory</a> &amp;)</td></tr>
-<tr class="separator:ae4140f2a4a989aee58a94b6e015a965f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac2c953dfe859abf412b739cba0ff8a8c"><td class="memItemLeft" align="right" valign="top"><a id="ac2c953dfe859abf412b739cba0ff8a8c" name="ac2c953dfe859abf412b739cba0ff8a8c"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
-<tr class="memdesc:ac2c953dfe859abf412b739cba0ff8a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Init CPU for emulation. <br /></td></tr>
-<tr class="separator:ac2c953dfe859abf412b739cba0ff8a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a901623838e58b817967948dbeba88c59"><td class="memItemLeft" align="right" valign="top"><a id="a901623838e58b817967948dbeba88c59" name="a901623838e58b817967948dbeba88c59"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>clock</b> ()</td></tr>
-<tr class="memdesc:a901623838e58b817967948dbeba88c59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start CPU clock. <br /></td></tr>
-<tr class="separator:a901623838e58b817967948dbeba88c59"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2737d72976d543cd11d6d23531844b48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a2737d72976d543cd11d6d23531844b48">RES</a> ()</td></tr>
-<tr class="memdesc:a2737d72976d543cd11d6d23531844b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset command.  <a href="classR6502.html#a2737d72976d543cd11d6d23531844b48">More...</a><br /></td></tr>
-<tr class="separator:a2737d72976d543cd11d6d23531844b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4c3c8a2ba83550fdf78cc5fd090b4b08"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a4c3c8a2ba83550fdf78cc5fd090b4b08">IRQ</a> ()</td></tr>
-<tr class="memdesc:a4c3c8a2ba83550fdf78cc5fd090b4b08"><td class="mdescLeft">&#160;</td><td class="mdescRight">IRQ interrupt sequence command.  <a href="classR6502.html#a4c3c8a2ba83550fdf78cc5fd090b4b08">More...</a><br /></td></tr>
-<tr class="separator:a4c3c8a2ba83550fdf78cc5fd090b4b08"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a343ece93fe35fa7f4c030a8352dc8e36"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a343ece93fe35fa7f4c030a8352dc8e36">NMI</a> ()</td></tr>
-<tr class="memdesc:a343ece93fe35fa7f4c030a8352dc8e36"><td class="mdescLeft">&#160;</td><td class="mdescRight">NMI interrupt sequence command.  <a href="classR6502.html#a343ece93fe35fa7f4c030a8352dc8e36">More...</a><br /></td></tr>
-<tr class="separator:a343ece93fe35fa7f4c030a8352dc8e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
-Private Types</h2></td></tr>
-<tr class="memitem:aa6313af3b3517f51a31a049c2fd36cc0"><td class="memItemLeft" align="right" valign="top"><a id="aa6313af3b3517f51a31a049c2fd36cc0" name="aa6313af3b3517f51a31a049c2fd36cc0"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>FLAGS</b> { <br />
-&#160;&#160;<b>N</b> = 0x01 &lt;&lt; 7
-, <b>V</b> = 0x01 &lt;&lt; 6
-, <b>U</b> = 0x01 &lt;&lt; 5
-, <b>B</b> = 0x01 &lt;&lt; 4
-, <br />
-&#160;&#160;<b>D</b> = 0x01 &lt;&lt; 3
-, <b>I</b> = 0x01 &lt;&lt; 2
-, <b>Z</b> = 0x01 &lt;&lt; 1
-, <b>C</b> = 0x01 &lt;&lt; 0
-<br />
- }</td></tr>
-<tr class="separator:aa6313af3b3517f51a31a049c2fd36cc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-types" name="pub-types"></a>
+Public Types</h2></td></tr>
 <tr class="memitem:ac0b772ec09dc191f0dcb44f7ba836730"><td class="memItemLeft" align="right" valign="top"><a id="ac0b772ec09dc191f0dcb44f7ba836730" name="ac0b772ec09dc191f0dcb44f7ba836730"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>MODES</b> { <br />
 &#160;&#160;<b>NULLMODE</b>
 , <b>IMMEDIATE</b>
@@ -220,6 +192,88 @@ Private Types</h2></td></tr>
  }</td></tr>
 <tr class="separator:a11b1c791c7387dafddebf6b73b5b7d66"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
+Public Member Functions</h2></td></tr>
+<tr class="memitem:aca8ac78aa38b0190403d711477cdf7f6"><td class="memItemLeft" align="right" valign="top"><a id="aca8ac78aa38b0190403d711477cdf7f6" name="aca8ac78aa38b0190403d711477cdf7f6"></a>
+&#160;</td><td class="memItemRight" valign="bottom"><b>R6502</b> (<a class="el" href="classMemory.html">Memory</a> *)</td></tr>
+<tr class="separator:aca8ac78aa38b0190403d711477cdf7f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2c953dfe859abf412b739cba0ff8a8c"><td class="memItemLeft" align="right" valign="top"><a id="ac2c953dfe859abf412b739cba0ff8a8c" name="ac2c953dfe859abf412b739cba0ff8a8c"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>init</b> ()</td></tr>
+<tr class="memdesc:ac2c953dfe859abf412b739cba0ff8a8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Init CPU for emulation. <br /></td></tr>
+<tr class="separator:ac2c953dfe859abf412b739cba0ff8a8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a901623838e58b817967948dbeba88c59"><td class="memItemLeft" align="right" valign="top"><a id="a901623838e58b817967948dbeba88c59" name="a901623838e58b817967948dbeba88c59"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>clock</b> ()</td></tr>
+<tr class="memdesc:a901623838e58b817967948dbeba88c59"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start CPU clock. <br /></td></tr>
+<tr class="separator:a901623838e58b817967948dbeba88c59"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2737d72976d543cd11d6d23531844b48"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a2737d72976d543cd11d6d23531844b48">RES</a> ()</td></tr>
+<tr class="memdesc:a2737d72976d543cd11d6d23531844b48"><td class="mdescLeft">&#160;</td><td class="mdescRight">Reset command.  <a href="classR6502.html#a2737d72976d543cd11d6d23531844b48">More...</a><br /></td></tr>
+<tr class="separator:a2737d72976d543cd11d6d23531844b48"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c3c8a2ba83550fdf78cc5fd090b4b08"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a4c3c8a2ba83550fdf78cc5fd090b4b08">IRQ</a> ()</td></tr>
+<tr class="memdesc:a4c3c8a2ba83550fdf78cc5fd090b4b08"><td class="mdescLeft">&#160;</td><td class="mdescRight">IRQ interrupt sequence command.  <a href="classR6502.html#a4c3c8a2ba83550fdf78cc5fd090b4b08">More...</a><br /></td></tr>
+<tr class="separator:a4c3c8a2ba83550fdf78cc5fd090b4b08"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a343ece93fe35fa7f4c030a8352dc8e36"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a343ece93fe35fa7f4c030a8352dc8e36">NMI</a> ()</td></tr>
+<tr class="memdesc:a343ece93fe35fa7f4c030a8352dc8e36"><td class="mdescLeft">&#160;</td><td class="mdescRight">NMI interrupt sequence command.  <a href="classR6502.html#a343ece93fe35fa7f4c030a8352dc8e36">More...</a><br /></td></tr>
+<tr class="separator:a343ece93fe35fa7f4c030a8352dc8e36"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2f37dd1494d3e6543a29fc9040922a57"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structR6502_1_1State.html">State</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a2f37dd1494d3e6543a29fc9040922a57">getState</a> ()</td></tr>
+<tr class="memdesc:a2f37dd1494d3e6543a29fc9040922a57"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the state of registers.  <a href="classR6502.html#a2f37dd1494d3e6543a29fc9040922a57">More...</a><br /></td></tr>
+<tr class="separator:a2f37dd1494d3e6543a29fc9040922a57"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac5961d72348d03e875df4da8cb886f09"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#ac5961d72348d03e875df4da8cb886f09">doInstruction</a> (const <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> &amp;)</td></tr>
+<tr class="memdesc:ac5961d72348d03e875df4da8cb886f09"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a given instruction.  <a href="classR6502.html#ac5961d72348d03e875df4da8cb886f09">More...</a><br /></td></tr>
+<tr class="separator:ac5961d72348d03e875df4da8cb886f09"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7958302a2437bf5a1ba8fa4c03539f75"><td class="memItemLeft" align="right" valign="top"><a id="a7958302a2437bf5a1ba8fa4c03539f75" name="a7958302a2437bf5a1ba8fa4c03539f75"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>doNextInstruction</b> ()</td></tr>
+<tr class="memdesc:a7958302a2437bf5a1ba8fa4c03539f75"><td class="mdescLeft">&#160;</td><td class="mdescRight">Do next instruction pointed at by the PC. <br /></td></tr>
+<tr class="separator:a7958302a2437bf5a1ba8fa4c03539f75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1960a40cb7023194a9a0ef46ef503c2a"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a1960a40cb7023194a9a0ef46ef503c2a">getCurrentOpCode</a> ()</td></tr>
+<tr class="memdesc:a1960a40cb7023194a9a0ef46ef503c2a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the current Op Code.  <a href="classR6502.html#a1960a40cb7023194a9a0ef46ef503c2a">More...</a><br /></td></tr>
+<tr class="separator:a1960a40cb7023194a9a0ef46ef503c2a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac466012484b3e5c06a2aa28d8ad0eb9e"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#ac466012484b3e5c06a2aa28d8ad0eb9e">getCyclesPassedThisInstruction</a> ()</td></tr>
+<tr class="memdesc:ac466012484b3e5c06a2aa28d8ad0eb9e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of Cycles Passed This <a class="el" href="structR6502_1_1Instruction.html">Instruction</a>.  <a href="classR6502.html#ac466012484b3e5c06a2aa28d8ad0eb9e">More...</a><br /></td></tr>
+<tr class="separator:ac466012484b3e5c06a2aa28d8ad0eb9e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4ff636258b243a9f2eee83e39ff8b27f"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a4ff636258b243a9f2eee83e39ff8b27f">getExtraCyclesPassedThisInstruction</a> ()</td></tr>
+<tr class="memdesc:a4ff636258b243a9f2eee83e39ff8b27f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the number of extra Cycles Passed This <a class="el" href="structR6502_1_1Instruction.html">Instruction</a>.  <a href="classR6502.html#a4ff636258b243a9f2eee83e39ff8b27f">More...</a><br /></td></tr>
+<tr class="separator:a4ff636258b243a9f2eee83e39ff8b27f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-methods" name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a8067b5c1232b53c64f86f8eb91c1e1ee"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a8067b5c1232b53c64f86f8eb91c1e1ee">getAddressModeName</a> (MODES)</td></tr>
+<tr class="memdesc:a8067b5c1232b53c64f86f8eb91c1e1ee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the address mode name for a given address mode enum.  <a href="classR6502.html#a8067b5c1232b53c64f86f8eb91c1e1ee">More...</a><br /></td></tr>
+<tr class="separator:a8067b5c1232b53c64f86f8eb91c1e1ee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa51f9dafaa9b4c991d820efab138bb55"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#aa51f9dafaa9b4c991d820efab138bb55">getOpMnemonic</a> (OPS)</td></tr>
+<tr class="memdesc:aa51f9dafaa9b4c991d820efab138bb55"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the operation mnemonic given an operation enum.  <a href="classR6502.html#aa51f9dafaa9b4c991d820efab138bb55">More...</a><br /></td></tr>
+<tr class="separator:aa51f9dafaa9b4c991d820efab138bb55"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa33d170b82897f9ae2c5ef3e2785acc"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structR6502_1_1InstructionMetadata.html">InstructionMetadata</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#aaa33d170b82897f9ae2c5ef3e2785acc">getInstructionMetadata</a> (<a class="el" href="structR6502_1_1Instruction.html">Instruction</a> &amp;)</td></tr>
+<tr class="memdesc:aaa33d170b82897f9ae2c5ef3e2785acc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> Meta Data for a given instruction.  <a href="classR6502.html#aaa33d170b82897f9ae2c5ef3e2785acc">More...</a><br /></td></tr>
+<tr class="separator:aaa33d170b82897f9ae2c5ef3e2785acc"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a148881c9caa29bbe6fb44b86e42e70e0"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="structR6502_1_1InstructionMetadata.html">InstructionMetadata</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a148881c9caa29bbe6fb44b86e42e70e0">getInstructionMetadata</a> (uint8_t)</td></tr>
+<tr class="memdesc:a148881c9caa29bbe6fb44b86e42e70e0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> Meta Data for a given op code.  <a href="classR6502.html#a148881c9caa29bbe6fb44b86e42e70e0">More...</a><br /></td></tr>
+<tr class="separator:a148881c9caa29bbe6fb44b86e42e70e0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a23ef2ec0de97a4905c016acf8afbe406"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a23ef2ec0de97a4905c016acf8afbe406">getInstructionMatrix</a> ()</td></tr>
+<tr class="memdesc:a23ef2ec0de97a4905c016acf8afbe406"><td class="mdescLeft">&#160;</td><td class="mdescRight">Get the 6502 <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> Matrx.  <a href="classR6502.html#a23ef2ec0de97a4905c016acf8afbe406">More...</a><br /></td></tr>
+<tr class="separator:a23ef2ec0de97a4905c016acf8afbe406"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-static-attribs" name="pub-static-attribs"></a>
+Static Public Attributes</h2></td></tr>
+<tr class="memitem:ae61000c590a7f89d7032cd899ac3ed30"><td class="memItemLeft" align="right" valign="top"><a id="ae61000c590a7f89d7032cd899ac3ed30" name="ae61000c590a7f89d7032cd899ac3ed30"></a>
+static const <a class="el" href="structR6502_1_1Instruction.html">Instruction</a>&#160;</td><td class="memItemRight" valign="bottom"><b>NULL_INSTRUCTION</b> = { NULLMODE, NULLOP }</td></tr>
+<tr class="separator:ae61000c590a7f89d7032cd899ac3ed30"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-types" name="pri-types"></a>
+Private Types</h2></td></tr>
+<tr class="memitem:aa6313af3b3517f51a31a049c2fd36cc0"><td class="memItemLeft" align="right" valign="top"><a id="aa6313af3b3517f51a31a049c2fd36cc0" name="aa6313af3b3517f51a31a049c2fd36cc0"></a>enum &#160;</td><td class="memItemRight" valign="bottom"><b>FLAGS</b> { <br />
+&#160;&#160;<b>N</b> = 0x01 &lt;&lt; 7
+, <b>V</b> = 0x01 &lt;&lt; 6
+, <b>U</b> = 0x01 &lt;&lt; 5
+, <b>B</b> = 0x01 &lt;&lt; 4
+, <br />
+&#160;&#160;<b>D</b> = 0x01 &lt;&lt; 3
+, <b>I</b> = 0x01 &lt;&lt; 2
+, <b>Z</b> = 0x01 &lt;&lt; 1
+, <b>C</b> = 0x01 &lt;&lt; 0
+<br />
+ }</td></tr>
+<tr class="separator:aa6313af3b3517f51a31a049c2fd36cc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-methods" name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
 <tr class="memitem:a885aedd2a3eedb5f5e3586b5cc5ccd47"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a885aedd2a3eedb5f5e3586b5cc5ccd47">read</a> (uint16_t addr)</td></tr>
@@ -258,19 +312,16 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:af37181a3e671da1e5158a2e9484df7ce"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#af37181a3e671da1e5158a2e9484df7ce">doOperation</a> (OPS)</td></tr>
 <tr class="memdesc:af37181a3e671da1e5158a2e9484df7ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes the given operation.  <a href="classR6502.html#af37181a3e671da1e5158a2e9484df7ce">More...</a><br /></td></tr>
 <tr class="separator:af37181a3e671da1e5158a2e9484df7ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a87e4590eec62dfe7c11c1c13a8f17744"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a87e4590eec62dfe7c11c1c13a8f17744">doInstruction</a> (<a class="el" href="structR6502_1_1Instruction.html">Instruction</a> &amp;)</td></tr>
-<tr class="memdesc:a87e4590eec62dfe7c11c1c13a8f17744"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute a given instruction.  <a href="classR6502.html#a87e4590eec62dfe7c11c1c13a8f17744">More...</a><br /></td></tr>
-<tr class="separator:a87e4590eec62dfe7c11c1c13a8f17744"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9d143908c5d27dc5e0bbe73faed149d4"><td class="memItemLeft" align="right" valign="top"><a id="a9d143908c5d27dc5e0bbe73faed149d4" name="a9d143908c5d27dc5e0bbe73faed149d4"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>doCurrentInstruction</b> ()</td></tr>
-<tr class="memdesc:a9d143908c5d27dc5e0bbe73faed149d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Execute the current instruction based on the current opcode. <br /></td></tr>
-<tr class="separator:a9d143908c5d27dc5e0bbe73faed149d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a96bd67071c7f130a60a69b9008f8cae5"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a96bd67071c7f130a60a69b9008f8cae5">pullStack</a> ()</td></tr>
-<tr class="memdesc:a96bd67071c7f130a60a69b9008f8cae5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pull the stack.  <a href="classR6502.html#a96bd67071c7f130a60a69b9008f8cae5">More...</a><br /></td></tr>
-<tr class="separator:a96bd67071c7f130a60a69b9008f8cae5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a41863794dd7b4df05c79ca459dae2704"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a41863794dd7b4df05c79ca459dae2704">pullStack16</a> ()</td></tr>
-<tr class="memdesc:a41863794dd7b4df05c79ca459dae2704"><td class="mdescLeft">&#160;</td><td class="mdescRight">Pull a double byute from the stack (2 pulls).  <a href="classR6502.html#a41863794dd7b4df05c79ca459dae2704">More...</a><br /></td></tr>
-<tr class="separator:a41863794dd7b4df05c79ca459dae2704"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad3f40422b25490008e2173c4b47391d4"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#ad3f40422b25490008e2173c4b47391d4">pullStackChain</a> ()</td></tr>
+<tr class="memdesc:ad3f40422b25490008e2173c4b47391d4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for pulling from the stack in a "chain" fashion. Stack pulling logic is difficult to fit into a function elegantly.  <a href="classR6502.html#ad3f40422b25490008e2173c4b47391d4">More...</a><br /></td></tr>
+<tr class="separator:ad3f40422b25490008e2173c4b47391d4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9d6f33424e3c04c458fb7970cfe32f31"><td class="memItemLeft" align="right" valign="top">uint16_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a9d6f33424e3c04c458fb7970cfe32f31">pullStackChain16</a> ()</td></tr>
+<tr class="memdesc:a9d6f33424e3c04c458fb7970cfe32f31"><td class="mdescLeft">&#160;</td><td class="mdescRight">Used for pulling from the stack in a "chain" fashion for a double byte.  <a href="classR6502.html#a9d6f33424e3c04c458fb7970cfe32f31">More...</a><br /></td></tr>
+<tr class="separator:a9d6f33424e3c04c458fb7970cfe32f31"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a08d6e76c1938fd30e9921bde395cb871"><td class="memItemLeft" align="right" valign="top"><a id="a08d6e76c1938fd30e9921bde395cb871" name="a08d6e76c1938fd30e9921bde395cb871"></a>
+void&#160;</td><td class="memItemRight" valign="bottom"><b>endPullStackChain</b> ()</td></tr>
+<tr class="memdesc:a08d6e76c1938fd30e9921bde395cb871"><td class="mdescLeft">&#160;</td><td class="mdescRight">End the stack pulling chain. <br /></td></tr>
+<tr class="separator:a08d6e76c1938fd30e9921bde395cb871"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5b3741ac52180036e740e62092b54fa3"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a5b3741ac52180036e740e62092b54fa3">pushStack</a> (uint8_t byte)</td></tr>
 <tr class="memdesc:a5b3741ac52180036e740e62092b54fa3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Push byte onto the stack.  <a href="classR6502.html#a5b3741ac52180036e740e62092b54fa3">More...</a><br /></td></tr>
 <tr class="separator:a5b3741ac52180036e740e62092b54fa3"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -290,9 +341,6 @@ void&#160;</td><td class="memItemRight" valign="bottom"><b>doCurrentInstruction<
 void&#160;</td><td class="memItemRight" valign="bottom"><b>doPossibleExtraCycle</b> ()</td></tr>
 <tr class="memdesc:a81adecf5be1bf7b7c56c031d5079b8d7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs extra clock cycle if agreed upon by the address mode. <br /></td></tr>
 <tr class="separator:a81adecf5be1bf7b7c56c031d5079b8d7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace68437a1162fdc3e01c85da9b56f513"><td class="memItemLeft" align="right" valign="top"><a id="ace68437a1162fdc3e01c85da9b56f513" name="ace68437a1162fdc3e01c85da9b56f513"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>cyclesPassed</b> ()</td></tr>
-<tr class="separator:ace68437a1162fdc3e01c85da9b56f513"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a2991b29e11c4d9c7bf28e0c3229a3056"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a2991b29e11c4d9c7bf28e0c3229a3056">setPC</a> (uint16_t)</td></tr>
 <tr class="memdesc:a2991b29e11c4d9c7bf28e0c3229a3056"><td class="mdescLeft">&#160;</td><td class="mdescRight">Set the value in the PC directly.  <a href="classR6502.html#a2991b29e11c4d9c7bf28e0c3229a3056">More...</a><br /></td></tr>
 <tr class="separator:a2991b29e11c4d9c7bf28e0c3229a3056"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -591,9 +639,9 @@ Static Private Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-attribs" name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a1d9b89836cd21242ee126b3ebbaad434"><td class="memItemLeft" align="right" valign="top"><a id="a1d9b89836cd21242ee126b3ebbaad434" name="a1d9b89836cd21242ee126b3ebbaad434"></a>
-<a class="el" href="classMemory.html">Memory</a>&#160;</td><td class="memItemRight" valign="bottom"><b>memory</b></td></tr>
-<tr class="separator:a1d9b89836cd21242ee126b3ebbaad434"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5857f376a6446cd78af6914707234313"><td class="memItemLeft" align="right" valign="top"><a id="a5857f376a6446cd78af6914707234313" name="a5857f376a6446cd78af6914707234313"></a>
+<a class="el" href="classMemory.html">Memory</a> *&#160;</td><td class="memItemRight" valign="bottom"><b>memory</b></td></tr>
+<tr class="separator:a5857f376a6446cd78af6914707234313"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a395e1c94a04aad0c34f5d6f58f1a8508"><td class="memItemLeft" align="right" valign="top"><a id="a395e1c94a04aad0c34f5d6f58f1a8508" name="a395e1c94a04aad0c34f5d6f58f1a8508"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>opcode</b> = 0x00</td></tr>
 <tr class="separator:a395e1c94a04aad0c34f5d6f58f1a8508"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -609,9 +657,6 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>operand</b> = 0x00
 <tr class="memitem:a3c0948012c9174297c39858ad67ef14d"><td class="memItemLeft" align="right" valign="top"><a id="a3c0948012c9174297c39858ad67ef14d" name="a3c0948012c9174297c39858ad67ef14d"></a>
 uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>tmp</b> = 0x0000</td></tr>
 <tr class="separator:a3c0948012c9174297c39858ad67ef14d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a30ad21204254a3ca2241f8fd87469735"><td class="memItemLeft" align="right" valign="top"><a id="a30ad21204254a3ca2241f8fd87469735" name="a30ad21204254a3ca2241f8fd87469735"></a>
-uint16_t&#160;</td><td class="memItemRight" valign="bottom"><b>cycles</b> = 0</td></tr>
-<tr class="separator:a30ad21204254a3ca2241f8fd87469735"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae7d8f78f1a6d1e8c5dc816ef7df4a228"><td class="memItemLeft" align="right" valign="top"><a id="ae7d8f78f1a6d1e8c5dc816ef7df4a228" name="ae7d8f78f1a6d1e8c5dc816ef7df4a228"></a>
 uint64_t&#160;</td><td class="memItemRight" valign="bottom"><b>totalCyclesPassed</b> = 0</td></tr>
 <tr class="separator:ae7d8f78f1a6d1e8c5dc816ef7df4a228"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -633,18 +678,27 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>sp</b> = 0x00</td>
 <tr class="memitem:a58b552e6f87135a80613b352e48f5282"><td class="memItemLeft" align="right" valign="top"><a id="a58b552e6f87135a80613b352e48f5282" name="a58b552e6f87135a80613b352e48f5282"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>P</b> = 0x00</td></tr>
 <tr class="separator:a58b552e6f87135a80613b352e48f5282"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8322c8949aef21333d5cd8d709ba2379"><td class="memItemLeft" align="right" valign="top"><a id="a8322c8949aef21333d5cd8d709ba2379" name="a8322c8949aef21333d5cd8d709ba2379"></a>
-const <a class="el" href="structR6502_1_1Instruction.html">Instruction</a>&#160;</td><td class="memItemRight" valign="bottom"><b>NULL_INSTRUCTION</b> = {NULLMODE, NULLOP, 0}</td></tr>
-<tr class="separator:a8322c8949aef21333d5cd8d709ba2379"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a2a47e3114022c38dbee8203969333534"><td class="memItemLeft" align="right" valign="top"><a id="a2a47e3114022c38dbee8203969333534" name="a2a47e3114022c38dbee8203969333534"></a>
-std::vector&lt; <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>instructionMatrix</b></td></tr>
-<tr class="separator:a2a47e3114022c38dbee8203969333534"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:add57c12542d4c3bf5517aea7fca44e84"><td class="memItemLeft" align="right" valign="top"><a id="add57c12542d4c3bf5517aea7fca44e84" name="add57c12542d4c3bf5517aea7fca44e84"></a>
 <a class="el" href="structR6502_1_1Instruction.html">Instruction</a>&#160;</td><td class="memItemRight" valign="bottom"><b>currentInstruction</b> = NULL_INSTRUCTION</td></tr>
 <tr class="separator:add57c12542d4c3bf5517aea7fca44e84"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62b81e682f2705153a9e845568284ac4"><td class="memItemLeft" align="right" valign="top"><a id="a62b81e682f2705153a9e845568284ac4" name="a62b81e682f2705153a9e845568284ac4"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>cyclesPassedThisInstruction</b> = 0x00</td></tr>
+<tr class="separator:a62b81e682f2705153a9e845568284ac4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af71e94a3d2f674b5bc90f93620325cf3"><td class="memItemLeft" align="right" valign="top"><a id="af71e94a3d2f674b5bc90f93620325cf3" name="af71e94a3d2f674b5bc90f93620325cf3"></a>
+uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclesPassedThisInstruction</b> = 0x00</td></tr>
+<tr class="separator:af71e94a3d2f674b5bc90f93620325cf3"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a4d0d5d8534818789c659c74e25b7aebf"><td class="memItemLeft" align="right" valign="top"><a id="a4d0d5d8534818789c659c74e25b7aebf" name="a4d0d5d8534818789c659c74e25b7aebf"></a>
 uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclePrepped</b> = 0x00</td></tr>
 <tr class="separator:a4d0d5d8534818789c659c74e25b7aebf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pri-static-attribs" name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:ae4559ce559ec61b19615ec9709afe9c5"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#ae4559ce559ec61b19615ec9709afe9c5">opMnemonics</a> [57]</td></tr>
+<tr class="separator:ae4559ce559ec61b19615ec9709afe9c5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afbca190f9bf9cc382fd8a574be515cd7"><td class="memItemLeft" align="right" valign="top">static const char *&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#afbca190f9bf9cc382fd8a574be515cd7">addressModeNames</a> [14]</td></tr>
+<tr class="separator:afbca190f9bf9cc382fd8a574be515cd7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a48ffd126d9d53f9689743792956f5269"><td class="memItemLeft" align="right" valign="top">static const <a class="el" href="structR6502_1_1Instruction.html">Instruction</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classR6502.html#a48ffd126d9d53f9689743792956f5269">instructionMatrix</a> [0x100]</td></tr>
+<tr class="separator:a48ffd126d9d53f9689743792956f5269"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Member Function Documentation</h2>
 <a id="a6d202cd149a1b2a54033968fe7737a9e" name="a6d202cd149a1b2a54033968fe7737a9e"></a>
@@ -709,28 +763,20 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclePrepped<
 
 </div>
 </div>
-<a id="a87e4590eec62dfe7c11c1c13a8f17744" name="a87e4590eec62dfe7c11c1c13a8f17744"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a87e4590eec62dfe7c11c1c13a8f17744">&#9670;&nbsp;</a></span>doInstruction()</h2>
+<a id="ac5961d72348d03e875df4da8cb886f09" name="ac5961d72348d03e875df4da8cb886f09"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac5961d72348d03e875df4da8cb886f09">&#9670;&nbsp;</a></span>doInstruction()</h2>
 
 <div class="memitem">
 <div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
       <table class="memname">
         <tr>
           <td class="memname">void R6502::doInstruction </td>
           <td>(</td>
-          <td class="paramtype"><a class="el" href="structR6502_1_1Instruction.html">Instruction</a> &amp;&#160;</td>
+          <td class="paramtype">const <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> &amp;&#160;</td>
           <td class="paramname"><em>instruction</em></td><td>)</td>
           <td></td>
         </tr>
       </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
 </div><div class="memdoc">
 
 <p>Execute a given instruction. </p>
@@ -834,6 +880,95 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclePrepped<
 
 </div>
 </div>
+<a id="a8067b5c1232b53c64f86f8eb91c1e1ee" name="a8067b5c1232b53c64f86f8eb91c1e1ee"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8067b5c1232b53c64f86f8eb91c1e1ee">&#9670;&nbsp;</a></span>getAddressModeName()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * R6502::getAddressModeName </td>
+          <td>(</td>
+          <td class="paramtype">MODES&#160;</td>
+          <td class="paramname"><em>mode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the address mode name for a given address mode enum. </p>
+<dl class="section return"><dt>Returns</dt><dd>const char* </dd></dl>
+
+</div>
+</div>
+<a id="a1960a40cb7023194a9a0ef46ef503c2a" name="a1960a40cb7023194a9a0ef46ef503c2a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1960a40cb7023194a9a0ef46ef503c2a">&#9670;&nbsp;</a></span>getCurrentOpCode()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t R6502::getCurrentOpCode </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the current Op Code. </p>
+<dl class="section return"><dt>Returns</dt><dd>uint8_t - Current opcode </dd></dl>
+
+</div>
+</div>
+<a id="ac466012484b3e5c06a2aa28d8ad0eb9e" name="ac466012484b3e5c06a2aa28d8ad0eb9e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac466012484b3e5c06a2aa28d8ad0eb9e">&#9670;&nbsp;</a></span>getCyclesPassedThisInstruction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t R6502::getCyclesPassedThisInstruction </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the number of Cycles Passed This <a class="el" href="structR6502_1_1Instruction.html">Instruction</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>uint8_t </dd></dl>
+
+</div>
+</div>
+<a id="a4ff636258b243a9f2eee83e39ff8b27f" name="a4ff636258b243a9f2eee83e39ff8b27f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ff636258b243a9f2eee83e39ff8b27f">&#9670;&nbsp;</a></span>getExtraCyclesPassedThisInstruction()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t R6502::getExtraCyclesPassedThisInstruction </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the number of extra Cycles Passed This <a class="el" href="structR6502_1_1Instruction.html">Instruction</a>. </p>
+<dl class="section return"><dt>Returns</dt><dd>uint8_t </dd></dl>
+
+</div>
+</div>
 <a id="ac56bb2f19d81aa102131952138b834d2" name="ac56bb2f19d81aa102131952138b834d2"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ac56bb2f19d81aa102131952138b834d2">&#9670;&nbsp;</a></span>getFlag()</h2>
 
@@ -866,6 +1001,143 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclePrepped<
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>uint8_t 1 or 0. </dd></dl>
+
+</div>
+</div>
+<a id="a23ef2ec0de97a4905c016acf8afbe406" name="a23ef2ec0de97a4905c016acf8afbe406"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a23ef2ec0de97a4905c016acf8afbe406">&#9670;&nbsp;</a></span>getInstructionMatrix()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static const <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> * R6502::getInstructionMatrix </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the 6502 <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> Matrx. </p>
+<dl class="section return"><dt>Returns</dt><dd>Instruction* </dd></dl>
+
+</div>
+</div>
+<a id="aaa33d170b82897f9ae2c5ef3e2785acc" name="aaa33d170b82897f9ae2c5ef3e2785acc"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaa33d170b82897f9ae2c5ef3e2785acc">&#9670;&nbsp;</a></span>getInstructionMetadata() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structR6502_1_1InstructionMetadata.html">R6502::InstructionMetadata</a> R6502::getInstructionMetadata </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="structR6502_1_1Instruction.html">Instruction</a> &amp;&#160;</td>
+          <td class="paramname"><em>instruction</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> Meta Data for a given instruction. </p>
+<p >Returns the mnemonic for the operation and the address mode name</p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structR6502_1_1InstructionMetadata.html">InstructionMetadata</a> </dd></dl>
+
+</div>
+</div>
+<a id="a148881c9caa29bbe6fb44b86e42e70e0" name="a148881c9caa29bbe6fb44b86e42e70e0"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a148881c9caa29bbe6fb44b86e42e70e0">&#9670;&nbsp;</a></span>getInstructionMetadata() <span class="overload">[2/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structR6502_1_1InstructionMetadata.html">R6502::InstructionMetadata</a> R6502::getInstructionMetadata </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>opCode</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the <a class="el" href="structR6502_1_1Instruction.html">Instruction</a> Meta Data for a given op code. </p>
+<p >Returns the mnemonic for the operation and the address mode name</p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structR6502_1_1InstructionMetadata.html">InstructionMetadata</a> </dd></dl>
+
+</div>
+</div>
+<a id="aa51f9dafaa9b4c991d820efab138bb55" name="aa51f9dafaa9b4c991d820efab138bb55"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa51f9dafaa9b4c991d820efab138bb55">&#9670;&nbsp;</a></span>getOpMnemonic()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * R6502::getOpMnemonic </td>
+          <td>(</td>
+          <td class="paramtype">OPS&#160;</td>
+          <td class="paramname"><em>op</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Get the operation mnemonic given an operation enum. </p>
+<dl class="section return"><dt>Returns</dt><dd>const char* </dd></dl>
+
+</div>
+</div>
+<a id="a2f37dd1494d3e6543a29fc9040922a57" name="a2f37dd1494d3e6543a29fc9040922a57"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2f37dd1494d3e6543a29fc9040922a57">&#9670;&nbsp;</a></span>getState()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname"><a class="el" href="structR6502_1_1State.html">R6502::State</a> R6502::getState </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Get the state of registers. </p>
+<dl class="section return"><dt>Returns</dt><dd><a class="el" href="structR6502_1_1State.html">State</a> </dd></dl>
 
 </div>
 </div>
@@ -1252,8 +1524,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclePrepped<
 
 </div>
 </div>
-<a id="a96bd67071c7f130a60a69b9008f8cae5" name="a96bd67071c7f130a60a69b9008f8cae5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a96bd67071c7f130a60a69b9008f8cae5">&#9670;&nbsp;</a></span>pullStack()</h2>
+<a id="ad3f40422b25490008e2173c4b47391d4" name="ad3f40422b25490008e2173c4b47391d4"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad3f40422b25490008e2173c4b47391d4">&#9670;&nbsp;</a></span>pullStackChain()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1262,7 +1534,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclePrepped<
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint8_t R6502::pullStack </td>
+          <td class="memname">uint8_t R6502::pullStackChain </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1275,13 +1547,13 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclePrepped<
 </table>
 </div><div class="memdoc">
 
-<p>Pull the stack. </p>
-<dl class="section return"><dt>Returns</dt><dd>uint8_t Top value on stack. </dd></dl>
+<p>Used for pulling from the stack in a "chain" fashion. Stack pulling logic is difficult to fit into a function elegantly. </p>
+<dl class="section return"><dt>Returns</dt><dd>uint8_t </dd></dl>
 
 </div>
 </div>
-<a id="a41863794dd7b4df05c79ca459dae2704" name="a41863794dd7b4df05c79ca459dae2704"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a41863794dd7b4df05c79ca459dae2704">&#9670;&nbsp;</a></span>pullStack16()</h2>
+<a id="a9d6f33424e3c04c458fb7970cfe32f31" name="a9d6f33424e3c04c458fb7970cfe32f31"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9d6f33424e3c04c458fb7970cfe32f31">&#9670;&nbsp;</a></span>pullStackChain16()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1290,7 +1562,7 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclePrepped<
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">uint16_t R6502::pullStack16 </td>
+          <td class="memname">uint16_t R6502::pullStackChain16 </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1303,8 +1575,8 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclePrepped<
 </table>
 </div><div class="memdoc">
 
-<p>Pull a double byute from the stack (2 pulls). </p>
-<dl class="section return"><dt>Returns</dt><dd>uint16_t The double byte on the stack. </dd></dl>
+<p>Used for pulling from the stack in a "chain" fashion for a double byte. </p>
+<dl class="section return"><dt>Returns</dt><dd>uint8_t </dd></dl>
 
 </div>
 </div>
@@ -1901,6 +2173,113 @@ uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>extraCyclePrepped<
   </dd>
 </dl>
 
+</div>
+</div>
+<h2 class="groupheader">Member Data Documentation</h2>
+<a id="afbca190f9bf9cc382fd8a574be515cd7" name="afbca190f9bf9cc382fd8a574be515cd7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afbca190f9bf9cc382fd8a574be515cd7">&#9670;&nbsp;</a></span>addressModeNames</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * R6502::addressModeNames</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">  <span class="stringliteral">&quot;ILLEGAL&quot;</span>, </div>
+<div class="line"> </div>
+<div class="line">  <span class="stringliteral">&quot;IMMEDIATE&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;ABSOLUTE&quot;</span>, <span class="stringliteral">&quot;ABSOLUTEX&quot;</span>, <span class="stringliteral">&quot;ABSOLUTEY&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;IMPLIED&quot;</span>, <span class="stringliteral">&quot;ACCUMULATOR&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;ZEROPAGE&quot;</span>, <span class="stringliteral">&quot;ZEROPAGEX&quot;</span>, <span class="stringliteral">&quot;ZEROPAGEY&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;RELATIVE&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;INDIRECT&quot;</span>, <span class="stringliteral">&quot;INDIRECTX&quot;</span>, <span class="stringliteral">&quot;INDIRECTY&quot;</span></div>
+<div class="line">}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="a48ffd126d9d53f9689743792956f5269" name="a48ffd126d9d53f9689743792956f5269"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a48ffd126d9d53f9689743792956f5269">&#9670;&nbsp;</a></span>instructionMatrix</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const <a class="el" href="structR6502_1_1Instruction.html">R6502::Instruction</a> R6502::instructionMatrix</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">        </div>
+<div class="line">    { IMPLIED    , BRK    }, { INDIRECTX  , ORA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , ORA    }, { ZEROPAGE   , ASL    }, { NULLMODE   , NULLOP }, { IMPLIED    , PHP    }, { IMMEDIATE  , ORA    }, { ACCUMULATOR, ASL    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTE   , ORA    }, { ABSOLUTE   , ASL    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { RELATIVE   , BPL    }, { INDIRECTY  , ORA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , ORA    }, { ZEROPAGEX  , ASL    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLC    }, { ABSOLUTEY  , ORA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , ORA    }, { ABSOLUTEX  , ASL    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { ABSOLUTE   , JSR    }, { INDIRECTX  , AND    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , BIT    }, { ZEROPAGE   , AND    }, { ZEROPAGE   , ROL    }, { NULLMODE   , NULLOP }, { IMPLIED    , PLP    }, { IMMEDIATE  , AND    }, { ACCUMULATOR, ROL    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , BIT    }, { ABSOLUTE   , AND    }, { ABSOLUTE   , ROL    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { RELATIVE   , BMI    }, { INDIRECTY  , AND    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , AND    }, { ZEROPAGEX  , ROL    }, { NULLMODE   , NULLOP }, { IMPLIED    , SEC    }, { ABSOLUTEY  , AND    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , AND    }, { ABSOLUTEX  , ROL    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { IMPLIED    , RTI    }, { INDIRECTX  , EOR    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , EOR    }, { ZEROPAGE   , LSR    }, { NULLMODE   , NULLOP }, { IMPLIED    , PHA    }, { IMMEDIATE  , EOR    }, { ACCUMULATOR, LSR    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , JMP    }, { ABSOLUTE   , EOR    }, { ABSOLUTE   , LSR    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { RELATIVE   , BVC    }, { INDIRECTY  , EOR    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , EOR    }, { ZEROPAGEX  , LSR    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLI    }, { ABSOLUTEY  , EOR    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , EOR    }, { ABSOLUTEX  , LSR    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { IMPLIED    , RTS    }, { INDIRECTX  , ADC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , ADC    }, { ZEROPAGE   , ROR    }, { NULLMODE   , NULLOP }, { IMPLIED    , PLA    }, { IMMEDIATE  , ADC    }, { ACCUMULATOR, ROR    }, { NULLMODE   , NULLOP }, { INDIRECT   , JMP    }, { ABSOLUTE   , ADC    }, { ABSOLUTE   , ROR    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { RELATIVE   , BVS    }, { INDIRECTY  , ADC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , ADC    }, { ZEROPAGEX  , ROR    }, { NULLMODE   , NULLOP }, { IMPLIED    , SEI    }, { ABSOLUTEY  , ADC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , ADC    }, { ABSOLUTEX  , ROR    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { NULLMODE   , NULLOP }, { INDIRECTX  , STA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , STY    }, { ZEROPAGE   , STA    }, { ZEROPAGE   , STX    }, { NULLMODE   , NULLOP }, { IMPLIED    , DEY    }, { NULLMODE   , NULLOP }, { IMPLIED    , TXA    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , STY    }, { ABSOLUTE   , STA    }, { ABSOLUTE   , STX    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { RELATIVE   , BCC    }, { INDIRECTY  , STA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , STY    }, { ZEROPAGEX  , STA    }, { ZEROPAGEY  , STX    }, { NULLMODE   , NULLOP }, { IMPLIED    , TYA    }, { ABSOLUTEY  , STA    }, { IMPLIED    , TXS    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , STA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { IMMEDIATE  , LDY    }, { INDIRECTX  , LDA    }, { IMMEDIATE  , LDX    }, { NULLMODE   , NULLOP }, { ZEROPAGE   , LDY    }, { ZEROPAGE   , LDA    }, { ZEROPAGE   , LDX    }, { NULLMODE   , NULLOP }, { IMPLIED    , TAY    }, { IMMEDIATE  , LDA    }, { IMPLIED    , TAX    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , LDY    }, { ABSOLUTE   , LDA    }, { ABSOLUTE   , LDX    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { RELATIVE   , BCS    }, { INDIRECTY  , LDA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , LDY    }, { ZEROPAGEX  , LDA    }, { ZEROPAGEY  , LDX    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLV    }, { ABSOLUTEY  , LDA    }, { IMPLIED    , TSX    }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , LDY    }, { ABSOLUTEX  , LDA    }, { ABSOLUTEY  , LDX    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { IMMEDIATE  , CPY    }, { INDIRECTX  , CMP    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , CPY    }, { ZEROPAGE   , CMP    }, { ZEROPAGE   , DEC    }, { NULLMODE   , NULLOP }, { IMPLIED    , INY    }, { IMMEDIATE  , CMP    }, { IMPLIED    , DEX    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , CPY    }, { ABSOLUTE   , CMP    }, { ABSOLUTE   , DEC    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { RELATIVE   , BNE    }, { INDIRECTY  , CMP    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , CMP    }, { ZEROPAGEX  , DEC    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLD    }, { ABSOLUTEY  , CMP    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , CMP    }, { ABSOLUTEX  , DEC    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { IMMEDIATE  , CPX    }, { INDIRECTX  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , CPX    }, { ZEROPAGE   , SBC    }, { ZEROPAGE   , INC    }, { NULLMODE   , NULLOP }, { IMPLIED    , INX    }, { IMMEDIATE  , SBC    }, { IMPLIED    , NOP    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , CPX    }, { ABSOLUTE   , SBC    }, { ABSOLUTE   , INC    }, { NULLMODE   , NULLOP }, </div>
+<div class="line">    { RELATIVE   , BEQ    }, { INDIRECTY  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , SBC    }, { ZEROPAGEX  , INC    }, { NULLMODE   , NULLOP }, { IMPLIED    , SED    }, { ABSOLUTEY  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , SBC    }, { ABSOLUTEX  , INC    }, { NULLMODE   , NULLOP } </div>
+<div class="line">}</div>
+</div><!-- fragment -->
+</div>
+</div>
+<a id="ae4559ce559ec61b19615ec9709afe9c5" name="ae4559ce559ec61b19615ec9709afe9c5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae4559ce559ec61b19615ec9709afe9c5">&#9670;&nbsp;</a></span>opMnemonics</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">const char * R6502::opMnemonics</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+<b>Initial value:</b><div class="fragment"><div class="line">= {</div>
+<div class="line">  <span class="stringliteral">&quot;ILLEGAL&quot;</span>, </div>
+<div class="line"> </div>
+<div class="line">  <span class="stringliteral">&quot;ADC&quot;</span>, <span class="stringliteral">&quot;AND&quot;</span>, <span class="stringliteral">&quot;ASL&quot;</span>, <span class="stringliteral">&quot;BCC&quot;</span>, <span class="stringliteral">&quot;BCS&quot;</span>, <span class="stringliteral">&quot;BEQ&quot;</span>, <span class="stringliteral">&quot;BIT&quot;</span>, <span class="stringliteral">&quot;BMI&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;BNE&quot;</span>, <span class="stringliteral">&quot;BPL&quot;</span>, <span class="stringliteral">&quot;BRK&quot;</span>, <span class="stringliteral">&quot;BVC&quot;</span>, <span class="stringliteral">&quot;BVS&quot;</span>, <span class="stringliteral">&quot;CLC&quot;</span>, <span class="stringliteral">&quot;CLD&quot;</span>, <span class="stringliteral">&quot;CLI&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;CLV&quot;</span>, <span class="stringliteral">&quot;CMP&quot;</span>, <span class="stringliteral">&quot;CPX&quot;</span>, <span class="stringliteral">&quot;CPY&quot;</span>, <span class="stringliteral">&quot;DEC&quot;</span>, <span class="stringliteral">&quot;DEX&quot;</span>, <span class="stringliteral">&quot;DEY&quot;</span>, <span class="stringliteral">&quot;EOR&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;INC&quot;</span>, <span class="stringliteral">&quot;INX&quot;</span>, <span class="stringliteral">&quot;INY&quot;</span>, <span class="stringliteral">&quot;JMP&quot;</span>, <span class="stringliteral">&quot;JSR&quot;</span>, <span class="stringliteral">&quot;LDA&quot;</span>, <span class="stringliteral">&quot;LDX&quot;</span>, <span class="stringliteral">&quot;LDY&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;LSR&quot;</span>, <span class="stringliteral">&quot;NOP&quot;</span>, <span class="stringliteral">&quot;ORA&quot;</span>, <span class="stringliteral">&quot;PHA&quot;</span>, <span class="stringliteral">&quot;PHP&quot;</span>, <span class="stringliteral">&quot;PLA&quot;</span>, <span class="stringliteral">&quot;PLP&quot;</span>, <span class="stringliteral">&quot;ROL&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;ROR&quot;</span>, <span class="stringliteral">&quot;RTI&quot;</span>, <span class="stringliteral">&quot;RTS&quot;</span>, <span class="stringliteral">&quot;SBC&quot;</span>, <span class="stringliteral">&quot;SEC&quot;</span>, <span class="stringliteral">&quot;SED&quot;</span>, <span class="stringliteral">&quot;SEI&quot;</span>, <span class="stringliteral">&quot;STA&quot;</span>,</div>
+<div class="line">  <span class="stringliteral">&quot;STX&quot;</span>, <span class="stringliteral">&quot;STY&quot;</span>, <span class="stringliteral">&quot;TAX&quot;</span>, <span class="stringliteral">&quot;TAY&quot;</span>, <span class="stringliteral">&quot;TSX&quot;</span>, <span class="stringliteral">&quot;TXA&quot;</span>, <span class="stringliteral">&quot;TXS&quot;</span>, <span class="stringliteral">&quot;TYA&quot;</span></div>
+<div class="line">}</div>
+</div><!-- fragment -->
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following files:<ul>

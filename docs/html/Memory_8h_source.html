@@ -77,12 +77,16 @@ $(function() {
 <div class="line"><a id="l00005" name="l00005"></a><span class="lineno">    5</span>    <a class="code hl_class" href="classMemory.html">Memory</a>();</div>
 <div class="line"><a id="l00006" name="l00006"></a><span class="lineno">    6</span>    <a class="code hl_class" href="classMemory.html">~Memory</a>();</div>
 <div class="line"><a id="l00007" name="l00007"></a><span class="lineno">    7</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00008" name="l00008"></a><span class="lineno">    8</span>    std::array&lt;uint8_t, 0x10000&gt; ram;</div>
-<div class="line"><a id="l00009" name="l00009"></a><span class="lineno">    9</span>  <span class="keyword">public</span>:</div>
-<div class="line"><a id="l00010" name="l00010"></a><span class="lineno">   10</span>    uint8_t read(uint16_t addr);</div>
-<div class="line"><a id="l00011" name="l00011"></a><span class="lineno">   11</span>    <span class="keywordtype">void</span> write(uint16_t addr, uint8_t data);</div>
-<div class="line"><a id="l00012" name="l00012"></a><span class="lineno">   12</span>};</div>
+<div class="line"><a id="l00012" name="l00012"></a><span class="lineno"><a class="line" href="classMemory.html#a5a2e455a45b88d67592e36a7aaa6b8c4">   12</a></span>    std::array&lt;uint8_t, 0x10000&gt; <a class="code hl_variable" href="classMemory.html#a5a2e455a45b88d67592e36a7aaa6b8c4">ram</a>;</div>
+<div class="line"><a id="l00013" name="l00013"></a><span class="lineno">   13</span>  <span class="keyword">public</span>:</div>
+<div class="line"><a id="l00020" name="l00020"></a><span class="lineno">   20</span>    uint8_t <a class="code hl_function" href="classMemory.html#a903a23f1e967193d46c62607d6273643">read</a>(uint16_t addr);</div>
+<div class="line"><a id="l00021" name="l00021"></a><span class="lineno">   21</span> </div>
+<div class="line"><a id="l00028" name="l00028"></a><span class="lineno">   28</span>    <span class="keywordtype">void</span> <a class="code hl_function" href="classMemory.html#af0140f7e4dbeaabb81912bce846464ae">write</a>(uint16_t addr, uint8_t data);</div>
+<div class="line"><a id="l00029" name="l00029"></a><span class="lineno">   29</span>};</div>
 <div class="ttc" id="aclassMemory_html"><div class="ttname"><a href="classMemory.html">Memory</a></div><div class="ttdef"><b>Definition:</b> Memory.h:3</div></div>
+<div class="ttc" id="aclassMemory_html_a5a2e455a45b88d67592e36a7aaa6b8c4"><div class="ttname"><a href="classMemory.html#a5a2e455a45b88d67592e36a7aaa6b8c4">Memory::ram</a></div><div class="ttdeci">std::array&lt; uint8_t, 0x10000 &gt; ram</div><div class="ttdoc">Memory array.</div><div class="ttdef"><b>Definition:</b> Memory.h:12</div></div>
+<div class="ttc" id="aclassMemory_html_a903a23f1e967193d46c62607d6273643"><div class="ttname"><a href="classMemory.html#a903a23f1e967193d46c62607d6273643">Memory::read</a></div><div class="ttdeci">uint8_t read(uint16_t addr)</div><div class="ttdoc">Read a byte given an address within the bounds of the RAM.</div><div class="ttdef"><b>Definition:</b> Memory.cpp:15</div></div>
+<div class="ttc" id="aclassMemory_html_af0140f7e4dbeaabb81912bce846464ae"><div class="ttname"><a href="classMemory.html#af0140f7e4dbeaabb81912bce846464ae">Memory::write</a></div><div class="ttdeci">void write(uint16_t addr, uint8_t data)</div><div class="ttdoc">Write a byte given an address within the bounds of the RAM.</div><div class="ttdef"><b>Definition:</b> Memory.cpp:9</div></div>
 </div><!-- fragment --></div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>

@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['r6502_0',['R6502',['../classR6502.html',1,'']]]
+  ['instruction_0',['Instruction',['../structR6502_1_1Instruction.html',1,'R6502']]],
+  ['instructionmetadata_1',['InstructionMetadata',['../structR6502_1_1InstructionMetadata.html',1,'R6502']]]
 ];

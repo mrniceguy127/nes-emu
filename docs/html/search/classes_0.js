@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['instruction_0',['Instruction',['../structR6502_1_1Instruction.html',1,'R6502']]]
+  ['consoledebugger_0',['ConsoleDebugger',['../classConsoleDebugger.html',1,'']]]
 ];

@@ -3,18 +3,54 @@
 \doxysubsection*{Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classMemory_a903a23f1e967193d46c62607d6273643}\label{classMemory_a903a23f1e967193d46c62607d6273643}} 
-uint8\+\_\+t {\bfseries read} (uint16\+\_\+t addr)
-\item 
-\mbox{\Hypertarget{classMemory_af0140f7e4dbeaabb81912bce846464ae}\label{classMemory_af0140f7e4dbeaabb81912bce846464ae}} 
-void {\bfseries write} (uint16\+\_\+t addr, uint8\+\_\+t data)
-\end{DoxyCompactItemize}
+uint8\+\_\+t \mbox{\hyperlink{classMemory_a903a23f1e967193d46c62607d6273643}{read}} (uint16\+\_\+t addr)
+\begin{DoxyCompactList}\small\item\em Read a byte given an address within the bounds of the RAM. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classMemory_af0140f7e4dbeaabb81912bce846464ae}{write}} (uint16\+\_\+t addr, uint8\+\_\+t data)
+\begin{DoxyCompactList}\small\item\em Write a byte given an address within the bounds of the RAM. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classMemory_a5a2e455a45b88d67592e36a7aaa6b8c4}\label{classMemory_a5a2e455a45b88d67592e36a7aaa6b8c4}} 
 std\+::array$<$ uint8\+\_\+t, 0x10000 $>$ {\bfseries ram}
-\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em \mbox{\hyperlink{classMemory}{Memory}} array. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classMemory_a903a23f1e967193d46c62607d6273643}\label{classMemory_a903a23f1e967193d46c62607d6273643}} 
+\index{Memory@{Memory}!read@{read}}
+\index{read@{read}!Memory@{Memory}}
+\doxysubsubsection{\texorpdfstring{read()}{read()}}
+{\footnotesize\ttfamily uint8\+\_\+t Memory\+::read (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{addr }\end{DoxyParamCaption})}
+
+
+
+Read a byte given an address within the bounds of the RAM. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em addr} & -\/ The 16 bit address to read the byte from. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+uint8\+\_\+t -\/ The byte at the address 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classMemory_af0140f7e4dbeaabb81912bce846464ae}\label{classMemory_af0140f7e4dbeaabb81912bce846464ae}} 
+\index{Memory@{Memory}!write@{write}}
+\index{write@{write}!Memory@{Memory}}
+\doxysubsubsection{\texorpdfstring{write()}{write()}}
+{\footnotesize\ttfamily void Memory\+::write (\begin{DoxyParamCaption}\item[{uint16\+\_\+t}]{addr,  }\item[{uint8\+\_\+t}]{data }\end{DoxyParamCaption})}
+
+
+
+Write a byte given an address within the bounds of the RAM. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em addr} & -\/ The 16 bit address to write the byte to. \\
+\hline
+{\em data} & -\/ The byte to write at the address. \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}

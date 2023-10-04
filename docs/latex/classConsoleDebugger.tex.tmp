@@ -1,0 +1,23 @@
+\hypertarget{classConsoleDebugger}{}\doxysection{Console\+Debugger Class Reference}
+\label{classConsoleDebugger}\index{ConsoleDebugger@{ConsoleDebugger}}
+
+
+Inheritance diagram for Console\+Debugger\+:
+% FIG 0
+
+
+Collaboration diagram for Console\+Debugger\+:
+% FIG 1
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classConsoleDebugger_a0fa751293ef1a682fe9434731fc9f2e5}\label{classConsoleDebugger_a0fa751293ef1a682fe9434731fc9f2e5}} 
+{\bfseries Console\+Debugger} (\mbox{\hyperlink{classR6502}{R6502}} $\ast$cpu)
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+src/Debugger.\+h\item 
+src/Debugger.\+cpp\end{DoxyCompactItemize}

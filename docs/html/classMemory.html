@@ -73,19 +73,85 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-methods" name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a903a23f1e967193d46c62607d6273643"><td class="memItemLeft" align="right" valign="top"><a id="a903a23f1e967193d46c62607d6273643" name="a903a23f1e967193d46c62607d6273643"></a>
-uint8_t&#160;</td><td class="memItemRight" valign="bottom"><b>read</b> (uint16_t addr)</td></tr>
+<tr class="memitem:a903a23f1e967193d46c62607d6273643"><td class="memItemLeft" align="right" valign="top">uint8_t&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemory.html#a903a23f1e967193d46c62607d6273643">read</a> (uint16_t addr)</td></tr>
+<tr class="memdesc:a903a23f1e967193d46c62607d6273643"><td class="mdescLeft">&#160;</td><td class="mdescRight">Read a byte given an address within the bounds of the RAM.  <a href="classMemory.html#a903a23f1e967193d46c62607d6273643">More...</a><br /></td></tr>
 <tr class="separator:a903a23f1e967193d46c62607d6273643"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af0140f7e4dbeaabb81912bce846464ae"><td class="memItemLeft" align="right" valign="top"><a id="af0140f7e4dbeaabb81912bce846464ae" name="af0140f7e4dbeaabb81912bce846464ae"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>write</b> (uint16_t addr, uint8_t data)</td></tr>
+<tr class="memitem:af0140f7e4dbeaabb81912bce846464ae"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classMemory.html#af0140f7e4dbeaabb81912bce846464ae">write</a> (uint16_t addr, uint8_t data)</td></tr>
+<tr class="memdesc:af0140f7e4dbeaabb81912bce846464ae"><td class="mdescLeft">&#160;</td><td class="mdescRight">Write a byte given an address within the bounds of the RAM.  <a href="classMemory.html#af0140f7e4dbeaabb81912bce846464ae">More...</a><br /></td></tr>
 <tr class="separator:af0140f7e4dbeaabb81912bce846464ae"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="pub-attribs" name="pub-attribs"></a>
 Public Attributes</h2></td></tr>
 <tr class="memitem:a5a2e455a45b88d67592e36a7aaa6b8c4"><td class="memItemLeft" align="right" valign="top"><a id="a5a2e455a45b88d67592e36a7aaa6b8c4" name="a5a2e455a45b88d67592e36a7aaa6b8c4"></a>
 std::array&lt; uint8_t, 0x10000 &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>ram</b></td></tr>
+<tr class="memdesc:a5a2e455a45b88d67592e36a7aaa6b8c4"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classMemory.html">Memory</a> array. <br /></td></tr>
 <tr class="separator:a5a2e455a45b88d67592e36a7aaa6b8c4"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a903a23f1e967193d46c62607d6273643" name="a903a23f1e967193d46c62607d6273643"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a903a23f1e967193d46c62607d6273643">&#9670;&nbsp;</a></span>read()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">uint8_t Memory::read </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>addr</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Read a byte given an address within the bounds of the RAM. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">addr</td><td>- The 16 bit address to read the byte from. </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>uint8_t - The byte at the address </dd></dl>
+
+</div>
+</div>
+<a id="af0140f7e4dbeaabb81912bce846464ae" name="af0140f7e4dbeaabb81912bce846464ae"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af0140f7e4dbeaabb81912bce846464ae">&#9670;&nbsp;</a></span>write()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">void Memory::write </td>
+          <td>(</td>
+          <td class="paramtype">uint16_t&#160;</td>
+          <td class="paramname"><em>addr</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint8_t&#160;</td>
+          <td class="paramname"><em>data</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Write a byte given an address within the bounds of the RAM. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">addr</td><td>- The 16 bit address to write the byte to. </td></tr>
+    <tr><td class="paramname">data</td><td>- The byte to write at the address. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following files:<ul>
 <li>src/<a class="el" href="Memory_8h_source.html">Memory.h</a></li>
 <li>src/Memory.cpp</li>

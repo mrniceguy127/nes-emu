@@ -1,0 +1,19 @@
+digraph "ConsoleDebugger"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  Node1 [label="ConsoleDebugger",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled", fontcolor="black",tooltip=" "];
+  Node2 -> Node1 [dir="back",color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="Debugger",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$classDebugger.html",tooltip=" "];
+  Node3 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" cpu" ,fontname="Helvetica"];
+  Node3 [label="R6502",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$classR6502.html",tooltip=" "];
+  Node4 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" memory" ,fontname="Helvetica"];
+  Node4 [label="Memory",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$classMemory.html",tooltip=" "];
+  Node5 -> Node3 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" NULL_INSTRUCTION\ncurrentInstruction\ninstructionMatrix" ,fontname="Helvetica"];
+  Node5 [label="R6502::Instruction",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$structR6502_1_1Instruction.html",tooltip=" "];
+  Node6 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" inputHandler" ,fontname="Helvetica"];
+  Node6 [label="DebuggerInputStrategy",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$classDebuggerInputStrategy.html",tooltip=" "];
+  Node7 -> Node2 [dir="back",color="darkorchid3",fontsize="10",style="dashed",label=" outputHandler" ,fontname="Helvetica"];
+  Node7 [label="DebuggerOutputStrategy",height=0.2,width=0.4,color="grey75", fillcolor="white", style="filled",URL="$classDebuggerOutputStrategy.html",tooltip=" "];
+}

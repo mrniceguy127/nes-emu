@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['fetchoperand_0',['fetchOperand',['../classR6502.html#af23243f6579040097fb658e65b118cc8',1,'R6502']]]
+  ['endpullstackchain_0',['endPullStackChain',['../classR6502.html#a08d6e76c1938fd30e9921bde395cb871',1,'R6502']]]
 ];

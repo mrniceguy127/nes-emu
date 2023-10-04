@@ -1,11 +1,10 @@
 var searchData=
 [
-  ['setaccumulator_0',['setAccumulator',['../classR6502.html#a60aaef21584079cd5d57f32ac4cf8f59',1,'R6502']]],
-  ['setbitsofbyte_1',['setBitsOfByte',['../classR6502.html#a1e8be351a6ef67497c7723af923ce311',1,'R6502']]],
-  ['setflags_2',['setFlags',['../classR6502.html#a6167fd22e3883eb1343d4c874836d90b',1,'R6502::setFlags(uint8_t flags, uint8_t value)'],['../classR6502.html#aa435f7321be2e8166f03c7fc0cd542f8',1,'R6502::setFlags(uint8_t flags)']]],
-  ['setp_3',['setP',['../classR6502.html#aca7646723dc26712851a13a5e8f94c46',1,'R6502']]],
-  ['setpc_4',['setPC',['../classR6502.html#a2991b29e11c4d9c7bf28e0c3229a3056',1,'R6502']]],
-  ['setsp_5',['setSP',['../classR6502.html#accad1075998275c1628a742c9d339222',1,'R6502']]],
-  ['setx_6',['setX',['../classR6502.html#a6c2db075d3eb24ee8228eef6da558cab',1,'R6502']]],
-  ['sety_7',['setY',['../classR6502.html#a9a779fd6556c39a4e0febd257da1e8ea',1,'R6502']]]
+  ['r6502_0',['R6502',['../classR6502.html',1,'']]],
+  ['ram_1',['ram',['../classMemory.html#a5a2e455a45b88d67592e36a7aaa6b8c4',1,'Memory']]],
+  ['read_2',['read',['../classMemory.html#a903a23f1e967193d46c62607d6273643',1,'Memory::read()'],['../classR6502.html#a885aedd2a3eedb5f5e3586b5cc5ccd47',1,'R6502::read(uint16_t addr)']]],
+  ['read16_3',['read16',['../classR6502.html#a4e1cd10e7f368135d54485d94d8cf657',1,'R6502']]],
+  ['readpc_4',['readPC',['../classR6502.html#a7b1c92c89fba856db7bf4ffdeccf8e04',1,'R6502']]],
+  ['readpc16_5',['readPC16',['../classR6502.html#afa22519b4597a38f78c4dd6cbf9f2980',1,'R6502']]],
+  ['res_6',['RES',['../classR6502.html#a2737d72976d543cd11d6d23531844b48',1,'R6502']]]
 ];
