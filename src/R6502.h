@@ -10,10 +10,10 @@ class R6502 {
     // Initialization for outside programmer
 
     /**
-     * @brief Init CPU for emulation
+     * @brief Init CPU power on state
      * 
      */
-    void init();
+    void powerOn();
   public:
     // External events
 
@@ -176,6 +176,7 @@ class R6502 {
       uint8_t y = 0x00;
       uint16_t pc = 0x0000;
       uint8_t sp = 0x00;
+      uint8_t P = 0x00;
     }; 
 
     /**

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <bitset>
 
 
 // MAKE MODULE FOR THIS STUFF.... THIS FUNCTION ALREADY EXISTS IN MAIN.
@@ -45,6 +46,9 @@ void DebuggerConsoleInputStrategy::getStepInput(char* inputBuffer, const size_t 
 
 void DebuggerConsoleOuptutStrategy::showState(R6502 * cpu) {
   R6502::State state = cpu->getState();
+
+  std::bitset<8> processorStateDisp(state.P);
+
   std::cout << "Instruction executed: ";
   printInstruction(cpu->getCurrentOpCode());
   std::cout << std::endl;
@@ -55,6 +59,7 @@ void DebuggerConsoleOuptutStrategy::showState(R6502 * cpu) {
     << "Y-Index: " << std::hex << (int)          state.y << std::endl
     << "Program Counter: " << std::hex << (int)  state.pc << std::endl
     << "Stack Pointer: " << std::hex << (int)    state.sp << std::endl
+    << "Processor State: " <<                    processorStateDisp
   << std::endl;
 }
 

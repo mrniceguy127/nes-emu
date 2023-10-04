@@ -41,7 +41,8 @@ R6502::State R6502::getState() {
     x,
     y,
     pc,
-    sp
+    sp,
+    P
   };
 
   return state;
@@ -373,8 +374,8 @@ void R6502::doPossibleExtraCycle() {
 
 void R6502::clock() { }
 
-void R6502::init() {
-  // setting these manually... pre emulation stuff
+void R6502::powerOn() {
+  // Initialize power on state
   // Useful Variables
   absAddr = 0x0000;
   relAddr = 0x0000;
@@ -384,6 +385,8 @@ void R6502::init() {
   accumulator = 0x00;
   x = 0x00;
   y = 0x00;
+
+  P = 0x34; // 00110100 - https://www.nesdev.org/wiki/CPU_power_up_state#At_power-up
 
   RES();
 }
@@ -401,7 +404,7 @@ void R6502::RES() {
   setSP(sp - 3);
  
   // The I (IRQ disable) flag was set to true (status ORed with $04)
-  setP(0x00 | I);
+  setFlags(I);
   // And finally, the internal memory was unchanged
 
   // "...loads the program counter from the memory vector locations FFFC and FFFD..."
@@ -830,8 +833,8 @@ void R6502::opBRK() {
 
   pushStack16(pc);
   // https://www.masswerk.at/6502/6502_instruction_set.html#BRK
-  pushStack(P | B); // Store status reg.
-  setFlags(I);
+  setFlags(I | B);
+  pushStack(P); // Store status reg.
 
   // https://wiki.nesdev.org/w/index.php?title=CPU_interrupts#Interrupt_hijacking
   // (Interrupt Request (IRQ)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
