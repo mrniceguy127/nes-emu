@@ -21,9 +21,6 @@ void debug(R6502 * cpu) {
   ConsoleDebugger debugger = ConsoleDebugger(cpu);
   int i = 0;
   while (i < 10) {
-    std::cout << "Instruction executed: ";
-    printInstruction(cpu->getCurrentOpCode());
-    std::cout << std::endl;
     debugger.step();
     i++;
   }

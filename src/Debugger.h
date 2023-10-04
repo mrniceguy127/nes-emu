@@ -1,8 +1,30 @@
 #include "NESIncludes.h"
 
+class DebuggerInputStrategy {
+  public:
+    virtual void getStepInput(char*, const size_t) = 0;
+};
+
+class DebuggerOutputStrategy {
+  public:
+    virtual void showState(R6502* cpu) = 0;
+};
+
+class DebuggerConsoleInputStrategy : public DebuggerInputStrategy {
+  public:
+    void getStepInput(char*, const size_t) override;
+};
+
+class DebuggerConsoleOuptutStrategy : public DebuggerOutputStrategy {
+  public:
+    void showState(R6502* cpu) override;
+};
+
 class Debugger {
   protected:
     R6502* cpu;
+    DebuggerInputStrategy* inputHandler;
+    DebuggerOutputStrategy* outputHandler;
   public:
     Debugger(R6502* c);
     ~Debugger();
@@ -11,7 +33,7 @@ class Debugger {
      * @brief Show the current CPU state.
      * 
      */
-    virtual void showState() = 0;
+    void showState();
 
     /**
      * @brief Step function for CPU.
@@ -23,11 +45,4 @@ class Debugger {
 class ConsoleDebugger : public Debugger {
     public:
       ConsoleDebugger(R6502* cpu);
-      ~ConsoleDebugger();
-    public:
-      /**
-       * @brief Show the current CPU state in console.
-       * 
-       */
-      void showState() override;
 };
