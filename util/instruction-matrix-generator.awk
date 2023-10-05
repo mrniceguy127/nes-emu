@@ -4,12 +4,12 @@ BEGIN {
 }
 
 NR!=1 {
-  OP=$1 "   "
+  OP=$1 "  "
   if ($1=="ILLEGAL") {
-    OP="NULLOP"
+    OP="ILLOP"
   }
 
-  ADDR_MODE="NULLMODE   "
+    ADDR_MODE="ILLMODE    "
   if ($2=="relative") {
     ADDR_MODE="RELATIVE   "
   } else if ($2=="abs") {

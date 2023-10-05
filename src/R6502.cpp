@@ -7,23 +7,23 @@
 
 // Generated using script located at util/generate-matrix.sh
 const R6502::Instruction R6502::instructionMatrix[0x100] = {
-        /* 0                        1                        2                        3                        4                        5                        6                        7                        8                        9                        A                        B                        C                        D                        E                        F                        */
-/* 0 */    { IMPLIED    , BRK    }, { INDIRECTX  , ORA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , ORA    }, { ZEROPAGE   , ASL    }, { NULLMODE   , NULLOP }, { IMPLIED    , PHP    }, { IMMEDIATE  , ORA    }, { ACCUMULATOR, ASL    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTE   , ORA    }, { ABSOLUTE   , ASL    }, { NULLMODE   , NULLOP }, 
-/* 1 */    { RELATIVE   , BPL    }, { INDIRECTY  , ORA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , ORA    }, { ZEROPAGEX  , ASL    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLC    }, { ABSOLUTEY  , ORA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , ORA    }, { ABSOLUTEX  , ASL    }, { NULLMODE   , NULLOP }, 
-/* 2 */    { ABSOLUTE   , JSR    }, { INDIRECTX  , AND    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , BIT    }, { ZEROPAGE   , AND    }, { ZEROPAGE   , ROL    }, { NULLMODE   , NULLOP }, { IMPLIED    , PLP    }, { IMMEDIATE  , AND    }, { ACCUMULATOR, ROL    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , BIT    }, { ABSOLUTE   , AND    }, { ABSOLUTE   , ROL    }, { NULLMODE   , NULLOP }, 
-/* 3 */    { RELATIVE   , BMI    }, { INDIRECTY  , AND    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , AND    }, { ZEROPAGEX  , ROL    }, { NULLMODE   , NULLOP }, { IMPLIED    , SEC    }, { ABSOLUTEY  , AND    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , AND    }, { ABSOLUTEX  , ROL    }, { NULLMODE   , NULLOP }, 
-/* 4 */    { IMPLIED    , RTI    }, { INDIRECTX  , EOR    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , EOR    }, { ZEROPAGE   , LSR    }, { NULLMODE   , NULLOP }, { IMPLIED    , PHA    }, { IMMEDIATE  , EOR    }, { ACCUMULATOR, LSR    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , JMP    }, { ABSOLUTE   , EOR    }, { ABSOLUTE   , LSR    }, { NULLMODE   , NULLOP }, 
-/* 5 */    { RELATIVE   , BVC    }, { INDIRECTY  , EOR    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , EOR    }, { ZEROPAGEX  , LSR    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLI    }, { ABSOLUTEY  , EOR    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , EOR    }, { ABSOLUTEX  , LSR    }, { NULLMODE   , NULLOP }, 
-/* 6 */    { IMPLIED    , RTS    }, { INDIRECTX  , ADC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , ADC    }, { ZEROPAGE   , ROR    }, { NULLMODE   , NULLOP }, { IMPLIED    , PLA    }, { IMMEDIATE  , ADC    }, { ACCUMULATOR, ROR    }, { NULLMODE   , NULLOP }, { INDIRECT   , JMP    }, { ABSOLUTE   , ADC    }, { ABSOLUTE   , ROR    }, { NULLMODE   , NULLOP }, 
-/* 7 */    { RELATIVE   , BVS    }, { INDIRECTY  , ADC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , ADC    }, { ZEROPAGEX  , ROR    }, { NULLMODE   , NULLOP }, { IMPLIED    , SEI    }, { ABSOLUTEY  , ADC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , ADC    }, { ABSOLUTEX  , ROR    }, { NULLMODE   , NULLOP }, 
-/* 8 */    { NULLMODE   , NULLOP }, { INDIRECTX  , STA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , STY    }, { ZEROPAGE   , STA    }, { ZEROPAGE   , STX    }, { NULLMODE   , NULLOP }, { IMPLIED    , DEY    }, { NULLMODE   , NULLOP }, { IMPLIED    , TXA    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , STY    }, { ABSOLUTE   , STA    }, { ABSOLUTE   , STX    }, { NULLMODE   , NULLOP }, 
-/* 9 */    { RELATIVE   , BCC    }, { INDIRECTY  , STA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , STY    }, { ZEROPAGEX  , STA    }, { ZEROPAGEY  , STX    }, { NULLMODE   , NULLOP }, { IMPLIED    , TYA    }, { ABSOLUTEY  , STA    }, { IMPLIED    , TXS    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , STA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, 
-/* A */    { IMMEDIATE  , LDY    }, { INDIRECTX  , LDA    }, { IMMEDIATE  , LDX    }, { NULLMODE   , NULLOP }, { ZEROPAGE   , LDY    }, { ZEROPAGE   , LDA    }, { ZEROPAGE   , LDX    }, { NULLMODE   , NULLOP }, { IMPLIED    , TAY    }, { IMMEDIATE  , LDA    }, { IMPLIED    , TAX    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , LDY    }, { ABSOLUTE   , LDA    }, { ABSOLUTE   , LDX    }, { NULLMODE   , NULLOP }, 
-/* B */    { RELATIVE   , BCS    }, { INDIRECTY  , LDA    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , LDY    }, { ZEROPAGEX  , LDA    }, { ZEROPAGEY  , LDX    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLV    }, { ABSOLUTEY  , LDA    }, { IMPLIED    , TSX    }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , LDY    }, { ABSOLUTEX  , LDA    }, { ABSOLUTEY  , LDX    }, { NULLMODE   , NULLOP }, 
-/* C */    { IMMEDIATE  , CPY    }, { INDIRECTX  , CMP    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , CPY    }, { ZEROPAGE   , CMP    }, { ZEROPAGE   , DEC    }, { NULLMODE   , NULLOP }, { IMPLIED    , INY    }, { IMMEDIATE  , CMP    }, { IMPLIED    , DEX    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , CPY    }, { ABSOLUTE   , CMP    }, { ABSOLUTE   , DEC    }, { NULLMODE   , NULLOP }, 
-/* D */    { RELATIVE   , BNE    }, { INDIRECTY  , CMP    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , CMP    }, { ZEROPAGEX  , DEC    }, { NULLMODE   , NULLOP }, { IMPLIED    , CLD    }, { ABSOLUTEY  , CMP    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , CMP    }, { ABSOLUTEX  , DEC    }, { NULLMODE   , NULLOP }, 
-/* E */    { IMMEDIATE  , CPX    }, { INDIRECTX  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGE   , CPX    }, { ZEROPAGE   , SBC    }, { ZEROPAGE   , INC    }, { NULLMODE   , NULLOP }, { IMPLIED    , INX    }, { IMMEDIATE  , SBC    }, { IMPLIED    , NOP    }, { NULLMODE   , NULLOP }, { ABSOLUTE   , CPX    }, { ABSOLUTE   , SBC    }, { ABSOLUTE   , INC    }, { NULLMODE   , NULLOP }, 
-/* F */    { RELATIVE   , BEQ    }, { INDIRECTY  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ZEROPAGEX  , SBC    }, { ZEROPAGEX  , INC    }, { NULLMODE   , NULLOP }, { IMPLIED    , SED    }, { ABSOLUTEY  , SBC    }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { NULLMODE   , NULLOP }, { ABSOLUTEX  , SBC    }, { ABSOLUTEX  , INC    }, { NULLMODE   , NULLOP } 
+          /* 0                       1                       2                       3                       4                       5                       6                       7                       8                       9                       A                       B                       C                       D                       E                       F                       */
+  /* 0 */    { IMPLIED    , BRK   }, { INDIRECTX  , ORA   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGE   , ORA   }, { ZEROPAGE   , ASL   }, { ILLMODE    , ILLOP }, { IMPLIED    , PHP   }, { IMMEDIATE  , ORA   }, { ACCUMULATOR, ASL   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ABSOLUTE   , ORA   }, { ABSOLUTE   , ASL   }, { ILLMODE    , ILLOP }, 
+  /* 1 */    { RELATIVE   , BPL   }, { INDIRECTY  , ORA   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGEX  , ORA   }, { ZEROPAGEX  , ASL   }, { ILLMODE    , ILLOP }, { IMPLIED    , CLC   }, { ABSOLUTEY  , ORA   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ABSOLUTEX  , ORA   }, { ABSOLUTEX  , ASL   }, { ILLMODE    , ILLOP }, 
+  /* 2 */    { ABSOLUTE   , JSR   }, { INDIRECTX  , AND   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGE   , BIT   }, { ZEROPAGE   , AND   }, { ZEROPAGE   , ROL   }, { ILLMODE    , ILLOP }, { IMPLIED    , PLP   }, { IMMEDIATE  , AND   }, { ACCUMULATOR, ROL   }, { ILLMODE    , ILLOP }, { ABSOLUTE   , BIT   }, { ABSOLUTE   , AND   }, { ABSOLUTE   , ROL   }, { ILLMODE    , ILLOP }, 
+  /* 3 */    { RELATIVE   , BMI   }, { INDIRECTY  , AND   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGEX  , AND   }, { ZEROPAGEX  , ROL   }, { ILLMODE    , ILLOP }, { IMPLIED    , SEC   }, { ABSOLUTEY  , AND   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ABSOLUTEX  , AND   }, { ABSOLUTEX  , ROL   }, { ILLMODE    , ILLOP }, 
+  /* 4 */    { IMPLIED    , RTI   }, { INDIRECTX  , EOR   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGE   , EOR   }, { ZEROPAGE   , LSR   }, { ILLMODE    , ILLOP }, { IMPLIED    , PHA   }, { IMMEDIATE  , EOR   }, { ACCUMULATOR, LSR   }, { ILLMODE    , ILLOP }, { ABSOLUTE   , JMP   }, { ABSOLUTE   , EOR   }, { ABSOLUTE   , LSR   }, { ILLMODE    , ILLOP }, 
+  /* 5 */    { RELATIVE   , BVC   }, { INDIRECTY  , EOR   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGEX  , EOR   }, { ZEROPAGEX  , LSR   }, { ILLMODE    , ILLOP }, { IMPLIED    , CLI   }, { ABSOLUTEY  , EOR   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ABSOLUTEX  , EOR   }, { ABSOLUTEX  , LSR   }, { ILLMODE    , ILLOP }, 
+  /* 6 */    { IMPLIED    , RTS   }, { INDIRECTX  , ADC   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGE   , ADC   }, { ZEROPAGE   , ROR   }, { ILLMODE    , ILLOP }, { IMPLIED    , PLA   }, { IMMEDIATE  , ADC   }, { ACCUMULATOR, ROR   }, { ILLMODE    , ILLOP }, { INDIRECT   , JMP   }, { ABSOLUTE   , ADC   }, { ABSOLUTE   , ROR   }, { ILLMODE    , ILLOP }, 
+  /* 7 */    { RELATIVE   , BVS   }, { INDIRECTY  , ADC   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGEX  , ADC   }, { ZEROPAGEX  , ROR   }, { ILLMODE    , ILLOP }, { IMPLIED    , SEI   }, { ABSOLUTEY  , ADC   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ABSOLUTEX  , ADC   }, { ABSOLUTEX  , ROR   }, { ILLMODE    , ILLOP }, 
+  /* 8 */    { ILLMODE    , ILLOP }, { INDIRECTX  , STA   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGE   , STY   }, { ZEROPAGE   , STA   }, { ZEROPAGE   , STX   }, { ILLMODE    , ILLOP }, { IMPLIED    , DEY   }, { ILLMODE    , ILLOP }, { IMPLIED    , TXA   }, { ILLMODE    , ILLOP }, { ABSOLUTE   , STY   }, { ABSOLUTE   , STA   }, { ABSOLUTE   , STX   }, { ILLMODE    , ILLOP }, 
+  /* 9 */    { RELATIVE   , BCC   }, { INDIRECTY  , STA   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGEX  , STY   }, { ZEROPAGEX  , STA   }, { ZEROPAGEY  , STX   }, { ILLMODE    , ILLOP }, { IMPLIED    , TYA   }, { ABSOLUTEY  , STA   }, { IMPLIED    , TXS   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ABSOLUTEX  , STA   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, 
+  /* A */    { IMMEDIATE  , LDY   }, { INDIRECTX  , LDA   }, { IMMEDIATE  , LDX   }, { ILLMODE    , ILLOP }, { ZEROPAGE   , LDY   }, { ZEROPAGE   , LDA   }, { ZEROPAGE   , LDX   }, { ILLMODE    , ILLOP }, { IMPLIED    , TAY   }, { IMMEDIATE  , LDA   }, { IMPLIED    , TAX   }, { ILLMODE    , ILLOP }, { ABSOLUTE   , LDY   }, { ABSOLUTE   , LDA   }, { ABSOLUTE   , LDX   }, { ILLMODE    , ILLOP }, 
+  /* B */    { RELATIVE   , BCS   }, { INDIRECTY  , LDA   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGEX  , LDY   }, { ZEROPAGEX  , LDA   }, { ZEROPAGEY  , LDX   }, { ILLMODE    , ILLOP }, { IMPLIED    , CLV   }, { ABSOLUTEY  , LDA   }, { IMPLIED    , TSX   }, { ILLMODE    , ILLOP }, { ABSOLUTEX  , LDY   }, { ABSOLUTEX  , LDA   }, { ABSOLUTEY  , LDX   }, { ILLMODE    , ILLOP }, 
+  /* C */    { IMMEDIATE  , CPY   }, { INDIRECTX  , CMP   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGE   , CPY   }, { ZEROPAGE   , CMP   }, { ZEROPAGE   , DEC   }, { ILLMODE    , ILLOP }, { IMPLIED    , INY   }, { IMMEDIATE  , CMP   }, { IMPLIED    , DEX   }, { ILLMODE    , ILLOP }, { ABSOLUTE   , CPY   }, { ABSOLUTE   , CMP   }, { ABSOLUTE   , DEC   }, { ILLMODE    , ILLOP }, 
+  /* D */    { RELATIVE   , BNE   }, { INDIRECTY  , CMP   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGEX  , CMP   }, { ZEROPAGEX  , DEC   }, { ILLMODE    , ILLOP }, { IMPLIED    , CLD   }, { ABSOLUTEY  , CMP   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ABSOLUTEX  , CMP   }, { ABSOLUTEX  , DEC   }, { ILLMODE    , ILLOP }, 
+  /* E */    { IMMEDIATE  , CPX   }, { INDIRECTX  , SBC   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGE   , CPX   }, { ZEROPAGE   , SBC   }, { ZEROPAGE   , INC   }, { ILLMODE    , ILLOP }, { IMPLIED    , INX   }, { IMMEDIATE  , SBC   }, { IMPLIED    , NOP   }, { ILLMODE    , ILLOP }, { ABSOLUTE   , CPX   }, { ABSOLUTE   , SBC   }, { ABSOLUTE   , INC   }, { ILLMODE    , ILLOP }, 
+  /* F */    { RELATIVE   , BEQ   }, { INDIRECTY  , SBC   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ZEROPAGEX  , SBC   }, { ZEROPAGEX  , INC   }, { ILLMODE    , ILLOP }, { IMPLIED    , SED   }, { ABSOLUTEY  , SBC   }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ILLMODE    , ILLOP }, { ABSOLUTEX  , SBC   }, { ABSOLUTEX  , INC   }, { ILLMODE    , ILLOP } 
 };
 
 R6502::R6502(Memory* mem) {
@@ -32,7 +32,7 @@ R6502::R6502(Memory* mem) {
 
 R6502::~R6502() { }
 
-const R6502::Instruction R6502::NULL_INSTRUCTION = { NULLMODE, NULLOP };
+const R6502::Instruction R6502::NULL_INSTRUCTION = { ILLMODE, ILLOP };
 
 
 R6502::State R6502::getState() {
@@ -73,224 +73,84 @@ const char* R6502::addressModeNames[14] = {
 
 void R6502::doAddressMode(MODES mode) {
   switch (mode) {
-    case IMMEDIATE:
-      modeImmediate();
-      break;
-    case ABSOLUTE:
-      modeAbsolute();
-      break;
-    case ABSOLUTEX:
-      modeAbsoluteX();
-      break;
-    case ABSOLUTEY:
-      modeAbsoluteY();
-      break;
-    case IMPLIED:
-      modeImplied();
-      break;
-    case ACCUMULATOR:
-      modeAccumulator();
-      break;
-    case ZEROPAGE:
-      modeZeroPage();
-      break;
-    case ZEROPAGEX:
-      modeZeroPageX();
-      break;
-    case ZEROPAGEY:
-      modeZeroPageY();
-      break;
-    case RELATIVE:
-      modeRelative();
-      break;
-    case INDIRECT:
-      modeIndirect();
-      break;
-    case INDIRECTX:
-      modeIndirectX();
-      break;
-    case INDIRECTY:
-      modeIndirectY();
-      break;
-    default:
-      modeIllegal();
+    case IMMEDIATE  : modeImmediate();   break;
+    case ABSOLUTE   : modeAbsolute();    break;
+    case ABSOLUTEX  : modeAbsoluteX();   break;
+    case ABSOLUTEY  : modeAbsoluteY();   break;
+    case IMPLIED    : modeImplied();     break;
+    case ACCUMULATOR: modeAccumulator(); break;
+    case ZEROPAGE   : modeZeroPage();    break;
+    case ZEROPAGEX  : modeZeroPageX();   break;
+    case ZEROPAGEY  : modeZeroPageY();   break;
+    case RELATIVE   : modeRelative();    break;
+    case INDIRECT   : modeIndirect();    break;
+    case INDIRECTX  : modeIndirectX();   break;
+    case INDIRECTY  : modeIndirectY();   break;
+
+    default         : modeIllegal();     break;
   }
 }
 
 void R6502::doOperation(OPS op) {
   switch (op) {
-    case ADC:
-      opADC();
-      break;
-    case AND:
-      opAND();
-      break;
-    case ASL:
-      opASL();
-      break;
-    case BCC:
-      opBCC();
-      break;
-    case BCS:
-      opBCS();
-      break;
-    case BEQ:
-      opBEQ();
-      break;
-    case BIT:
-      opBIT();
-      break;
-    case BMI:
-      opBMI();
-      break;
-    case BNE:
-      opBNE();
-      break;
-    case BPL:
-      opBPL();
-      break;
-    case BRK:
-      opBRK();
-      break;
-    case BVC:
-      opBVC();
-      break;
-    case BVS:
-      opBVS();
-      break;
-    case CLC:
-      opCLC();
-      break;
-    case CLD:
-      opCLD();
-      break;
-    case CLI:
-      opCLI();
-      break;
-    case CLV:
-      opCLV();
-      break;
-    case CMP:
-      opCMP();
-      break;
-    case CPX:
-      opCPX();
-      break;
-    case CPY:
-      opCPY();
-      break;
-    case DEC:
-      opDEC();
-      break;
-    case DEX:
-      opDEX();
-      break;
-    case DEY:
-      opDEY();
-      break;
-    case EOR:
-      opEOR();
-      break;
-    case INC:
-      opINC();
-      break;
-    case INX:
-      opINX();
-      break;
-    case INY:
-      opINY();
-      break;
-    case JMP:
-      opJMP();
-      break;
-    case JSR:
-      opJSR();
-      break;
-    case LDA:
-      opLDA();
-      break;
-    case LDX:
-      opLDX();
-      break;
-    case LDY:
-      opLDY();
-      break;
-    case LSR:
-      opLSR();
-      break;
-    case NOP:
-      opNOP();
-      break;
-    case ORA:
-      opORA();
-      break;
-    case PHA:
-      opPHA();
-      break;
-    case PHP:
-      opPHP();
-      break;
-    case PLA:
-      opPLA();
-      break;
-    case PLP:
-      opPLP();
-      break;
-    case ROL:
-      opROL();
-      break;
-    case ROR:
-      opROR();
-      break;
-    case RTI:
-      opRTI();
-      break;
-    case RTS:
-      opRTS();
-      break;
-    case SBC:
-      opSBC();
-      break;
-    case SEC:
-      opSEC();
-      break;
-    case SED:
-      opSED();
-      break;
-    case SEI:
-      opSEI();
-      break;
-    case STA:
-      opSTA();
-      break;
-    case STX:
-      opSTX();
-      break;
-    case STY:
-      opSTY();
-      break;
-    case TAX:
-      opTAX();
-      break;
-    case TAY:
-      opTAY();
-      break;
-    case TSX:
-      opTSX();
-      break;
-    case TXA:
-      opTXA();
-      break;
-    case TXS:
-      opTXS();
-      break;
-    case TYA:
-      opTYA();
-      break;
+    case ADC: opADC(); break;
+    case AND: opAND(); break;
+    case ASL: opASL(); break;
+    case BCC: opBCC(); break;
+    case BCS: opBCS(); break;
+    case BEQ: opBEQ(); break;
+    case BIT: opBIT(); break;
+    case BMI: opBMI(); break;
+    case BNE: opBNE(); break;
+    case BPL: opBPL(); break;
+    case BRK: opBRK(); break;
+    case BVC: opBVC(); break;
+    case BVS: opBVS(); break;
+    case CLC: opCLC(); break;
+    case CLD: opCLD(); break;
+    case CLI: opCLI(); break;
+    case CLV: opCLV(); break;
+    case CMP: opCMP(); break;
+    case CPX: opCPX(); break;
+    case CPY: opCPY(); break;
+    case DEC: opDEC(); break;
+    case DEX: opDEX(); break;
+    case DEY: opDEY(); break;
+    case EOR: opEOR(); break;
+    case INC: opINC(); break;
+    case INX: opINX(); break;
+    case INY: opINY(); break;
+    case JMP: opJMP(); break;
+    case JSR: opJSR(); break;
+    case LDA: opLDA(); break;
+    case LDX: opLDX(); break;
+    case LDY: opLDY(); break;
+    case LSR: opLSR(); break;
+    case NOP: opNOP(); break;
+    case ORA: opORA(); break;
+    case PHA: opPHA(); break;
+    case PHP: opPHP(); break;
+    case PLA: opPLA(); break;
+    case PLP: opPLP(); break;
+    case ROL: opROL(); break;
+    case ROR: opROR(); break;
+    case RTI: opRTI(); break;
+    case RTS: opRTS(); break;
+    case SBC: opSBC(); break;
+    case SEC: opSEC(); break;
+    case SED: opSED(); break;
+    case SEI: opSEI(); break;
+    case STA: opSTA(); break;
+    case STX: opSTX(); break;
+    case STY: opSTY(); break;
+    case TAX: opTAX(); break;
+    case TAY: opTAY(); break;
+    case TSX: opTSX(); break;
+    case TXA: opTXA(); break;
+    case TXS: opTXS(); break;
+    case TYA: opTYA(); break;
 
-    default:
-      opIllegal();
-      break;
+    default: opIllegal(); break;
   }
 }
 

@@ -188,7 +188,7 @@ class R6502 {
     State getState();
 
     enum MODES {
-      NULLMODE, // emulator utility. Not a real address mode
+      ILLMODE, // emulator utility. Not a real address mode
 
       IMMEDIATE,
       ABSOLUTE, ABSOLUTEX, ABSOLUTEY,
@@ -199,7 +199,7 @@ class R6502 {
     };
 
     enum OPS {
-      NULLOP, // emulator utility. Not a real operation
+      ILLOP, // emulator utility. Not a real operation
 
       ADC, AND, ASL, BCC, BCS, BEQ, BIT, BMI,
       BNE, BPL, BRK, BVC, BVS, CLC, CLD, CLI,
@@ -211,8 +211,8 @@ class R6502 {
     };
 
     struct Instruction {
-      MODES addressMode = NULLMODE;
-      OPS operation = NULLOP;
+      MODES addressMode = ILLMODE;
+      OPS operation =  ILLOP;
     };
 
     static const Instruction NULL_INSTRUCTION;
