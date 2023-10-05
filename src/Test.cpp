@@ -3,6 +3,8 @@
 #include <iomanip>
 #include "Debugger.h"
 
+uint8_t test(R6502& cpu, Memory * mem);
+
 int main() {
   Memory * memory = new Memory();
   R6502 cpu = R6502(memory);
@@ -13,7 +15,6 @@ int main() {
   return 0;
 };
 
-uint8_t test(R6502& cpu, Memory * mem);
 uint8_t assertEqual(uint8_t expected, uint8_t actual);
 uint8_t assertEqual(R6502::State expected, R6502::State actual);
 void printExpectedAndActual(uint8_t expected, uint8_t actual);
