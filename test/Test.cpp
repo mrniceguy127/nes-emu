@@ -1,16 +1,22 @@
-#include "NESIncludes.h"
+#include "../src/NESIncludes.h"
+#include "../src/Debugger.h"
+
 #include <iostream>
 #include <iomanip>
-#include "Debugger.h"
+#include <fstream>
 
 uint8_t test(R6502& cpu, Memory * mem);
+uint8_t testInstructionCycleAccuracy(R6502& cpu, Memory * mem, uint8_t opCode, uint8_t expectedMachineCycles);
+uint8_t testSimpleProgram(R6502& cpu, Memory * mem);
+uint8_t testComprehensive(R6502& cpu, Memory * mem);
 
 int main() {
   Memory * memory = new Memory();
   R6502 cpu = R6502(memory);
   cpu.powerOn();
 
-  test(cpu, memory);
+  //test(cpu, memory);
+  testComprehensive(cpu, memory);
 
   return 0;
 };
@@ -201,4 +207,88 @@ void printInstruction(uint8_t opCode) {
     << std::uppercase <<  std::setw(2) << std::setfill('0') << std::hex << (int) opCode
     << "] OP: " << instructionMetadata.mnemonic
     << " / ADDR_MODE: " << instructionMetadata.addressModeName;
+}
+
+void loadProgramFromFile(const char* filePath, Memory * mem) {
+  std::ifstream file(filePath, std::ios::binary);
+
+  if (!file.is_open()) {
+      std::cerr << "Failed to open file: " << filePath << std::endl;
+      return;
+  }
+
+  const size_t buffer_size = 1024;
+  unsigned int page = 0;
+  std::vector<char> buffer(buffer_size);
+
+  // Read and process bytes using a buffer
+  while (true) {
+      file.read(buffer.data(), buffer_size);
+      std::streamsize bytesRead = file.gcount(); // Number of bytes read in the last read operation
+
+      if (bytesRead > 0) {
+          // Process the bytes in the buffer
+          for (std::streamsize i = 0; i < bytesRead; ++i) {
+              // Process buffer[i] as needed
+              unsigned int address = (page * buffer_size) + i;
+              mem->write(address, buffer[i]);
+              //std::cout << std::hex << (int) address << " " << std::endl;
+          }
+      } else {
+          // End of file reached
+          break;
+      }
+    
+    page++;
+  }
+
+  // Check for errors during the read operation
+  if (file.fail() && !file.eof()) {
+      std::cerr << "Error reading file: " << filePath << std::endl;
+      file.close();
+      return;
+  }
+
+  // Close the file
+  file.close();
+}
+
+uint8_t testComprehensive(R6502& cpu, Memory * mem) {
+  cpu.powerOn();
+  cpu.pc = 0x0400;
+  loadProgramFromFile("test/test-programs/6502_functional_test.bin", mem);
+  ConsoleDebugger debugger = ConsoleDebugger(&cpu);
+  //debugger.showState();
+
+  int instructionsPassed = 0;
+  uint8_t hitIllegal = 0x00;
+  uint8_t hitJMP = 0x00;
+  while (true) {
+    if (hitIllegal) debugger.step();
+    else if (hitJMP == 0x02) {
+      debugger.step();
+      hitJMP--;
+    }
+    else cpu.doNextInstruction();
+
+    if(R6502::getInstructionMatrix()[cpu.getCurrentOpCode()].addressMode == R6502::ILLMODE) {
+      hitIllegal = 0x01;
+    }
+
+    if(R6502::getInstructionMatrix()[cpu.getCurrentOpCode()].operation == R6502::JMP) {
+      hitJMP++;
+    } else if (hitJMP > 0x00) {
+
+    }
+
+    debugger.showState();
+    instructionsPassed++;
+  }
+
+  debugger.showState();
+  std::cout << "END COMPREHENSIVE" << std::endl;
+
+  //debugger.showState();
+
+  return 0x00;
 }

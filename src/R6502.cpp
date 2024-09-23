@@ -1,5 +1,6 @@
 #include "NESIncludes.h"
 #include <iostream>
+#include <iomanip>
 
 // -----
 // External event functions
@@ -177,6 +178,10 @@ const char* R6502::getAddressModeName(MODES mode) {
   return addressModeNames[mode];
 }
 
+const R6502::Instruction * R6502::getInstructionMatrix() {
+  return instructionMatrix;
+}
+
 R6502::InstructionMetadata R6502::getInstructionMetadata(Instruction& instruction) {
   return {
     getOpMnemonic(instruction.operation),
@@ -210,7 +215,7 @@ uint8_t R6502::getExtraCyclesPassedThisInstruction() {
 void R6502::doRelBranch() {
   prepExtraCycle();
   doPossibleExtraCycle(); // default cycle....
-  absAddr = pc + relAddr;
+  absAddr = pc + (int8_t) relAddr;
   if (absAddr & 0xFF00 != absAddr & 0xFF00) {
     prepExtraCycle();
     doPossibleExtraCycle(); // branch on different page, so extra cycle
@@ -264,7 +269,7 @@ void R6502::RES() {
   setSP(sp - 3);
  
   // The I (IRQ disable) flag was set to true (status ORed with $04)
-  setFlags(I);
+  setFlags(I | Z);
   // And finally, the internal memory was unchanged
 
   // "...loads the program counter from the memory vector locations FFFC and FFFD..."
@@ -410,11 +415,11 @@ void R6502::pushStack16(uint16_t dbyte) {
 // -------------
 
 uint8_t R6502::isZero(uint8_t byte) {
-  return byte == 0x00 ? Z : 0x0;
+  return byte ? 0x0 : Z;
 }
 
 uint8_t R6502::isZero(uint16_t doubleByte) {
-  return doubleByte == 0x0000 ? Z : 0x0;
+  return doubleByte ? 0x0 : Z;
 }
 
 uint8_t R6502::isNegative(uint8_t byte) {
@@ -430,7 +435,7 @@ uint8_t R6502::isCarry(uint16_t doubleByte) {
 }
 
 uint8_t R6502::getFlag(FLAGS flag) {
-  return flag & P > 0 ? 1 : 0;
+  return flag & P ? 1 : 0;
 }
 
 uint8_t R6502::setBitsOfByte(uint8_t bitsToChange, uint8_t value, uint8_t byte) {
@@ -475,7 +480,9 @@ void R6502::modeImmediate() {
 }  
 
 void R6502::modeAbsolute() {
-  if (currentInstruction.operation != JSR) absAddr = readPC16();
+  if (currentInstruction.operation != JSR) {
+    absAddr = readPC16();
+  }
 }
 
 void R6502::modeAbsoluteX() {
@@ -497,7 +504,7 @@ void R6502::modeAbsoluteY() {
 }
 
 void R6502::modeImplied() {
-  readPC(); // Read byte and throw it away <- https://www.nesdev.org/6502_cpu.txt
+  read(pc); // Read byte and throw it away <- https://www.nesdev.org/6502_cpu.txt
   operand = accumulator;
 }
 
@@ -642,14 +649,16 @@ void R6502::opBCS() {
   // branch on C = 1
   // Flags changed: 
 
-  if (getFlag(C) == 1) doRelBranch();
+  if (getFlag(C) != 0) doRelBranch();
 }
 
 void R6502::opBEQ() {
   // branch on Z = 1
   // Flags changed: 
 
-  if (getFlag(Z) == 1) doRelBranch();
+  if (getFlag(Z) != 0) {
+    doRelBranch();
+  }
 }
 
 void R6502::opBIT() {
@@ -667,7 +676,7 @@ void R6502::opBMI() {
   // branch on N = 1
   // Flags changed: 
 
-  if (getFlag(N) == 1) doRelBranch();
+  if (getFlag(N) != 0) doRelBranch();
 }
 
 void R6502::opBNE() {
@@ -713,7 +722,7 @@ void R6502::opBVS() {
   // branch on V = 1
   // Flags changed: 
   
-  if (getFlag(V) == 1) doRelBranch();
+  if (getFlag(V) != 0) doRelBranch();
 }
 
 void R6502::opCLC() {
@@ -747,7 +756,7 @@ void R6502::opCMP() {
 
   tmp = ((uint16_t) accumulator - (uint16_t) operand) & 0x00FF;
 
-  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | accumulator >= operand ? C : 0x0);
+  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | (accumulator >= operand ? C : 0x0));
 }
 
 void R6502::opCPX() {
@@ -777,6 +786,7 @@ void R6502::opDEC() {
   fetchOperand();
 
   if (currentInstruction.addressMode == ABSOLUTEX)
+    //doPossibleExtraCycle();
     fetchOperand();
 
   write(absAddr, operand);

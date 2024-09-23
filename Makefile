@@ -3,7 +3,7 @@
 cc = g++
 main = src/main.cpp src/R6502.cpp src/Memory.cpp src/Debugger.cpp
 
-test = src/Test.cpp src/R6502.cpp src/Memory.cpp src/Debugger.cpp
+test = test/Test.cpp src/R6502.cpp src/Memory.cpp src/Debugger.cpp
 
 build_dir = ./build
 out = $(build_dir)/main

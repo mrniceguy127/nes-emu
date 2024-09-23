@@ -95,7 +95,7 @@ class R6502 {
     // Useful variables
     uint8_t opcode = 0x00;
     uint16_t absAddr = 0x0000;
-    uint16_t relAddr = 0x0000;
+    uint8_t relAddr = 0x0000;
     uint8_t operand = 0x00;
     uint16_t tmp = 0x0000;
 
@@ -111,7 +111,7 @@ class R6502 {
      * @return uint8_t - The operand in most cases. 
      */
     uint8_t fetchOperand();
-  private:
+  public:
     // Registers
     uint8_t accumulator = 0x00; // Accumulator
     uint8_t x = 0x00; // X Index register
