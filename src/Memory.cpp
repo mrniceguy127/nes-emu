@@ -16,5 +16,6 @@ uint8_t Memory::read(uint16_t addr) {
   if (addr >= 0x0000 && addr <= 0xFFFF) { // Memory addressing boundaries
     return ram[addr];
   }
+  return 0x00;
 }
 

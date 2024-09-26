@@ -50,7 +50,7 @@ class R6502 {
      */
     void NMI();
 
-  private:
+  public:
     Memory* memory;
 
     /**

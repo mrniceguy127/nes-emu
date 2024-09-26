@@ -44,7 +44,6 @@ class Debugger {
     DebuggerOutputStrategy* outputHandler;
   public:
     Debugger(R6502* c);
-    ~Debugger();
   public:
     /**
      * @brief Show the current CPU state.

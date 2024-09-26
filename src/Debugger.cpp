@@ -20,11 +20,6 @@ static void printInstruction(uint8_t opCode) {
 
 Debugger::Debugger(R6502* c) : cpu(c) { }
 
-Debugger::~Debugger() {
-  delete inputHandler;
-  delete outputHandler;
-}
-
 void Debugger::step() {
   const size_t inputSize = 2;
   char inputBuffer[inputSize];  
@@ -49,8 +44,11 @@ void DebuggerConsoleOuptutStrategy::showState(R6502 * cpu) {
 
   std::bitset<8> processorStateDisp(state.P);
 
-  std::cout << "Instruction executed: ";
+  std::cout << "<Instruction executed> ";
   printInstruction(cpu->getCurrentOpCode());
+  const uint16_t pc = cpu->memory->read(state.pc);
+  const uint8_t operand1 = cpu->memory->read(state.pc + 1);
+  const uint8_t operand2 = cpu->memory->read(state.pc + 2);
   std::cout << std::endl;
   std::cout
     << "<REGISTERS STATE>" << std::endl
@@ -58,6 +56,8 @@ void DebuggerConsoleOuptutStrategy::showState(R6502 * cpu) {
     << "X-Index: " << std::hex << (int)          state.x << std::endl
     << "Y-Index: " << std::hex << (int)          state.y << std::endl
     << "Program Counter: " << std::hex << (int)  state.pc << std::endl
+    << "Operand 1: " << std::hex << (int)        operand1 << std::endl
+    << "Operand 2: " << std::hex << (int)        operand2  << std::endl
     << "Stack Pointer: " << std::hex << (int)    state.sp << std::endl
     << "Processor State: " <<                    processorStateDisp
   << std::endl;

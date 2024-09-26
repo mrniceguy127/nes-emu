@@ -215,8 +215,9 @@ uint8_t R6502::getExtraCyclesPassedThisInstruction() {
 void R6502::doRelBranch() {
   prepExtraCycle();
   doPossibleExtraCycle(); // default cycle....
+  const uint16_t prevAddr = absAddr; // try to do this without new var?
   absAddr = pc + (int8_t) relAddr;
-  if (absAddr & 0xFF00 != absAddr & 0xFF00) {
+  if ((prevAddr & 0xFF00) != (absAddr & 0xFF00)) {
     prepExtraCycle();
     doPossibleExtraCycle(); // branch on different page, so extra cycle
   }
@@ -283,14 +284,14 @@ void R6502::IRQ() {
   pushStack16(pc);
   pushStack(P & ~B);
   setFlags(I); // B flag is cleared when pushed.
-  setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
+  setPC(((uint16_t) read(0xFFFE)) | ((uint16_t) read(0xFFFF) << 8)); // lo byte, than hi. C order of evalutation. Left expression first (lo).
 }
 
 void R6502::NMI() {
   pushStack16(pc);
   pushStack(P & ~B);
   setFlags(I); // B flag is cleared when pushed.
-  setPC((uint16_t) read(0xFFFA) | (uint16_t) read(0xFFFB) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
+  setPC(((uint16_t) read(0xFFFA)) | ((uint16_t) read(0xFFFB) << 8)); // lo byte, than hi. C order of evalutation. Left expression first (lo).
 }
 
 uint8_t R6502::read(uint16_t addr) {
@@ -404,8 +405,8 @@ void R6502::pushStack(uint8_t byte) {
 }
 
 void R6502::pushStack16(uint16_t dbyte) {
-  pushStack(dbyte >> 8); // Store higher order bits first
-  pushStack(dbyte & 0x00FF); // Than lower.
+  pushStack((uint8_t) (dbyte >> 8)); // Store higher order bits first
+  pushStack((uint8_t) (dbyte & 0x00FF)); // Than lower.
   // its cause of the way stacks work. we want to fetch lo off the stack first.
 }
 
@@ -423,19 +424,19 @@ uint8_t R6502::isZero(uint16_t doubleByte) {
 }
 
 uint8_t R6502::isNegative(uint8_t byte) {
-  return byte & 0x80 ? N : 0x0;
+  return (byte & 0x80) ? N : 0x0;
 }
 
 uint8_t R6502::isNegative(uint16_t doubleByte) {
-  return doubleByte & 0x0080 ? N : 0x0;
+  return (doubleByte & 0x0080) ? N : 0x0;
 }
 
 uint8_t R6502::isCarry(uint16_t doubleByte) {
-  return doubleByte & 0xFF00 ? C : 0x0;
+  return (doubleByte & 0xFF00) ? C : 0x0;
 }
 
 uint8_t R6502::getFlag(FLAGS flag) {
-  return flag & P ? 1 : 0;
+  return (flag & P) ? 1 : 0;
 }
 
 uint8_t R6502::setBitsOfByte(uint8_t bitsToChange, uint8_t value, uint8_t byte) {
@@ -496,11 +497,24 @@ void R6502::modeAbsoluteX() {
 
 void R6502::modeAbsoluteY() {
   absAddr = readPC16();
+  std::cout << "pre-addr " << std::hex << (int) absAddr << std::endl;
   uint8_t hi = absAddr >> 8;
   absAddr += y;
+  std::cout << "addr-3 " << std::hex << (int) absAddr - 3 << std::endl;
+  std::cout << "addr-2 " << std::hex << (int) absAddr - 2 << std::endl;
+  std::cout << "addr-1 " << std::hex << (int) absAddr - 1 << std::endl;
+  std::cout << "addr   " << std::hex << (int) absAddr << std::endl;
+  std::cout << "addr+1 " << std::hex << (int) absAddr + 1 << std::endl;
+  std::cout << "addr+2 " << std::hex << (int) absAddr + 2 << std::endl;
+  std::cout << "ACC INTENDED-3 " << std::hex << (int) memory->read(absAddr-3) << std::endl;
+  std::cout << "ACC INTENDED-2 " << std::hex << (int) memory->read(absAddr-2) << std::endl;
+  std::cout << "ACC INTENDED-1 " << std::hex << (int) memory->read(absAddr-1) << std::endl;
+  std::cout << "ACC INTENDED   " << std::hex << (int) memory->read(absAddr) << std::endl;
+  std::cout << "ACC INTENDED+1 " << std::hex << (int) memory->read(absAddr+1) << std::endl;
+  std::cout << "ACC INTENDED+2 " << std::hex << (int) memory->read(absAddr+2) << std::endl;
  
   // Extra cycle is needed if page boundary crossed
-  if (absAddr >> 8 != hi) prepExtraCycle();
+  if ((absAddr >> 8) != hi) prepExtraCycle();
 }
 
 void R6502::modeImplied() {
@@ -517,12 +531,13 @@ void R6502::modeZeroPage() {
 }
 
 void R6502::modeZeroPageX() {
-  absAddr = read(readPC()) + x;
+  absAddr = readPC() + x;
+  std::cout << "mem2 " << absAddr << " " << std::hex << (int) memory->read(absAddr) << std::endl;
   absAddr &= 0x00FF; // no paging past the zero page may occur
 }
 
 void R6502::modeZeroPageY() {
-  absAddr = read(readPC()) + y;
+  absAddr = readPC() + y;
   absAddr &= 0x00FF; // no paging past the zero page may occur
 }
 
@@ -536,17 +551,15 @@ void R6502::modeRelative() {
 
 void R6502::modeIndirectX() {
   uint16_t baseAddr = readPC();
-  uint16_t loAddr = (read(baseAddr) + x) & 0x00FF;
-  absAddr = read16(loAddr);
+  absAddr = read16((baseAddr + x) & 0x00FF);
 }
 
 void R6502::modeIndirectY() {
   uint16_t baseAddr = readPC();
   absAddr = read16(baseAddr & 0x00FF);
-  uint8_t hi = absAddr >> 8;
-  absAddr += y;
+  absAddr = absAddr + y;
 
-  if (absAddr >> 8 != hi) {
+  if (((absAddr - y) >> 8) != (absAddr >> 8)) {
     prepExtraCycle();
   }
 }
@@ -700,15 +713,20 @@ void R6502::opBRK() {
   // https://www.pagetable.com/?p=410
   // http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
 
-  pushStack16(pc);
+  pushStack16(pc+1);
   // https://www.masswerk.at/6502/6502_instruction_set.html#BRK
-  setFlags(I | B);
+  setFlags(B);
   pushStack(P); // Store status reg.
+  std::cout << "BREAK " << (int) P << std::endl;
+
+  // PLEASE NOT ON REAL HARDWARE, THE INSTRUCTION ITSELF DOES NOT SET THE I FLAG!!! PLEASE VERIFY THIS LATER! IT IS IMPLICITLY SET WHEN FORCING AN INTERRUPT!
+  setFlags(I);
+
 
   // https://wiki.nesdev.org/w/index.php?title=CPU_interrupts#Interrupt_hijacking
   // (Interrupt Request (IRQ)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
   // "$FFFE-$FFFF = IRQ/BRK vector" https://wiki.nesdev.org/w/index.php?title=CPU_memory_map
-  setPC((uint16_t) read(0xFFFE) | (uint16_t) read(0xFFFF) << 8); // lo byte, than hi. C order of evalutation. Left expression first (lo).
+  setPC(((uint16_t) read(0xFFFE)) | ((uint16_t) read(0xFFFF) << 8)); // lo byte, than hi. C order of evalutation. Left expression first (lo).
 }
 
 void R6502::opBVC() {
@@ -756,7 +774,7 @@ void R6502::opCMP() {
 
   tmp = ((uint16_t) accumulator - (uint16_t) operand) & 0x00FF;
 
-  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | (accumulator >= operand ? C : 0x0));
+  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | ((accumulator >= operand) ? C : 0x0));
 }
 
 void R6502::opCPX() {
@@ -766,7 +784,7 @@ void R6502::opCPX() {
 
   tmp = ((uint16_t) x - (uint16_t) operand) & 0x00FF;
 
-  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | x >= operand ? C : 0x0);
+  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | ((x >= operand) ? C : 0x0));
 }
 
 void R6502::opCPY() {
@@ -776,7 +794,7 @@ void R6502::opCPY() {
 
   tmp = ((uint16_t) y - (uint16_t) operand) & 0x00FF;
 
-  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | y >= operand ? C : 0x0);
+  setFlags(Z | N | C, isZero(tmp) | isNegative(tmp) | ((y >= operand) ? C : 0x0));
 }
 
 void R6502::opDEC() {
@@ -971,7 +989,7 @@ void R6502::opPLA() {
 void R6502::opPLP() {
   // pull P
   // Flags changed: FROM STACK
-  setP(pullStackChain());
+  setP(pullStackChain() | B);
   endPullStackChain();
 }
 
@@ -987,7 +1005,7 @@ void R6502::opROL() {
 
   tmp = ((uint16_t) (operand << 1) | (uint16_t) (operand >> 7)) & 0x00FF;
 
-  setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | operand & 0x80 ? C : 0x0);
+  setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | ((operand & 0x80) ? C : 0x0));
   
   if (currentInstruction.addressMode == ACCUMULATOR) setAccumulator(tmp);
   else write(absAddr, tmp);
@@ -1005,7 +1023,7 @@ void R6502::opROR() {
 
   tmp = ((uint16_t) (operand >> 1) | (uint16_t) (operand << 7)) & 0x00FF;
 
-  setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | operand & 0x01 ? C : 0x0);
+  setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | ((operand & 0x01) ? C : 0x0));
   
   if (currentInstruction.addressMode == ACCUMULATOR) setAccumulator(tmp);
   else write(absAddr, tmp);
@@ -1143,7 +1161,7 @@ void R6502::opTXS() {
   // Flags changed: Z N
 
   setSP(x);
-  setFlags(Z | N, isZero(sp) | isNegative(sp));
+  // NOT NEEDED: setFlags(Z | N, isZero(sp) | isNegative(sp));
 }
 
 void R6502::opTYA() {
