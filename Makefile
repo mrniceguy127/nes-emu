@@ -1,4 +1,4 @@
-.PHONY: build clean run
+.PHONY: build clean run test
 
 cc = g++
 main = src/main.cpp src/R6502.cpp src/Memory.cpp src/Debugger.cpp

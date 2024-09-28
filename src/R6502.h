@@ -91,7 +91,7 @@ class R6502 {
      * @param data The data to write.
      */
     void write(uint16_t addr, uint8_t data);
-  private:
+  public:
     // Useful variables
     uint8_t opcode = 0x00;
     uint16_t absAddr = 0x0000;

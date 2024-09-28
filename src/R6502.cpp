@@ -238,7 +238,12 @@ void R6502::doPossibleExtraCycle() {
   extraCyclePrepped = 0x00;
 }
 
-void R6502::clock() { }
+void R6502::clock() {
+  if (cyclesPassedThisInstruction == 0x00) {
+    doNextInstruction();
+  }
+  cyclesPassedThisInstruction--;
+}
 
 void R6502::powerOn() {
   // Initialize power on state
@@ -497,21 +502,8 @@ void R6502::modeAbsoluteX() {
 
 void R6502::modeAbsoluteY() {
   absAddr = readPC16();
-  std::cout << "pre-addr " << std::hex << (int) absAddr << std::endl;
   uint8_t hi = absAddr >> 8;
   absAddr += y;
-  std::cout << "addr-3 " << std::hex << (int) absAddr - 3 << std::endl;
-  std::cout << "addr-2 " << std::hex << (int) absAddr - 2 << std::endl;
-  std::cout << "addr-1 " << std::hex << (int) absAddr - 1 << std::endl;
-  std::cout << "addr   " << std::hex << (int) absAddr << std::endl;
-  std::cout << "addr+1 " << std::hex << (int) absAddr + 1 << std::endl;
-  std::cout << "addr+2 " << std::hex << (int) absAddr + 2 << std::endl;
-  std::cout << "ACC INTENDED-3 " << std::hex << (int) memory->read(absAddr-3) << std::endl;
-  std::cout << "ACC INTENDED-2 " << std::hex << (int) memory->read(absAddr-2) << std::endl;
-  std::cout << "ACC INTENDED-1 " << std::hex << (int) memory->read(absAddr-1) << std::endl;
-  std::cout << "ACC INTENDED   " << std::hex << (int) memory->read(absAddr) << std::endl;
-  std::cout << "ACC INTENDED+1 " << std::hex << (int) memory->read(absAddr+1) << std::endl;
-  std::cout << "ACC INTENDED+2 " << std::hex << (int) memory->read(absAddr+2) << std::endl;
  
   // Extra cycle is needed if page boundary crossed
   if ((absAddr >> 8) != hi) prepExtraCycle();
@@ -532,7 +524,6 @@ void R6502::modeZeroPage() {
 
 void R6502::modeZeroPageX() {
   absAddr = readPC() + x;
-  std::cout << "mem2 " << absAddr << " " << std::hex << (int) memory->read(absAddr) << std::endl;
   absAddr &= 0x00FF; // no paging past the zero page may occur
 }
 
@@ -717,7 +708,6 @@ void R6502::opBRK() {
   // https://www.masswerk.at/6502/6502_instruction_set.html#BRK
   setFlags(B);
   pushStack(P); // Store status reg.
-  std::cout << "BREAK " << (int) P << std::endl;
 
   // PLEASE NOT ON REAL HARDWARE, THE INSTRUCTION ITSELF DOES NOT SET THE I FLAG!!! PLEASE VERIFY THIS LATER! IT IS IMPLICITLY SET WHEN FORCING AN INTERRUPT!
   setFlags(I);
@@ -855,10 +845,10 @@ void R6502::opINC() {
 
   write(absAddr, operand);
 
-  tmp = ((uint16_t) operand + 1) & 0x00FF;
+  tmp = (((uint16_t) operand) + 1) & 0x00FF;
 
-  write(absAddr, tmp);
   setFlags(Z | N, isZero(tmp) | isNegative(tmp));
+  write(absAddr, tmp);
 }
 
 void R6502::opINX() {
@@ -939,7 +929,7 @@ void R6502::opLSR() {
 
   tmp = (uint16_t) operand >> 1;
 
-  setFlags(C | Z | N, isZero(tmp) | isCarry(tmp));
+  setFlags(C | Z | N, isZero(tmp) | ((operand & 0x01) == 0x01 ? C : 0x00));
 
   if (currentInstruction.addressMode == ACCUMULATOR) setAccumulator(tmp & 0x00FF);
   else write(absAddr, tmp & 0x00FF);
@@ -974,7 +964,7 @@ void R6502::opPHP() {
   // push P
   // Flags changed:
   
-  pushStack(P);
+  pushStack(P | B | U);
 }
 
 void R6502::opPLA() {
@@ -989,7 +979,7 @@ void R6502::opPLA() {
 void R6502::opPLP() {
   // pull P
   // Flags changed: FROM STACK
-  setP(pullStackChain() | B);
+  setP(pullStackChain());
   endPullStackChain();
 }
 
@@ -1003,12 +993,17 @@ void R6502::opROL() {
 
   if (currentInstruction.addressMode != ACCUMULATOR) write(absAddr, operand);
 
-  tmp = ((uint16_t) (operand << 1) | (uint16_t) (operand >> 7)) & 0x00FF;
 
-  setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | ((operand & 0x80) ? C : 0x0));
   
-  if (currentInstruction.addressMode == ACCUMULATOR) setAccumulator(tmp);
-  else write(absAddr, tmp);
+  if (currentInstruction.addressMode == ACCUMULATOR) {
+    tmp = ((uint16_t) (accumulator << 1) | (uint16_t) (getFlag(C) ? 0x01 : 0x0)) & 0x00FF;
+    setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | ((accumulator & 0x80) ? C : 0x0));
+    setAccumulator(tmp);
+  } else {
+    tmp = ((uint16_t) (operand << 1) | (uint16_t) (getFlag(C) ? 0x01 : 0x0)) & 0x00FF;
+    setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | ((operand & 0x80) ? C : 0x0));
+    write(absAddr, tmp);
+  }
 }
 
 void R6502::opROR() {
@@ -1021,12 +1016,17 @@ void R6502::opROR() {
 
   if (currentInstruction.addressMode != ACCUMULATOR) write(absAddr, operand);
 
-  tmp = ((uint16_t) (operand >> 1) | (uint16_t) (operand << 7)) & 0x00FF;
 
-  setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | ((operand & 0x01) ? C : 0x0));
   
-  if (currentInstruction.addressMode == ACCUMULATOR) setAccumulator(tmp);
-  else write(absAddr, tmp);
+  if (currentInstruction.addressMode == ACCUMULATOR) {
+    tmp = ((uint16_t) (accumulator >> 1) | (uint16_t) (getFlag(C) ? 0x80 : 0x0)) & 0x00FF;
+    setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | ((accumulator & 0x01) ? C : 0x0));
+    setAccumulator(tmp);
+  } else {
+    tmp = ((uint16_t) (operand >> 1) | (uint16_t) (getFlag(C) ? 0x80 : 0x0)) & 0x00FF;
+    setFlags(C | Z | N, isZero(tmp) | isNegative(tmp) | ((operand & 0x01) ? C : 0x0));
+    write(absAddr, tmp);
+  }
 }
 
 void R6502::opRTI() {
@@ -1065,12 +1065,20 @@ void R6502::opSBC() {
 
   // Same as addition, but invert memory
 
-  tmp = (uint16_t) accumulator + (uint16_t) (operand ^ 0xFF) + (uint16_t) getFlag(C);
+  //std::cout << std::hex << (int) tmp << std::endl;
+  tmp = (uint16_t) accumulator + (((uint16_t) (~operand)) & 0x00FF) + (uint16_t) getFlag(C);
+  /*std::cout << std::hex << (int) accumulator << std::endl;
+  std::cout << std::hex << (int) operand << std::endl;
+  std::cout << std::hex << (int) getFlag(C) << std::endl;
+  std::cout << std::hex << (int) tmp << std::endl;
+  std::cout << std::hex << (int) ((accumulator ^ ((uint8_t) (tmp & 0x00FF)))) << std::endl;
+  std::cout << std::hex << (int) (uint8_t) (~(accumulator ^ operand)) << std::endl;
+  std::cout << std::hex << (int) ((accumulator ^ ((uint8_t) (tmp & 0x00FF)))    &    ((uint8_t) (~(accumulator ^ operand)))) << std::endl;*/
 
-  uint8_t overflowBit = (~((uint16_t) accumulator ^ (uint16_t) operand) & (((uint16_t)accumulator ^ tmp)) & 0x0080) ? V : 0;
-  setFlags(V | C | Z | N, overflowBit | isCarry(tmp) | isZero(tmp) | isNegative(tmp));
+  uint8_t overflowBit = ((((uint8_t) ~(accumulator ^ ((uint8_t) (~operand)))) & (accumulator ^ ((uint8_t) (tmp & 0x00FF)))) & 0x0080) ? V : 0;
+  setFlags(V | C | Z | N, overflowBit | isCarry(tmp) | isZero(((uint8_t) (tmp & 0x00FF))) | isNegative(tmp));
 
-  setAccumulator(tmp);
+  setAccumulator(tmp & 0x00FF);
 
   doPossibleExtraCycle();
 }

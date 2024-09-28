@@ -209,7 +209,7 @@ void printInstruction(uint8_t opCode) {
     << " / ADDR_MODE: " << instructionMetadata.addressModeName;
 }
 
-void loadProgramFromFile(const char* filePath, Memory * mem, uint16_t pcStart) {
+void loadProgramFromFile(const char* filePath, Memory * mem, uint16_t start) {
   std::ifstream file(filePath, std::ios::binary);
 
   if (!file.is_open()) {
@@ -231,7 +231,7 @@ void loadProgramFromFile(const char* filePath, Memory * mem, uint16_t pcStart) {
           for (std::streamsize i = 0; i < bytesRead; ++i) {
               // Process buffer[i] as needed
               unsigned int address = (page * buffer_size) + i;
-              mem->write(pcStart + address, buffer[i]);
+              mem->write(start + address, buffer[i]);
               //std::cout << std::hex << (int) address << " " << std::endl;
           }
       } else {
@@ -253,90 +253,45 @@ void loadProgramFromFile(const char* filePath, Memory * mem, uint16_t pcStart) {
   file.close();
 }
 
+/**
+ * @brief Run comprehensive tests (https://github.com/Klaus2m5/6502_65C02_functional_tests/blob/master/bin_files/6502_functional_test.lst)
+ * 
+ * @param cpu 
+ * @param mem 
+ * @return uint8_t 
+ */
 uint8_t testComprehensive(R6502& cpu, Memory * mem) {
   cpu.powerOn();
-  //https://github.com/Klaus2m5/6502_65C02_functional_tests/blob/master/bin_files/6502_functional_test.lst
-  // Config???
-  cpu.memory->write(0x0001, 0x00); // Disable rom vectors
-  cpu.memory->write(0x0001, 0x00); // Disable load data direct
-  cpu.memory->write(0x0003, 0x00); // Allow I Flag
-  cpu.memory->write(0x000A, 0x0A); // Zero page start (system mem)
-  cpu.memory->write(0x0200, 0x00); // Data segment start (low byte)
-  cpu.memory->write(0x0201, 0x02); // Data segment start (high byte)
-  cpu.memory->write(0x0400, 0x00); // Code segment start (low byte)
-  cpu.memory->write(0x0401, 0x04); // Code segment start (high byte)
-
-  //cpu.setFlags(0x20, 0);
-
-
   cpu.pc = 0x0400;
+
   loadProgramFromFile("test/test-programs/6502_functional_test.bin", mem, 0);
   ConsoleDebugger debugger = ConsoleDebugger(&cpu);
-  //debugger.showState();
 
-  int instructionsPassed = 0;
-  uint8_t hitIllegal = 0x00;
-  uint8_t hitJMP = 0x00;
-  uint8_t trapHit = 0x00;
-  while (true) {
-    if (hitIllegal) {
-      std::cout << "Illegal instruction hit!" << std::endl;
-      //debugger.showState();
-      break;
-    }
-    else if (hitJMP == 0x02) {
-      //debugger.step();
-      hitJMP--;
-    }
-
-    /*const uint16_t traps[] = {
-      05e6
-    };*/
+  uint8_t hitTrap = 0x00;
+  uint16_t lastPC = 0x0000;
+  //debugger.enableStackTrace();
+  //debugger.setBreakPoint(0x35C9);
+  uint16_t successAddress = 0x3469;
+  while (cpu.pc != successAddress) {
+    R6502::State state = cpu.getState();
 
     // detect traps
-    if (
-      trapHit != 0 //||
-      //cpu.pc == 0x0674 || // Branch should be taken
-      //cpu.pc == 0x37C9 ||
-      //cpu.pc == 0x3778
-      //cpu.pc == 0x0D96
-      //cpu.pc == 0x0E68
-      //cpu.pc == 0x0E5A
-      //cpu.pc == 0x0F65
-      //cpu.pc == 0x17AD
-      //cpu.pc == 0x16FC
-    ) {
-      std::cout << "Trap hit!" << std::endl;
-      debugger.showState();
-      //debugger.showState();
-      debugger.step();
-      std::cout << "mem: " << std::hex << (int) cpu.memory->read(0x0015) << std::endl;
-      std::cout << "mem: " << std::hex << (int) cpu.memory->read(0x0016) << std::endl;
-      std::cout << "mem: " << std::hex << (int) cpu.memory->read(0x0017) << std::endl;
-      std::cout << "mem: " << std::hex << (int) cpu.memory->read(0x0018) << std::endl;
-      trapHit = 1;
-    }
-    cpu.doNextInstruction();
-
-    if (cpu.pc == 0x3469) {
-      std::cout << "Success on comprehensive tests!" << std::endl;
-      break;
+    if ((state.pc == lastPC && cpu.getCurrentOpCode() == 0xD0) && !hitTrap) {
+      if (!hitTrap) std::cout << "COMPREHENSIVE TESTS FAILED! CONTINUE STEPPING PROGRAM!" << std::endl;
+      hitTrap = 0x01;
+      debugger.pause();
     }
 
-    if(R6502::getInstructionMatrix()[cpu.getCurrentOpCode()].addressMode == R6502::ILLMODE) {
-      hitIllegal = 0x01;
+    //if (cpu.getInstructionMatrix()[cpu.getCurrentOpCode()].operation == R6502::OPS::ADC) {
+    if (cpu.pc == 0x3470) {
+      debugger.enableStackTrace();
     }
 
-    if(R6502::getInstructionMatrix()[cpu.getCurrentOpCode()].operation == R6502::JMP) {
-      hitJMP++;
-    } else if (hitJMP > 0x00) {
-    }
-
-    debugger.showState();
-    //debugger.step();
-    instructionsPassed++;
+    debugger.step();
+    lastPC = state.pc;
   }
 
+  std::cout << "Success on comprehensive tests!" << std::endl;
   std::cout << "END COMPREHENSIVE" << std::endl;
 
   //debugger.showState();
