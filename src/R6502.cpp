@@ -636,7 +636,7 @@ void R6502::opASL() {
   tmp = (uint16_t) operand << 1;
   //doCycle(); // Internal operation cycle (3a) <- https://the-dreams.de/aay64.txt
 
-  setFlags(C | Z | N, isCarry(tmp) | isZero(tmp) | isNegative(tmp));
+  setFlags(C | Z | N, isCarry(tmp) | isZero((uint8_t) (tmp & 0x00FF)) | isNegative(tmp));
 
   if (currentInstruction.addressMode == ACCUMULATOR) setAccumulator(tmp & 0x00FF);
   else write(absAddr, tmp & 0x00FF);
@@ -1065,15 +1065,7 @@ void R6502::opSBC() {
 
   // Same as addition, but invert memory
 
-  //std::cout << std::hex << (int) tmp << std::endl;
   tmp = (uint16_t) accumulator + (((uint16_t) (~operand)) & 0x00FF) + (uint16_t) getFlag(C);
-  /*std::cout << std::hex << (int) accumulator << std::endl;
-  std::cout << std::hex << (int) operand << std::endl;
-  std::cout << std::hex << (int) getFlag(C) << std::endl;
-  std::cout << std::hex << (int) tmp << std::endl;
-  std::cout << std::hex << (int) ((accumulator ^ ((uint8_t) (tmp & 0x00FF)))) << std::endl;
-  std::cout << std::hex << (int) (uint8_t) (~(accumulator ^ operand)) << std::endl;
-  std::cout << std::hex << (int) ((accumulator ^ ((uint8_t) (tmp & 0x00FF)))    &    ((uint8_t) (~(accumulator ^ operand)))) << std::endl;*/
 
   uint8_t overflowBit = ((((uint8_t) ~(accumulator ^ ((uint8_t) (~operand)))) & (accumulator ^ ((uint8_t) (tmp & 0x00FF)))) & 0x0080) ? V : 0;
   setFlags(V | C | Z | N, overflowBit | isCarry(tmp) | isZero(((uint8_t) (tmp & 0x00FF))) | isNegative(tmp));

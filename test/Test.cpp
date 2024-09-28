@@ -269,9 +269,8 @@ uint8_t testComprehensive(R6502& cpu, Memory * mem) {
 
   uint8_t hitTrap = 0x00;
   uint16_t lastPC = 0x0000;
-  //debugger.enableStackTrace();
-  //debugger.setBreakPoint(0x35C9);
-  uint16_t successAddress = 0x3469;
+  debugger.enableStackTrace();
+  uint16_t successAddress = 0x336D;
   while (cpu.pc != successAddress) {
     R6502::State state = cpu.getState();
 
@@ -282,16 +281,11 @@ uint8_t testComprehensive(R6502& cpu, Memory * mem) {
       debugger.pause();
     }
 
-    //if (cpu.getInstructionMatrix()[cpu.getCurrentOpCode()].operation == R6502::OPS::ADC) {
-    if (cpu.pc == 0x3470) {
-      debugger.enableStackTrace();
-    }
-
     debugger.step();
     lastPC = state.pc;
   }
 
-  std::cout << "Success on comprehensive tests!" << std::endl;
+  std::cout << "Success on comprehensive functional tests!" << std::endl;
   std::cout << "END COMPREHENSIVE" << std::endl;
 
   //debugger.showState();
