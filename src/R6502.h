@@ -91,13 +91,26 @@ class R6502 {
      * @param data The data to write.
      */
     void write(uint16_t addr, uint8_t data);
+
+    /**
+     * @brief Prepare the cpu for a write if applicable.
+     * 
+     * @param byte 
+     * @return uint8_t 
+     */
+    void prepWrite(uint8_t data);
+    void prepWrite(uint16_t data);
+
+    void opWrite();
+
   public:
     // Useful variables
+    uint16_t fetchAddress = 0x0000;
     uint8_t opcode = 0x00;
-    uint16_t absAddr = 0x0000;
-    uint8_t relAddr = 0x0000;
-    uint8_t operand = 0x00;
     uint16_t tmp = 0x0000;
+
+    uint8_t enableWrite = 0x00;
+    uint8_t writeReg = 0x00;
 
     uint64_t totalCyclesPassed = 0;
 
@@ -110,7 +123,7 @@ class R6502 {
      * 
      * @return uint8_t - The operand in most cases. 
      */
-    uint8_t fetchOperand();
+    uint8_t fetchOperand(uint16_t);
   public:
     // Registers
     uint8_t accumulator = 0x00; // Accumulator
@@ -122,16 +135,25 @@ class R6502 {
     // Flags
     uint8_t P = 0x00; // Processor Status
 
-    enum FLAGS { // Never considered using enums for bit manipulation. Credit to OneLoneCoder for this strategy.
-      N = 0x01 << 7, // Negative?
-      V = 0x01 << 6, // Overflow?
-      U = 0x01 << 5, // UNUSED
-      B = 0x01 << 4, // BRK command?
-      D = 0x01 << 3, // Decimal mode?
-      I = 0x01 << 2, // IRQ disable?
-      Z = 0x01 << 1, // Result zero?
-      C = 0x01 << 0  // Carry?
+    enum FLAGS {
+      N = 0x80, // Negative?
+      V = 0x40, // Overflow?
+      U = 0x20, // UNUSED
+      B = 0x10, // BRK command?
+      D = 0x08, // Decimal mode?
+      I = 0x04, // IRQ disable?
+      Z = 0x02, // Result zero?
+      C = 0x01  // Carry?
     };
+
+    /**
+     * @brief Get the Flag with a value set or not.
+     * 
+     * @param flag The flag to get as a value.
+     * @param value Boolean value to set the return flag to.
+     * @return FLAGS 
+     */
+    static uint8_t getFlagByteAs(FLAGS flag, uint8_t value);
 
     /**
      * @brief returns the BIT value of a flag
@@ -140,16 +162,6 @@ class R6502 {
      * @return uint8_t 1 or 0.
      */
     uint8_t getFlag(FLAGS flag);
-
-    /**
-     * @brief sets bits of a byte based on a mask byte and a byte representing what to change them to.
-     * 
-     * @param bitsToChange The byte mask.
-     * @param value The values to set the bits specified by the mask to.
-     * @param byte The original byte to modify.
-     * @return uint8_t 
-     */
-    uint8_t setBitsOfByte(uint8_t bitsToChange, uint8_t value, uint8_t byte);
 
     /**
      * @brief Sets flags to a specific value.
@@ -209,6 +221,13 @@ class R6502 {
       ROR, RTI, RTS, SBC, SEC, SED, SEI, STA,
       STX, STY, TAX, TAY, TSX, TXA, TXS, TYA
     };
+
+    
+    typedef void (R6502::*ModeFunc)();
+    static const ModeFunc modeFuncs[14];
+
+    typedef void (R6502::*OpFunc)(uint8_t operand);
+    static const OpFunc opFuncs[57];
 
     struct Instruction {
       MODES addressMode = ILLMODE;
@@ -271,7 +290,7 @@ class R6502 {
      * 
      * @param op - The operation.
      */
-    void doOperation(OPS);
+    void doOperation(OPS, uint16_t);
   public:
     /**
      * @brief Execute a given instruction.
@@ -396,7 +415,7 @@ class R6502 {
      * Useful method for cutting down on bugs / repetition.
      * 
      */
-    void doRelBranch();
+    void doRelBranch(uint8_t);
 
 
     uint8_t extraCyclePrepped = 0x00;
@@ -631,62 +650,63 @@ class R6502 {
   private:
     // Opertions
 
-    void opADC();
-    void opAND();
-    void opASL();
-    void opBCC();
-    void opBCS();
-    void opBEQ();
-    void opBIT();
-    void opBMI();
-    void opBNE();
-    void opBPL();
-    void opBRK();
-    void opBVC();
-    void opBVS();
-    void opCLC();
-    void opCLD();
-    void opCLI();
-    void opCLV();
-    void opCMP();
-    void opCPX();
-    void opCPY();
-    void opDEC();
-    void opDEX();
-    void opDEY();
-    void opEOR();
-    void opINC();
-    void opINX();
-    void opINY();
-    void opJMP();
-    void opJSR();
-    void opLDA();
-    void opLDX();
-    void opLDY();
-    void opLSR();
-    void opNOP();
-    void opORA();
-    void opPHA();
-    void opPHP();
-    void opPLA();
-    void opPLP();
-    void opROL();
-    void opROR();
-    void opRTI();
-    void opRTS();
-    void opSBC();
-    void opSEC();
-    void opSED();
-    void opSEI();
-    void opSTA();
-    void opSTX();
-    void opSTY();
-    void opTAX();
-    void opTAY();
-    void opTSX();
-    void opTXA();
-    void opTXS();
-    void opTYA();
+
+    void opADC(uint8_t);
+    void opAND(uint8_t);
+    void opASL(uint8_t);
+    void opBCC(uint8_t);
+    void opBCS(uint8_t);
+    void opBEQ(uint8_t);
+    void opBIT(uint8_t);
+    void opBMI(uint8_t);
+    void opBNE(uint8_t);
+    void opBPL(uint8_t);
+    void opBRK(uint8_t);
+    void opBVC(uint8_t);
+    void opBVS(uint8_t);
+    void opCLC(uint8_t);
+    void opCLD(uint8_t);
+    void opCLI(uint8_t);
+    void opCLV(uint8_t);
+    void opCMP(uint8_t);
+    void opCPX(uint8_t);
+    void opCPY(uint8_t);
+    void opDEC(uint8_t);
+    void opDEX(uint8_t);
+    void opDEY(uint8_t);
+    void opEOR(uint8_t);
+    void opINC(uint8_t);
+    void opINX(uint8_t);
+    void opINY(uint8_t);
+    void opJMP(uint8_t);
+    void opJSR(uint8_t);
+    void opLDA(uint8_t);
+    void opLDX(uint8_t);
+    void opLDY(uint8_t);
+    void opLSR(uint8_t);
+    void opNOP(uint8_t);
+    void opORA(uint8_t);
+    void opPHA(uint8_t);
+    void opPHP(uint8_t);
+    void opPLA(uint8_t);
+    void opPLP(uint8_t);
+    void opROL(uint8_t);
+    void opROR(uint8_t);
+    void opRTI(uint8_t);
+    void opRTS(uint8_t);
+    void opSBC(uint8_t);
+    void opSEC(uint8_t);
+    void opSED(uint8_t);
+    void opSEI(uint8_t);
+    void opSTA(uint8_t);
+    void opSTX(uint8_t);
+    void opSTY(uint8_t);
+    void opTAX(uint8_t);
+    void opTAY(uint8_t);
+    void opTSX(uint8_t);
+    void opTXA(uint8_t);
+    void opTXS(uint8_t);
+    void opTYA(uint8_t);
 
   private:
     // Illegal instruction handling
@@ -701,5 +721,5 @@ class R6502 {
      * @brief Executes when an illegal operation is executed
      * 
      */
-    void opIllegal();
+    void opIllegal(uint8_t);
 };

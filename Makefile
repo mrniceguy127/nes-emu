@@ -1,9 +1,10 @@
 .PHONY: build clean run test
 
 cc = g++
-main = src/main.cpp src/R6502.cpp src/Memory.cpp src/Debugger.cpp
+core = src/utils/ByteUtils.cpp src/R6502.cpp src/Memory.cpp src/Debugger.cpp
+main = src/main.cpp $(core)
 
-test = test/Test.cpp src/R6502.cpp src/Memory.cpp src/Debugger.cpp
+test = test/Test.cpp $(core)
 
 build_dir = ./build
 out = $(build_dir)/main

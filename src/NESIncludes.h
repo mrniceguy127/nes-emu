@@ -6,6 +6,8 @@
 #include <vector>
 #include <string>
 
+#include "utils/ByteUtils.h"
+
 #include "Memory.h"
 #include "R6502.h"
 

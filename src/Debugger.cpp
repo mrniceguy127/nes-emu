@@ -14,9 +14,8 @@ static std::string getInstructionDisp(uint8_t opCode) {
   std::ostringstream instructionDisp;
   instructionDisp
     << "[" << instructionMetadata.mnemonic
-    << "  " << std::setw(9) << std::setfill(' ') << std::left << instructionMetadata.addressModeName;
-  instructionDisp << "]  "
-    << "0x"
+    << "  " << std::setw(11) << std::setfill(' ') << std::left << instructionMetadata.addressModeName
+    << "]  0x"
     << std::uppercase <<  std::setw(2) << std::setfill('0') << std::hex << (int) opCode;
   return instructionDisp.str();
 }
@@ -121,12 +120,12 @@ void DebuggerConsoleInputStrategy::getStepInput(char* inputBuffer, const size_t 
 
 void DebuggerConsoleOuptutStrategy::showState(R6502 * cpu, R6502::State previousState) {
   R6502::State state = cpu->getState();
-
-  std::cout << getBinDisplay(previousState.pc) << ":   " << getInstructionDisp(cpu->getCurrentOpCode());
-  const uint16_t pc = cpu->memory->read(state.pc);
   const uint8_t lastOperand = cpu->memory->read(previousState.pc + 1);
+  const uint8_t operandResolved = cpu->memory->read(cpu->fetchAddress);
+
   std::cout
-    << " " << getBinDisplay(lastOperand) << " *(->" << getBinDisplay(cpu->absAddr) << ") = " << getBinDisplay(cpu->operand)
+    << getBinDisplay(previousState.pc) << ":   " << getInstructionDisp(cpu->getCurrentOpCode())
+    << " " << getBinDisplay(lastOperand) << " *(->" << getBinDisplay(cpu->fetchAddress) << ") = " << getBinDisplay(operandResolved)
     << "   A: " <<  getBinDisplay(state.accumulator)
     << " X: " <<  getBinDisplay(state.x)
     << " Y: " <<  getBinDisplay(state.y)
