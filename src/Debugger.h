@@ -10,13 +10,21 @@ class DebuggerInputStrategy {
 };
 
 class DebuggerOutputStrategy {
+  protected:
+    uint16_t lastPC = 0x0000;
   public:
     /**
      * @brief Abstaract method for displaying CPU state
      * 
      * @param cpu 
      */
-    virtual void showState(R6502* cpu) = 0;
+    virtual void showState(R6502* cpu, R6502::State previousState) = 0;
+
+    /**
+     * @brief Abstract method for showing debugger step output
+     * 
+     */
+    virtual void step() = 0;
 };
 
 class DebuggerConsoleInputStrategy : public DebuggerInputStrategy {
@@ -34,7 +42,8 @@ class DebuggerConsoleOuptutStrategy : public DebuggerOutputStrategy {
      * @brief Show the current CPU state in console
      * 
      */
-    void showState(R6502* cpu) override;
+    void showState(R6502* cpu, R6502::State previousState) override;
+    void step() override;
 };
 
 class Debugger {
@@ -42,9 +51,13 @@ class Debugger {
     R6502* cpu;
     DebuggerInputStrategy* inputHandler;
     DebuggerOutputStrategy* outputHandler;
+    uint8_t hitBreak = 0x00;
+    uint8_t stackTraceEnabled = 0x00;
+    uint16_t breakPoint = 0x0000;
+    uint8_t breakPointEnabled = 0x00;
+    R6502::State previousState;
   public:
     Debugger(R6502* c);
-    ~Debugger();
   public:
     /**
      * @brief Show the current CPU state.
@@ -57,6 +70,31 @@ class Debugger {
      * 
      */
     void step();
+
+    /**
+     * @brief Run the cpu with debugger attached.
+     * 
+     */
+     void run();
+
+     /**
+      * @brief Pause the debugger
+      * 
+      */
+     void pause();
+
+      /**
+        * @brief Set the Break Point object
+        * 
+        * @param bp 
+        */
+      void setBreakPoint(uint16_t bp);
+
+      /**
+       * @brief Enable stack trace output
+       * 
+       */
+      void enableStackTrace();
 };
 
 class ConsoleDebugger : public Debugger {
