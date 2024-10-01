@@ -99,14 +99,14 @@ void R6502::doAddressMode(MODES mode) {
   (this->*modeFuncs[mode])();
 }
 
-void R6502::doOperation(OPS op, uint16_t fetchAddress) {
-  (this->*opFuncs[op])(fetchOperand(fetchAddress));
+void R6502::doOperation(OPS op) {
+  (this->*opFuncs[op])();
 }
 
 void R6502::doInstruction(const Instruction& instruction) {
   currentInstruction = instruction;
   doAddressMode(currentInstruction.addressMode);
-  doOperation(currentInstruction.operation, fetchAddress);
+  doOperation(currentInstruction.operation);
   opWrite();
   currentInstruction = NULL_INSTRUCTION;
 }
@@ -149,8 +149,16 @@ uint8_t R6502::getCurrentOpCode() {
 
 void R6502::doCycle() {
   // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
+  doCycle(0);
+}
+
+void R6502::doCycle(uint8_t extra) {
+  // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
   totalCyclesPassed++;
   cyclesPassedThisInstruction++;
+  if (extra) {
+    extraCyclesPassedThisInstruction++;
+  }
 }
 
 uint8_t R6502::getCyclesPassedThisInstruction() {
@@ -161,29 +169,11 @@ uint8_t R6502::getExtraCyclesPassedThisInstruction() {
   return extraCyclesPassedThisInstruction;
 }
 
-void R6502::doRelBranch(uint8_t operand) {
-  prepExtraCycle();
-  doPossibleExtraCycle(); // default cycle....
+void R6502::doRelBranch() {
+  doCycle(1);
   fetchAddress = pc + (int8_t) operand;
-  if (hi16(fetchAddress - pc) != hi16(fetchAddress)) {
-    prepExtraCycle();
-    doPossibleExtraCycle(); // branch on different page, so extra cycle
-  }
-
+  if (hi16(fetchAddress - (int8_t) operand) != hi16(fetchAddress)) doCycle(1);
   setPC(fetchAddress);
-}
-
-void R6502::prepExtraCycle() {
-  extraCyclePrepped = 0x01;
-}
-
-
-void R6502::doPossibleExtraCycle() {
-  if (extraCyclePrepped) {
-    doCycle();
-    extraCyclesPassedThisInstruction++;
-  }
-  extraCyclePrepped = 0x00;
 }
 
 void R6502::clock() {
@@ -434,18 +424,9 @@ void R6502::setFlags(uint8_t flags) {
 // Intructions utils.
 // -----
 
-uint8_t R6502::fetchOperand(uint16_t fetchAddress) {
-  switch (currentInstruction.addressMode) {
-    case ACCUMULATOR:
-      return accumulator;
-    case IMPLIED:
-      return accumulator;
-    case RELATIVE:
-      return lo(fetchAddress);
-
-    default:
-      return read(fetchAddress);
-  }
+void R6502::fetchOperand() {
+  if (currentInstruction.addressMode != ACCUMULATOR) operand = read(fetchAddress);
+  else operand = accumulator;
 }
 
 
@@ -478,14 +459,14 @@ void R6502::modeAbsoluteX() {
   fetchAddress = readPC16() + x;
  
   // Extra cycle is needed if page boundary crossed
-  if (hi16(fetchAddress) != hi16(fetchAddress - x)) prepExtraCycle();
+  if (hi16(fetchAddress) != hi16(fetchAddress - x)) doCycle(1);
 }
 
 void R6502::modeAbsoluteY() {
   fetchAddress = readPC16() + y;
  
   // Extra cycle is needed if page boundary crossed
-  if (hi(fetchAddress) != hi(fetchAddress - y)) prepExtraCycle();
+  if (hi(fetchAddress) != hi(fetchAddress - y)) doCycle(1);
 }
 
 void R6502::modeImplied() {
@@ -502,23 +483,24 @@ void R6502::modeZeroPage() {
 }
 
 void R6502::modeZeroPageX() {
-  fetchAddress = lo16(readPC() + x); // no paging past the zero page may occur
+  uint16_t baseAddr = readPC();
+  read(baseAddr); // useless read to simulate hardware behavior. causes extra clock.
+  fetchAddress = lo16(baseAddr + x); // no paging past the zero page may occur
 }
 
 void R6502::modeZeroPageY() {
-  fetchAddress = lo16(readPC() + y); // no paging past the zero page may occur
+  uint16_t baseAddr = readPC();
+  read(baseAddr); // useless read to simulate hardware behavior. causes extra clock.
+  fetchAddress = lo16(baseAddr + y); // no paging past the zero page may occur
 }
 
 void R6502::modeRelative() {
-  fetchAddress = dbyte(readPC());
-  // if negative (MSB of lo byte == 1), set hi byte to FF since addresses are 2 bytes. This will keep the relative address negative when converted to dbyte form.
-  if (isNegative(tmp)) {
-    tmp |= 0xFF00;
-  }
+  operand = dbyte(readPC());
 }
 
 void R6502::modeIndirectX() {
   uint8_t baseAddr = readPC();
+  read(baseAddr); // useless read to simulate hardware behavior. causes extra clock.
   fetchAddress = read16(lo16(baseAddr + x)); // zero page wrap around https://www.nesdev.org/obelisk-6502-guide/addressing.html
 }
 
@@ -527,9 +509,7 @@ void R6502::modeIndirectY() {
   fetchAddress = read16(lo16(baseAddr));
   fetchAddress = fetchAddress + y;
 
-  if (hi16(fetchAddress - y) != hi16(fetchAddress)) {
-    prepExtraCycle();
-  }
+  if (hi16(fetchAddress - y) != hi16(fetchAddress)) doCycle(1);
 }
 
 void R6502::modeIndirect() {
@@ -547,14 +527,11 @@ void R6502::modeIndirect() {
   uint8_t pointerHi = read(pc);
   incPC();
 
-  uint16_t loAddr = dbyte(pointerHi, pointerLo);
-  // hiAddr is intentionally bugged. pointerLo + 1 can overflow.
-  uint16_t hiAddr = dbyte(pointerHi, pointerLo + 1);
-
-  uint8_t hi = read(hiAddr);
-  uint8_t lo = read(loAddr);
-
-  fetchAddress = dbyte(hi, lo);
+  // fetch low address to latch - https://www.nesdev.org/6502_cpu.txt
+  uint8_t loAddr = read(dbyte(pointerLo));
+  uint8_t hiAddr = read(dbyte(pointerHi));
+  // lo is intentionally bugged. pointerLo + 1 can overflow.
+  fetchAddress = dbyte(hiAddr, loAddr + 1);
 }
 
 
@@ -567,9 +544,10 @@ void R6502::modeIndirect() {
 
 
 
-void R6502::opADC(uint8_t operand) {
+void R6502::opADC() {
   // A + M + C -> A, C
   // Flags changed: C Z N V
+  fetchOperand();
 
   tmp = dbyte(accumulator) + dbyte(operand) + dbyte(getFlag(C));
 
@@ -591,13 +569,13 @@ void R6502::opADC(uint8_t operand) {
   );
 
   setAccumulator(lo(tmp));
-
-  doPossibleExtraCycle();
 }
 
-void R6502::opAND(uint8_t operand) {
+void R6502::opAND() {
   // A AND M -> A
   // Flags changed: Z N
+  fetchOperand();
+
   setAccumulator(accumulator & operand);
 
   setFlags(
@@ -605,25 +583,22 @@ void R6502::opAND(uint8_t operand) {
     isZero(accumulator) |
     isNegative(accumulator)
   );
-
-  doPossibleExtraCycle();
 }
 
-void R6502::opASL(uint8_t operand) {
+void R6502::opASL() {
   // C <- [76543210] <- 0
   // Flags changed: C Z N
 
   if (currentInstruction.addressMode == ABSOLUTEX
       || currentInstruction.addressMode == ABSOLUTEY)
-      //read(fetchAddress);
-      doCycle(); // redundant cycle?????
+    read(fetchAddress); // redundant cycle?????
 
   if (currentInstruction.addressMode != ACCUMULATOR)
-    //write(fetchAddress, operand); // for redundanct write on hardware
-    doCycle();
-  
+    write(fetchAddress, operand); // for redundanct write on hardware
+
+  fetchOperand();
+
   tmp = dbyte(operand) << 1;
-  //doCycle(); // Internal operation cycle (3a) <- https://the-dreams.de/aay64.txt
 
   setFlags(
     C | Z | N,
@@ -635,30 +610,32 @@ void R6502::opASL(uint8_t operand) {
   return prepWrite(tmp);
 }
 
-void R6502::opBCC(uint8_t operand) {
+void R6502::opBCC() {
   // branch on C = 0
   // Flags changed: 
 
-  if (getFlag(C) == 0) doRelBranch(operand);
+  if (getFlag(C) == 0) doRelBranch();
 }
 
-void R6502::opBCS(uint8_t operand) {
+void R6502::opBCS() {
   // branch on C = 1
   // Flags changed: 
 
-  if (getFlag(C) != 0) doRelBranch(operand);
+  if (getFlag(C) != 0) doRelBranch();
 }
 
-void R6502::opBEQ(uint8_t operand) {
+void R6502::opBEQ() {
   // branch on Z = 1
   // Flags changed: 
 
-  if (getFlag(Z) != 0) doRelBranch(operand);
+  if (getFlag(Z) != 0) doRelBranch();
 }
 
-void R6502::opBIT(uint8_t operand) {
+void R6502::opBIT() {
   // A AND M, M7 -> N, M6 -> V
   // Flags changed: Z N V
+
+  fetchOperand();
 
   tmp = (accumulator & operand);
   
@@ -670,28 +647,28 @@ void R6502::opBIT(uint8_t operand) {
   );
 }
 
-void R6502::opBMI(uint8_t operand) {
+void R6502::opBMI() {
   // branch on N = 1
   // Flags changed: 
 
-  if (getFlag(N) != 0) doRelBranch(operand);
+  if (getFlag(N) != 0) doRelBranch();
 }
 
-void R6502::opBNE(uint8_t operand) {
+void R6502::opBNE() {
   // branch on Z = 0
   // Flags changed: 
 
-  if (getFlag(Z) == 0) doRelBranch(operand);
+  if (getFlag(Z) == 0) doRelBranch();
 }
 
-void R6502::opBPL(uint8_t operand) {
+void R6502::opBPL() {
   // branch on N = 0
   // Flags changed: 
   
-  if (getFlag(N) == 0) doRelBranch(operand);
+  if (getFlag(N) == 0) doRelBranch();
 }
 
-void R6502::opBRK(uint8_t operand) {
+void R6502::opBRK() {
   // interrupt, push PC+2, push SR
   // Flags Changed: I
   
@@ -713,47 +690,49 @@ void R6502::opBRK(uint8_t operand) {
   setPC(((uint16_t) read(0xFFFE)) | ((uint16_t) read(0xFFFF) << 8)); // lo byte, than hi. C order of evalutation. Left expression first (lo).
 }
 
-void R6502::opBVC(uint8_t operand) {
+void R6502::opBVC() {
   // branch on V = 0
   // Flags changed: 
 
-  if (getFlag(V) == 0) doRelBranch(operand);
+  if (getFlag(V) == 0) doRelBranch();
 }
 
-void R6502::opBVS(uint8_t operand) {
+void R6502::opBVS() {
   // branch on V = 1
   // Flags changed: 
   
-  if (getFlag(V) != 0) doRelBranch(operand);
+  if (getFlag(V) != 0) doRelBranch();
 }
 
-void R6502::opCLC(uint8_t operand) {
+void R6502::opCLC() {
   // 0 -> C
   // Flags changed: C
   setFlags(C, 0);
 }
 
-void R6502::opCLD(uint8_t operand) {
+void R6502::opCLD() {
   // 0 -> D
   // Flags changed: D
   setFlags(D, 0);
 }
 
-void R6502::opCLI(uint8_t operand) {
+void R6502::opCLI() {
   // 0 -> I
   // Flags changed: I
   setFlags(I, 0);
 }
 
-void R6502::opCLV(uint8_t operand) {
+void R6502::opCLV() {
   // 0 -> V
   // Flags changed: V
   setFlags(V, 0);
 }
 
-void R6502::opCMP(uint8_t operand) {
+void R6502::opCMP() {
   // A - M
   // Flags changed: N Z C
+  fetchOperand();
+
   tmp = lo16(dbyte(accumulator) - dbyte(operand));
 
   setFlags(
@@ -764,9 +743,11 @@ void R6502::opCMP(uint8_t operand) {
   );
 }
 
-void R6502::opCPX(uint8_t operand) {
+void R6502::opCPX() {
   // X - M
   // Flags changed: N Z C
+  fetchOperand();
+
   tmp = lo16(dbyte(x) - dbyte(operand));
 
   setFlags(
@@ -777,9 +758,11 @@ void R6502::opCPX(uint8_t operand) {
   );
 }
 
-void R6502::opCPY(uint8_t operand) {
+void R6502::opCPY() {
   // Y - M
   // Flags changed: N Z C
+  fetchOperand();
+
   tmp = lo16(dbyte(y) - dbyte(operand));
 
   setFlags(
@@ -790,15 +773,15 @@ void R6502::opCPY(uint8_t operand) {
   );
 }
 
-void R6502::opDEC(uint8_t operand) {
+void R6502::opDEC() {
   // M - 1 -> M
   // Flags changed: Z N
   if (currentInstruction.addressMode == ABSOLUTEX) // What is this?????? check cycle accuracy later
-    //fetchOperand(); ????????? check when fixing cycle acc
-    doCycle();
+    fetchOperand(); // Hardware fetches redundantly
 
-  //write(fetchAddress, operand);
-  doCycle(); // For redundant write on hardware.
+  write(fetchAddress, operand); // redundant hardware write
+
+  fetchOperand();
 
   tmp = dbyte(operand - 1);
 
@@ -811,7 +794,7 @@ void R6502::opDEC(uint8_t operand) {
   prepWrite(tmp);
 }
 
-void R6502::opDEX(uint8_t operand) {
+void R6502::opDEX() {
   // X - 1 -> X
   // Flags changed: Z N
 
@@ -823,7 +806,7 @@ void R6502::opDEX(uint8_t operand) {
   );
 }
 
-void R6502::opDEY(uint8_t operand) {
+void R6502::opDEY() {
   // Y - 1 -> Y
   // Flags changed: Z N
 
@@ -835,9 +818,11 @@ void R6502::opDEY(uint8_t operand) {
   );
 }
 
-void R6502::opEOR(uint8_t operand) {
+void R6502::opEOR() {
   // A EOR M -> A
   // Flags changed: Z N
+
+  fetchOperand();
 
   setAccumulator(accumulator ^ operand);
   setFlags(
@@ -845,19 +830,17 @@ void R6502::opEOR(uint8_t operand) {
     isZero(accumulator) |
     isNegative(accumulator)
   );
-
-  doPossibleExtraCycle();
 }
 
-void R6502::opINC(uint8_t operand) {
+void R6502::opINC() {
   // M + 1 -> M
   // Flags changed: Z N
   if (currentInstruction.addressMode == ABSOLUTEX)
-    //fetchOperand(); ????????? check when fixing cycle acc
-    doCycle(); // For redundant write on hardware.
+    fetchOperand(); // For redundant write on hardware.
 
-  //write(fetchAddress, operand);
-  doCycle(); // For redundant write on hardware.
+  write(fetchAddress, operand);
+
+  fetchOperand();
 
   tmp = dbyte(operand + 1);
 
@@ -870,7 +853,7 @@ void R6502::opINC(uint8_t operand) {
   prepWrite(tmp);
 }
 
-void R6502::opINX(uint8_t operand) {
+void R6502::opINX() {
   // X - 1 -> X
   // Flags changed: Z N
 
@@ -882,7 +865,7 @@ void R6502::opINX(uint8_t operand) {
   );
 }
 
-void R6502::opINY(uint8_t operand) {
+void R6502::opINY() {
   // Y + 1 -> Y
   // Flags changed: Z N
 
@@ -894,14 +877,14 @@ void R6502::opINY(uint8_t operand) {
   );
 }
 
-void R6502::opJMP(uint8_t operand) {
+void R6502::opJMP() {
   // (PC+1) -> PCL
   // (PC+2) -> PCH
   // Flags changed:
   setPC(fetchAddress);
 }
 
-void R6502::opJSR(uint8_t operand) {
+void R6502::opJSR() {
   // push (PC+2),
   // (PC+1) -> PCL
   // (PC+2) -> PCH
@@ -914,56 +897,56 @@ void R6502::opJSR(uint8_t operand) {
   setPC(tmp);
 }
 
-void R6502::opLDA(uint8_t operand) {
+void R6502::opLDA() {
   // M -> A
   // Flags changed: Z N
+  fetchOperand();
+
   setAccumulator(operand);
   setFlags(
     Z | N,
     isZero(accumulator) |
     isNegative(accumulator)
   );
-
-  doPossibleExtraCycle();
 }
 
-void R6502::opLDX(uint8_t operand) {
+void R6502::opLDX() {
   // M -> X
   // Flags changed: Z N
+  fetchOperand();
+
   setX(operand);
   setFlags(
     Z | N,
     isZero(x) |
     isNegative(x)
   );
-
-  doPossibleExtraCycle();
 }
 
-void R6502::opLDY(uint8_t operand) {
+void R6502::opLDY() {
   // M -> Y
   // Flags changed: Z N
+  fetchOperand();
+
   setY(operand);
   setFlags(
     Z | N,
     isZero(y) |
     isNegative(y)
   );
-
-  doPossibleExtraCycle();
 }
 
-void R6502::opLSR(uint8_t operand) {
+void R6502::opLSR() {
   // 0 -> [76543210] -> C
   // Flags changed: Z N C
   if (currentInstruction.addressMode == ABSOLUTEX
     || currentInstruction.addressMode == ABSOLUTEY)
-    //fetchOperand(); 
-    doCycle(); // ????????? check when fixing cycle acc
+    fetchOperand(); // Redundant hardware write
   
   if (currentInstruction.addressMode != ACCUMULATOR)
-    //write(fetchAddress, operand);
-    doCycle(); // for redundant write on hardware
+    write(fetchAddress, operand); // for redundant write on hardware
+
+  fetchOperand();
 
   tmp = dbyte(operand >> 1);
 
@@ -977,38 +960,37 @@ void R6502::opLSR(uint8_t operand) {
   prepWrite(tmp);
 }
 
-void R6502::opNOP(uint8_t operand) {
+void R6502::opNOP() {
   // No operation.
   // Flags changed: 
   return;
 }
 
-void R6502::opORA(uint8_t operand) {
+void R6502::opORA() {
   // A OR M -> A
   // Flags changed: Z N
+  fetchOperand();
   setAccumulator(accumulator | operand);
   setFlags(
     Z | N,
     isZero(accumulator) |
     isNegative(accumulator)
   );
-
-  doPossibleExtraCycle();
 }
 
-void R6502::opPHA(uint8_t operand) {
+void R6502::opPHA() {
   // push A
   // Flags changed:
   pushStack(accumulator);
 }
 
-void R6502::opPHP(uint8_t operand) {
+void R6502::opPHP() {
   // push P
   // Flags changed:
   pushStack(P | B | U);
 }
 
-void R6502::opPLA(uint8_t operand) {
+void R6502::opPLA() {
   // pull A
   // Flags changed: Z N
   setAccumulator(pullStackChain());
@@ -1020,28 +1002,27 @@ void R6502::opPLA(uint8_t operand) {
   );
 }
 
-void R6502::opPLP(uint8_t operand) {
+void R6502::opPLP() {
   // pull P
   // Flags changed: FROM STACK
   setP(pullStackChain());
   endPullStackChain();
 }
 
-void R6502::opROL(uint8_t operand) {
+void R6502::opROL() {
   // C <- [76543210] <- C
   // Flags Changed: C Z N
   if (currentInstruction.addressMode == ABSOLUTEX
     || currentInstruction.addressMode == ABSOLUTEY)
-    //fetchOperand(); ????????? check when fixing cycle acc
-    doCycle();
+    fetchOperand(); // Redundant HW read
 
   if (currentInstruction.addressMode != ACCUMULATOR)
-    //write(fetchAddress, operand); // for redundant write on hardware
-    doCycle();
-
-
+    write(fetchAddress, operand); // for redundant write on hardware
   
+  fetchOperand();
+
   tmp = dbyte((operand << 1) | getFlag(C));
+  
   setFlags(
     C | Z | N,
     getFlagByteAs(C, operand & 0x80) |
@@ -1052,21 +1033,20 @@ void R6502::opROL(uint8_t operand) {
   prepWrite(tmp);
 }
 
-void R6502::opROR(uint8_t operand) {
+void R6502::opROR() {
   // C -> [76543210] -> C
   // Flags Changed: C Z N
   if (currentInstruction.addressMode == ABSOLUTEX
     || currentInstruction.addressMode == ABSOLUTEY)
-    //fetchOperand(); ????????? check when fixing cycle acc
-    doCycle();
+    fetchOperand(); // Redund. HW read
 
   if (currentInstruction.addressMode != ACCUMULATOR)
-    //write(fetchAddress, operand); // for redundant write on hardware
-    doCycle();
+    write(fetchAddress, operand); // for redundant write on hardware
 
+  fetchOperand();
 
-  
   tmp = dbyte((operand >> 1) | (getFlag(C) << 7));
+  
   setFlags(
     C | Z | N,
     isZero(tmp) |
@@ -1077,7 +1057,7 @@ void R6502::opROR(uint8_t operand) {
   prepWrite(tmp);
 }
 
-void R6502::opRTI(uint8_t operand) {
+void R6502::opRTI() {
   // pull P, pull PC
   // Flags changed: FROM STACK
   // "The status register is pulled with the break flag
@@ -1088,17 +1068,16 @@ void R6502::opRTI(uint8_t operand) {
   endPullStackChain();
 }
 
-void R6502::opRTS(uint8_t operand) {
+void R6502::opRTS() {
   // pull PC, PC+1 -> PC
 
   
   setPC(pullStackChain16());
   endPullStackChain();
-  incPC();
-  doCycle();
+  incPC(); doCycle();
 }
 
-void R6502::opSBC(uint8_t operand) {
+void R6502::opSBC() {
   // A - M - (1 - C) -> A
   // C is a single bit. 1 - C is the inverse of C (C(bar)).
   // A - M - (1 - C) == A + (-M - (1 - C)) == A + (-M - 1 + C)
@@ -1110,6 +1089,7 @@ void R6502::opSBC(uint8_t operand) {
   // Flags changed: V C Z N
 
   // Same as addition, but invert memory
+  fetchOperand();
   tmp = dbyte(accumulator) + dbyte(~operand) + dbyte(getFlag(C));
 
   uint8_t overflowBit = (accumulator ^ lo(tmp)) & ((~operand) ^ lo(tmp));
@@ -1122,32 +1102,30 @@ void R6502::opSBC(uint8_t operand) {
   );
 
   setAccumulator(lo(tmp));
-
-  doPossibleExtraCycle();
 }
 
-void R6502::opSEC(uint8_t operand) {
+void R6502::opSEC() {
   // 1 -> C
   // Flags changed: C
 
   setFlags(C);
 }
 
-void R6502::opSED(uint8_t operand) {
+void R6502::opSED() {
   // 1 -> D
   // Flags changed: D
 
   setFlags(D);
 }
 
-void R6502::opSEI(uint8_t operand) {
+void R6502::opSEI() {
   // 1 -> I
   // Flags changed: I
 
   setFlags(I);
 }
 
-void R6502::opSTA(uint8_t operand) {
+void R6502::opSTA() {
   // A -> M
   // Flags changed: 
 
@@ -1156,27 +1134,26 @@ void R6502::opSTA(uint8_t operand) {
     currentInstruction.addressMode == ABSOLUTEY ||
     currentInstruction.addressMode == ABSOLUTEX
   )
-    //fetchOperand(); // Read from effective address...? <- https://www.nesdev.org/6502_cpu.txt
-    doCycle(); // ????????? check when fixing cycle acc
+    fetchOperand(); // Wasted cycle. Read from effective address...? <- https://www.nesdev.org/6502_cpu.txt
 
   prepWrite(accumulator);
 }
 
-void R6502::opSTX(uint8_t operand) {
+void R6502::opSTX() {
   // X -> M
   // Flags changed: 
 
   prepWrite(x);
 }
 
-void R6502::opSTY(uint8_t operand) {
+void R6502::opSTY() {
   // Y -> M
   // Flags changed: 
 
   prepWrite(y);
 }
 
-void R6502::opTAX(uint8_t operand) {
+void R6502::opTAX() {
   // A -> X
   // Flags changed: Z N
 
@@ -1188,7 +1165,7 @@ void R6502::opTAX(uint8_t operand) {
   );
 }
 
-void R6502::opTAY(uint8_t operand) {
+void R6502::opTAY() {
   // A -> Y
   // Flags changed: Z N
 
@@ -1200,7 +1177,7 @@ void R6502::opTAY(uint8_t operand) {
   );
 }
 
-void R6502::opTSX(uint8_t operand) {
+void R6502::opTSX() {
   // SP -> X
   // Flags changed: Z N
 
@@ -1212,7 +1189,7 @@ void R6502::opTSX(uint8_t operand) {
   );
 }
 
-void R6502::opTXA(uint8_t operand) {
+void R6502::opTXA() {
   // X -> A
   // Flags changed: Z N
 
@@ -1224,7 +1201,7 @@ void R6502::opTXA(uint8_t operand) {
   );
 }
 
-void R6502::opTXS(uint8_t operand) {
+void R6502::opTXS() {
   // X -> SP
   // Flags changed: Z N
 
@@ -1232,7 +1209,7 @@ void R6502::opTXS(uint8_t operand) {
   // NOT NEEDED: setFlags(Z | N, isZero(sp) | isNegative(sp));
 }
 
-void R6502::opTYA(uint8_t operand) {
+void R6502::opTYA() {
   // Y -> A
   // Flags changed: Z N
 
@@ -1256,7 +1233,7 @@ void R6502::modeIllegal() {
   
 }
 
-void R6502::opIllegal(uint8_t) { // Does nothing, illegal instruction
+void R6502::opIllegal() { // Does nothing, illegal instruction
   return;
 }
 

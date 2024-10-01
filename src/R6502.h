@@ -108,6 +108,7 @@ class R6502 {
     uint16_t fetchAddress = 0x0000;
     uint8_t opcode = 0x00;
     uint16_t tmp = 0x0000;
+    uint8_t operand = 0x00;
 
     uint8_t enableWrite = 0x00;
     uint8_t writeReg = 0x00;
@@ -123,7 +124,7 @@ class R6502 {
      * 
      * @return uint8_t - The operand in most cases. 
      */
-    uint8_t fetchOperand(uint16_t);
+    void fetchOperand();
   public:
     // Registers
     uint8_t accumulator = 0x00; // Accumulator
@@ -226,7 +227,7 @@ class R6502 {
     typedef void (R6502::*ModeFunc)();
     static const ModeFunc modeFuncs[14];
 
-    typedef void (R6502::*OpFunc)(uint8_t operand);
+    typedef void (R6502::*OpFunc)();
     static const OpFunc opFuncs[57];
 
     struct Instruction {
@@ -290,7 +291,7 @@ class R6502 {
      * 
      * @param op - The operation.
      */
-    void doOperation(OPS, uint16_t);
+    void doOperation(OPS);
   public:
     /**
      * @brief Execute a given instruction.
@@ -405,6 +406,15 @@ class R6502 {
      */
     void doCycle();
 
+    /**
+     * @brief Executes when a cycle occurs.
+     * 
+     * Good for capturing clock cycles.
+     * 
+     * @param byte is extra?
+     */
+    void doCycle(uint8_t);
+
     uint8_t cyclesPassedThisInstruction = 0x00;
     uint8_t extraCyclesPassedThisInstruction = 0x00;
 
@@ -415,7 +425,7 @@ class R6502 {
      * Useful method for cutting down on bugs / repetition.
      * 
      */
-    void doRelBranch(uint8_t);
+    void doRelBranch();
 
 
     uint8_t extraCyclePrepped = 0x00;
@@ -651,62 +661,62 @@ class R6502 {
     // Opertions
 
 
-    void opADC(uint8_t);
-    void opAND(uint8_t);
-    void opASL(uint8_t);
-    void opBCC(uint8_t);
-    void opBCS(uint8_t);
-    void opBEQ(uint8_t);
-    void opBIT(uint8_t);
-    void opBMI(uint8_t);
-    void opBNE(uint8_t);
-    void opBPL(uint8_t);
-    void opBRK(uint8_t);
-    void opBVC(uint8_t);
-    void opBVS(uint8_t);
-    void opCLC(uint8_t);
-    void opCLD(uint8_t);
-    void opCLI(uint8_t);
-    void opCLV(uint8_t);
-    void opCMP(uint8_t);
-    void opCPX(uint8_t);
-    void opCPY(uint8_t);
-    void opDEC(uint8_t);
-    void opDEX(uint8_t);
-    void opDEY(uint8_t);
-    void opEOR(uint8_t);
-    void opINC(uint8_t);
-    void opINX(uint8_t);
-    void opINY(uint8_t);
-    void opJMP(uint8_t);
-    void opJSR(uint8_t);
-    void opLDA(uint8_t);
-    void opLDX(uint8_t);
-    void opLDY(uint8_t);
-    void opLSR(uint8_t);
-    void opNOP(uint8_t);
-    void opORA(uint8_t);
-    void opPHA(uint8_t);
-    void opPHP(uint8_t);
-    void opPLA(uint8_t);
-    void opPLP(uint8_t);
-    void opROL(uint8_t);
-    void opROR(uint8_t);
-    void opRTI(uint8_t);
-    void opRTS(uint8_t);
-    void opSBC(uint8_t);
-    void opSEC(uint8_t);
-    void opSED(uint8_t);
-    void opSEI(uint8_t);
-    void opSTA(uint8_t);
-    void opSTX(uint8_t);
-    void opSTY(uint8_t);
-    void opTAX(uint8_t);
-    void opTAY(uint8_t);
-    void opTSX(uint8_t);
-    void opTXA(uint8_t);
-    void opTXS(uint8_t);
-    void opTYA(uint8_t);
+    void opADC();
+    void opAND();
+    void opASL();
+    void opBCC();
+    void opBCS();
+    void opBEQ();
+    void opBIT();
+    void opBMI();
+    void opBNE();
+    void opBPL();
+    void opBRK();
+    void opBVC();
+    void opBVS();
+    void opCLC();
+    void opCLD();
+    void opCLI();
+    void opCLV();
+    void opCMP();
+    void opCPX();
+    void opCPY();
+    void opDEC();
+    void opDEX();
+    void opDEY();
+    void opEOR();
+    void opINC();
+    void opINX();
+    void opINY();
+    void opJMP();
+    void opJSR();
+    void opLDA();
+    void opLDX();
+    void opLDY();
+    void opLSR();
+    void opNOP();
+    void opORA();
+    void opPHA();
+    void opPHP();
+    void opPLA();
+    void opPLP();
+    void opROL();
+    void opROR();
+    void opRTI();
+    void opRTS();
+    void opSBC();
+    void opSEC();
+    void opSED();
+    void opSEI();
+    void opSTA();
+    void opSTX();
+    void opSTY();
+    void opTAX();
+    void opTAY();
+    void opTSX();
+    void opTXA();
+    void opTXS();
+    void opTYA();
 
   private:
     // Illegal instruction handling
@@ -721,5 +731,5 @@ class R6502 {
      * @brief Executes when an illegal operation is executed
      * 
      */
-    void opIllegal(uint8_t);
+    void opIllegal();
 };
