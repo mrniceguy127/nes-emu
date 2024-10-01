@@ -57,3 +57,13 @@ dkms.conf
 
 # Build directory
 build/
+
+
+
+
+
+# Mac garbage
+*.DS_STORE
+
+# not doing shady business
+*.nes
