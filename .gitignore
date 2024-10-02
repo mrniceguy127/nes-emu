@@ -67,3 +67,6 @@ build/
 
 # not doing shady business
 *.nes
+
+# big tmp files
+test/results

@@ -171,8 +171,10 @@ uint8_t R6502::getExtraCyclesPassedThisInstruction() {
 
 void R6502::doRelBranch() {
   doCycle(1);
-  fetchAddress = pc + (int8_t) operand;
-  if (hi16(fetchAddress - (int8_t) operand) != hi16(fetchAddress)) doCycle(1);
+  uint16_t rel = dbyte(operand);
+  if (isNegative(operand)) rel |= 0xFF00;
+  fetchAddress = pc + (int16_t) rel;
+  if (hi16(pc) != hi16(fetchAddress)) doCycle(1);
   setPC(fetchAddress);
 }
 
@@ -495,7 +497,7 @@ void R6502::modeZeroPageY() {
 }
 
 void R6502::modeRelative() {
-  operand = dbyte(readPC());
+  operand = readPC();
 }
 
 void R6502::modeIndirectX() {
@@ -528,10 +530,10 @@ void R6502::modeIndirect() {
   incPC();
 
   // fetch low address to latch - https://www.nesdev.org/6502_cpu.txt
-  uint8_t loAddr = read(dbyte(pointerLo));
-  uint8_t hiAddr = read(dbyte(pointerHi));
+  uint8_t loAddr = read(dbyte(pointerHi, pointerLo));
+  uint8_t hiAddr = read(dbyte(pointerHi, pointerLo + 1));
   // lo is intentionally bugged. pointerLo + 1 can overflow.
-  fetchAddress = dbyte(hiAddr, loAddr + 1);
+  fetchAddress = dbyte(hiAddr, loAddr);
 }
 
 
@@ -589,14 +591,14 @@ void R6502::opASL() {
   // C <- [76543210] <- 0
   // Flags changed: C Z N
 
+  fetchOperand();
+
   if (currentInstruction.addressMode == ABSOLUTEX
       || currentInstruction.addressMode == ABSOLUTEY)
     read(fetchAddress); // redundant cycle?????
 
   if (currentInstruction.addressMode != ACCUMULATOR)
     write(fetchAddress, operand); // for redundanct write on hardware
-
-  fetchOperand();
 
   tmp = dbyte(operand) << 1;
 
@@ -776,12 +778,14 @@ void R6502::opCPY() {
 void R6502::opDEC() {
   // M - 1 -> M
   // Flags changed: Z N
+
+  fetchOperand();
+
   if (currentInstruction.addressMode == ABSOLUTEX) // What is this?????? check cycle accuracy later
     fetchOperand(); // Hardware fetches redundantly
 
   write(fetchAddress, operand); // redundant hardware write
 
-  fetchOperand();
 
   tmp = dbyte(operand - 1);
 
@@ -835,12 +839,13 @@ void R6502::opEOR() {
 void R6502::opINC() {
   // M + 1 -> M
   // Flags changed: Z N
+
+  fetchOperand();
+
   if (currentInstruction.addressMode == ABSOLUTEX)
     fetchOperand(); // For redundant write on hardware.
 
   write(fetchAddress, operand);
-
-  fetchOperand();
 
   tmp = dbyte(operand + 1);
 
@@ -939,14 +944,15 @@ void R6502::opLDY() {
 void R6502::opLSR() {
   // 0 -> [76543210] -> C
   // Flags changed: Z N C
+
+  fetchOperand();
+
   if (currentInstruction.addressMode == ABSOLUTEX
     || currentInstruction.addressMode == ABSOLUTEY)
     fetchOperand(); // Redundant hardware write
   
   if (currentInstruction.addressMode != ACCUMULATOR)
     write(fetchAddress, operand); // for redundant write on hardware
-
-  fetchOperand();
 
   tmp = dbyte(operand >> 1);
 
@@ -1012,6 +1018,9 @@ void R6502::opPLP() {
 void R6502::opROL() {
   // C <- [76543210] <- C
   // Flags Changed: C Z N
+
+  fetchOperand();
+
   if (currentInstruction.addressMode == ABSOLUTEX
     || currentInstruction.addressMode == ABSOLUTEY)
     fetchOperand(); // Redundant HW read
@@ -1019,8 +1028,6 @@ void R6502::opROL() {
   if (currentInstruction.addressMode != ACCUMULATOR)
     write(fetchAddress, operand); // for redundant write on hardware
   
-  fetchOperand();
-
   tmp = dbyte((operand << 1) | getFlag(C));
   
   setFlags(
@@ -1036,14 +1043,15 @@ void R6502::opROL() {
 void R6502::opROR() {
   // C -> [76543210] -> C
   // Flags Changed: C Z N
+
+  fetchOperand();
+
   if (currentInstruction.addressMode == ABSOLUTEX
     || currentInstruction.addressMode == ABSOLUTEY)
     fetchOperand(); // Redund. HW read
 
   if (currentInstruction.addressMode != ACCUMULATOR)
     write(fetchAddress, operand); // for redundant write on hardware
-
-  fetchOperand();
 
   tmp = dbyte((operand >> 1) | (getFlag(C) << 7));
   

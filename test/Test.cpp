@@ -153,13 +153,13 @@ uint8_t test(R6502& cpu, Memory * mem) {
     return 0x00;
   }
 
-  /*if (testSimpleProgram(cpu, mem)) {
+  if (testSimpleProgram(cpu, mem)) {
     std::cout << "Simple program tests passed!" << std::endl;
   } else {
     std::cout << "Simple program tests failed..." << std::endl;
     exit(0);
     return 0x00;
-  }*/
+  }
 
   std::cout << "All tests passed!" << std::endl;
   return 0x01;
@@ -281,7 +281,7 @@ uint8_t testComprehensive(R6502& cpu, Memory * mem) {
 
     // detect traps
     if ((state.pc == lastPC && cpu.getCurrentOpCode() == 0xD0) ||
-        (state.pc == lastPC && cpu.getCurrentOpCode() == 0x90) ||
+        (state.pc == lastPC && cpu.getCurrentOpCode() == 0xB0) ||
         (state.pc == lastPC && cpu.getCurrentOpCode() == 0x4C) && !hitTrap) {
       if (!hitTrap) std::cout << "COMPREHENSIVE TESTS FAILED! CONTINUE STEPPING PROGRAM!" << std::endl;
       hitTrap = 0x01;
