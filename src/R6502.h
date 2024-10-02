@@ -32,23 +32,19 @@ class R6502 {
      */
     void RES();
 
-    /**
-     * @brief IRQ interrupt sequence command
-     * 
-     * http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
-     * https://www.nesdev.org/wiki/CPU_interrupts
-     * 
-     */
-    void IRQ();
+    enum INTERRUPTS {
+      IRQ,
+      NMI
+    };
 
     /**
-     * @brief NMI interrupt sequence command
+     * @brief IRQ & NMI interrupt sequence command
      * 
      * http://archive.6502.org/datasheets/synertek_programming_manual.pdf - p. 131
      * https://www.nesdev.org/wiki/CPU_interrupts
      * 
      */
-    void NMI();
+    void interrupt(INTERRUPTS);
 
   public:
     Memory* memory;
