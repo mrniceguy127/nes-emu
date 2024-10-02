@@ -781,7 +781,7 @@ void R6502::opDEC() {
 
   fetchOperand();
 
-  if (currentInstruction.addressMode == ABSOLUTEX) // What is this?????? check cycle accuracy later
+  if (currentInstruction.addressMode == ABSOLUTEX)
     fetchOperand(); // Hardware fetches redundantly
 
   write(fetchAddress, operand); // redundant hardware write
@@ -1214,7 +1214,6 @@ void R6502::opTXS() {
   // Flags changed: Z N
 
   setSP(x);
-  // NOT NEEDED: setFlags(Z | N, isZero(sp) | isNegative(sp));
 }
 
 void R6502::opTYA() {
