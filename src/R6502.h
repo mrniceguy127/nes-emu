@@ -240,6 +240,28 @@ class R6502 {
       INDIRECT, INDIRECTX, INDIRECTY
     };
 
+    /**
+     * @brief is current instruction a mem read?
+     * 
+     * @return uint8_t 
+     */
+    uint8_t isMemoryReadMode();
+
+    /**
+     * @brief has redundant read?
+     * From https://www.nesdev.org/6502_cpu.txt:
+     * Notes: * The high byte of the effective address may be invalid
+                at this time, i.e. it may be smaller by $100.
+     * 
+     */
+    uint8_t modeHasRedundantRead();
+
+    /**
+     * @brief is current instruction a mem write only?
+     * 
+     */
+    uint8_t opIsWriteOnly();
+
     enum OPS {
       ILLOP, // emulator utility. Not a real operation
 

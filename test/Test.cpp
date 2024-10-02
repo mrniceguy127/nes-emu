@@ -15,8 +15,15 @@ int main() {
   R6502 cpu = R6502(memory);
   cpu.powerOn();
 
-  test(cpu, memory);
-  testComprehensive(cpu, memory);
+  uint8_t testsPass =
+    test(cpu, memory) &&
+    testComprehensive(cpu, memory);
+
+  if (testsPass) {
+    std::cout << "All tests passed! Congrats!" << std::endl;
+  } else {
+    std::cout << "Some tests failed..." << std::endl;
+  }
 
   return 0;
 };
@@ -37,9 +44,9 @@ void prepCPUForInstructionCyclesTest(uint8_t opCode, R6502& cpu, Memory * mem) {
 
 uint8_t testInstructionCycleAccuracy(R6502& cpu, Memory * mem, uint8_t opCode, uint8_t expectedMachineCycles) {
   ConsoleDebugger debugger = ConsoleDebugger(&cpu);
-  /*std::cout << "Testing instruction cycles...\nIntruction: ";
-  printInstruction(opCode);
-  std::cout << std::endl;*/
+  //std::cout << "Testing instruction cycles...\nIntruction: ";
+  //printInstruction(opCode);
+  //std::cout << std::endl;
 
   prepCPUForInstructionCyclesTest(opCode, cpu, mem);
   //debugger.enableStackTrace();
@@ -119,14 +126,15 @@ uint8_t testSimpleProgram(R6502& cpu, Memory * mem) {
   ConsoleDebugger debugger = ConsoleDebugger(&cpu);
 
   std::cout << "Simple program initial state: " << std::endl;
-  debugger.showState();
+  //debugger.showState();
 
+  //debugger.enableStackTrace();
   while (cpu.getState().pc < progSize) {
-    cpu.doNextInstruction();
+    debugger.step();
   }
 
   std::cout << "Simple program end state: " << std::endl;
-  debugger.showState();
+  //debugger.showState();
 
   R6502::State actualState = cpu.getState();
   R6502::State expectedState = {
@@ -160,7 +168,6 @@ uint8_t test(R6502& cpu, Memory * mem) {
     return 0x00;
   }
 
-  std::cout << "All tests passed!" << std::endl;
   return 0x01;
 }
 
@@ -279,10 +286,16 @@ uint8_t testComprehensive(R6502& cpu, Memory * mem) {
     R6502::State state = cpu.getState();
 
     // detect traps
-    if ((state.pc == lastPC && cpu.getCurrentOpCode() == 0xD0) ||
+    if (
+        (state.pc == lastPC && cpu.getCurrentOpCode() == 0xD0) ||
         (state.pc == lastPC && cpu.getCurrentOpCode() == 0xB0) ||
-        (state.pc == lastPC && cpu.getCurrentOpCode() == 0x4C) && !hitTrap) {
-      if (!hitTrap) std::cout << "COMPREHENSIVE TESTS FAILED! CONTINUE STEPPING PROGRAM!" << std::endl;
+        (state.pc == lastPC && cpu.getCurrentOpCode() == 0x4C) && !hitTrap
+    ) {
+      if (!hitTrap) {
+        std::cout << "COMPREHENSIVE TESTS FAILED! CONTINUE STEPPING PROGRAM!\n"
+                  << "Expected: A working cpu / Actual: A broken cpu"
+                  << std::endl;
+      }
       hitTrap = 0x01;
       debugger.pause();
     }
@@ -292,9 +305,6 @@ uint8_t testComprehensive(R6502& cpu, Memory * mem) {
   }
 
   std::cout << "Success on comprehensive functional tests!" << std::endl;
-  std::cout << "END COMPREHENSIVE" << std::endl;
 
-  //debugger.showState();
-
-  return 0x00;
+  return 0x01;
 }
