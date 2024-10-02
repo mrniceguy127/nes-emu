@@ -115,7 +115,36 @@ class R6502 {
 
     uint64_t totalCyclesPassed = 0;
 
+    enum EXECUTION_STATE {
+      FETCH,
+      DECODE,
+      EXECUTE,
+      WRITE
+    }
+
+    executionState = FETCH;
+
+    /**
+     * @brief Set the state
+     * 
+     */
+    void setExecutionState(EXECUTION_STATE);
+
+    /**
+     * @brief do current state
+     * 
+     */
+    void stepExecutionState();
+
+    /**
+     * @brief do full execution cycle
+     * 
+     */
+    void doExecutionCycle();
+
     // Useful methods
+
+    void fetchOpcode();
 
     /**
      * @brief Reads from the currently relevant absolute address.
@@ -296,7 +325,6 @@ class R6502 {
     /**
      * @brief Execute a given instruction.
      * 
-     * @param instruction - The instruction
      */
     void doInstruction(const Instruction&);
 

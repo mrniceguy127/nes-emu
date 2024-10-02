@@ -84,16 +84,48 @@ const R6502::Instruction R6502::NULL_INSTRUCTION = { ILLMODE, ILLOP };
 
 R6502::State R6502::getState() {
   State state = {
-    accumulator,
-    x,
-    y,
-    pc,
-    sp,
-    P
+    accumulator, x, y, pc, sp, P
   };
 
   return state;
-}  
+}
+
+void R6502::fetchOpcode() {
+  opcode = readPC();
+}
+
+void R6502::setExecutionState(R6502::EXECUTION_STATE state) {
+  executionState = state;
+}
+
+void R6502::stepExecutionState() {
+  switch (executionState) {
+    case FETCH:
+      currentInstruction = NULL_INSTRUCTION;
+      fetchOpcode();
+      setExecutionState(DECODE);
+      break;
+    case DECODE:
+      currentInstruction = instructionMatrix[opcode];
+      setExecutionState(EXECUTE);
+      break;
+    case EXECUTE:
+      doInstruction(currentInstruction);
+      setExecutionState(WRITE);
+      break;
+    case WRITE:
+      opWrite();
+      setExecutionState(FETCH);
+      break;
+  }
+}
+
+void R6502::doExecutionCycle() {
+  stepExecutionState(); // Fetch
+  stepExecutionState(); // Decode
+  stepExecutionState(); // Execute
+  stepExecutionState(); // Write
+}
 
 void R6502::doAddressMode(MODES mode) {
   (this->*modeFuncs[mode])();
@@ -104,19 +136,14 @@ void R6502::doOperation(OPS op) {
 }
 
 void R6502::doInstruction(const Instruction& instruction) {
-  currentInstruction = instruction;
   doAddressMode(currentInstruction.addressMode);
   doOperation(currentInstruction.operation);
-  opWrite();
-  currentInstruction = NULL_INSTRUCTION;
 }
 
 void R6502::doNextInstruction() {
   cyclesPassedThisInstruction = 0x00;
   extraCyclesPassedThisInstruction = 0x00;
-  opcode = readPC();
-  Instruction instruction = instructionMatrix[opcode];
-  doInstruction(instruction);
+  doExecutionCycle();
 }
 
 const char* R6502::getOpMnemonic(OPS op) {

@@ -37,14 +37,13 @@ void prepCPUForInstructionCyclesTest(uint8_t opCode, R6502& cpu, Memory * mem) {
 
 uint8_t testInstructionCycleAccuracy(R6502& cpu, Memory * mem, uint8_t opCode, uint8_t expectedMachineCycles) {
   ConsoleDebugger debugger = ConsoleDebugger(&cpu);
-  std::cout << "Testing instruction cycles...\nIntruction: ";
+  /*std::cout << "Testing instruction cycles...\nIntruction: ";
   printInstruction(opCode);
-  std::cout << std::endl;
+  std::cout << std::endl;*/
 
   prepCPUForInstructionCyclesTest(opCode, cpu, mem);
-  debugger.enableStackTrace();
+  //debugger.enableStackTrace();
   debugger.step();
-  //cpu.doNextInstruction();
 
   uint8_t extraCycles = cpu.getExtraCyclesPassedThisInstruction();
   return assertEqual(expectedMachineCycles + extraCycles, cpu.getCyclesPassedThisInstruction());
@@ -175,7 +174,7 @@ uint8_t assertEqual(uint8_t expected, uint8_t actual) {
     return 0x00;
   }
 
-  std::cout << "\tPassed" << std::endl;
+  //std::cout << "\tPassed" << std::endl;
   return 0x01;
 }
 
@@ -274,7 +273,7 @@ uint8_t testComprehensive(R6502& cpu, Memory * mem) {
 
   uint8_t hitTrap = 0x00;
   uint16_t lastPC = 0x0000;
-  debugger.enableStackTrace();
+  //debugger.enableStackTrace();
   uint16_t successAddress = 0x336D;
   while (cpu.pc != successAddress) {
     R6502::State state = cpu.getState();
