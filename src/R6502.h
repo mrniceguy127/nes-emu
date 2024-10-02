@@ -112,13 +112,15 @@ class R6502 {
     uint64_t totalCyclesPassed = 0;
 
     enum EXECUTION_STATE {
-      FETCH,
+      FETCH_OPCODE,
       DECODE,
-      EXECUTE,
+      EXECUTE_MODE,
+      FETCH_OPERAND,
+      EXECUTE_OP,
       WRITE
     }
 
-    executionState = FETCH;
+    executionState = FETCH_OPCODE;
 
     /**
      * @brief Set the state
@@ -140,6 +142,10 @@ class R6502 {
 
     // Useful methods
 
+    /**
+     * @brief Fetch the opcode at the current PC.
+     * 
+     */
     void fetchOpcode();
 
     /**
@@ -296,6 +302,12 @@ class R6502 {
     };
 
     /**
+     * @brief Decode the opcode.
+     * 
+     */
+    void decodeOpCode();
+
+    /**
      * @brief Get the address mode name for a given address mode enum
      * 
      * @return const char* 
@@ -332,26 +344,18 @@ class R6502 {
     Instruction currentInstruction = NULL_INSTRUCTION;
 
     /**
-     * @brief Execute code requiured for given address mode
+     * @brief Execute code requiured for current address mode
      * 
-     * @param mode - The mode.
      */
-    void doAddressMode(MODES);
+    void doAddressMode();
 
 
     /**
-     * @brief Executes the given operation
+     * @brief Executes the current operation
      * 
-     * @param op - The operation.
      */
-    void doOperation(OPS);
+    void doOperation();
   public:
-    /**
-     * @brief Execute a given instruction.
-     * 
-     */
-    void doInstruction(const Instruction&);
-
     /**
      * @brief Do next instruction pointed at by the PC.
      * 

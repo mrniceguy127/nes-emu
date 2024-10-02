@@ -96,47 +96,55 @@ void R6502::setExecutionState(R6502::EXECUTION_STATE state) {
   executionState = state;
 }
 
+void R6502::decodeOpCode() {
+  currentInstruction = instructionMatrix[opcode];
+}
+
 void R6502::stepExecutionState() {
   switch (executionState) {
-    case FETCH:
+    case FETCH_OPCODE:
       currentInstruction = NULL_INSTRUCTION;
       fetchOpcode();
       setExecutionState(DECODE);
       break;
     case DECODE:
-      currentInstruction = instructionMatrix[opcode];
-      setExecutionState(EXECUTE);
+      decodeOpCode();
+      setExecutionState(EXECUTE_MODE);
       break;
-    case EXECUTE:
-      doInstruction(currentInstruction);
+    case EXECUTE_MODE:
+      doAddressMode();
+      setExecutionState(FETCH_OPERAND);
+      break;
+    case FETCH_OPERAND:
+      fetchOperand();
+      setExecutionState(EXECUTE_OP);
+      break;
+    case EXECUTE_OP:
+      doOperation();
       setExecutionState(WRITE);
       break;
     case WRITE:
       opWrite();
-      setExecutionState(FETCH);
+      setExecutionState(FETCH_OPCODE);
       break;
   }
 }
 
 void R6502::doExecutionCycle() {
-  stepExecutionState(); // Fetch
-  stepExecutionState(); // Decode
-  stepExecutionState(); // Execute
+  stepExecutionState(); // Fetch Opcode
+  stepExecutionState(); // Decode Opcode
+  stepExecutionState(); // Execute Mode
+  stepExecutionState(); // Fetch Operand
+  stepExecutionState(); // Execute Operation
   stepExecutionState(); // Write
 }
 
-void R6502::doAddressMode(MODES mode) {
-  (this->*modeFuncs[mode])();
+void R6502::doAddressMode() {
+  (this->*modeFuncs[currentInstruction.addressMode])();
 }
 
-void R6502::doOperation(OPS op) {
-  (this->*opFuncs[op])();
-}
-
-void R6502::doInstruction(const Instruction& instruction) {
-  doAddressMode(currentInstruction.addressMode);
-  fetchOperand();
-  doOperation(currentInstruction.operation);
+void R6502::doOperation() {
+  (this->*opFuncs[currentInstruction.operation])();
 }
 
 void R6502::doNextInstruction() {
@@ -197,9 +205,7 @@ uint8_t R6502::getExtraCyclesPassedThisInstruction() {
 
 void R6502::doRelBranch() {
   doCycle(1);
-  uint16_t rel = dbyte(operand);
-  if (isNegative(operand)) rel |= 0xFF00;
-  fetchAddress = pc + (int16_t) rel;
+  fetchAddress = pc + (int8_t) operand;
   if (hi16(pc) != hi16(fetchAddress)) doCycle(1);
   setPC(fetchAddress);
 }
