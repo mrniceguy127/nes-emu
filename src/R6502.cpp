@@ -83,9 +83,7 @@ const R6502::Instruction R6502::NULL_INSTRUCTION = { ILLMODE, ILLOP };
 
 
 R6502::State R6502::getState() {
-  State state = {
-    accumulator, x, y, pc, sp, P
-  };
+  State state = { accumulator, x, y, pc, sp, P };
 
   return state;
 }
@@ -250,18 +248,18 @@ void R6502::RES() {
   // Done!
 }
 
-void R6502::IRQ() {
+void R6502::interrupt(R6502::INTERRUPTS interrupt) {
   pushStack16(pc);
   pushStack(P & ~B);
   setFlags(I); // B flag is cleared when pushed.
-  setPC(lo16(read(0xFFFE)) | hi16(read(0xFFFF))); // lo byte, than hi. C order of evalutation. Left expression first (lo). I AM BEING CAUTIOUS OF READ ORDER.
-}
-
-void R6502::NMI() {
-  pushStack16(pc);
-  pushStack(P & ~B);
-  setFlags(I); // B flag is cleared when pushed.
-  setPC(lo16(read(0xFFFA)) | hi16(read(0xFFFB))); // lo byte, than hi. C order of evalutation. Left expression first (lo). I AM BEING CAUTIOUS OF READ ORDER.
+  switch (interrupt) {
+    // lo byte, than hi. C order of evalutation. Left expression first (lo). I AM BEING CAUTIOUS OF READ ORDER.
+    case IRQ:
+      setPC(lo16(read(0xFFFE)) | hi16(read(0xFFFF)));
+    case NMI:
+      setPC(lo16(read(0xFFFA)) | hi16(read(0xFFFB)));
+      break;
+  }
 }
 
 uint8_t R6502::read(uint16_t addr) {
