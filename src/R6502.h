@@ -483,23 +483,6 @@ class R6502 {
      */
     void doRelBranch();
 
-
-    uint8_t extraCyclePrepped = 0x00;
-
-    /**
-     * @brief Preps an extra cycle if asked by address mode
-     * 
-     * Extra cycle will execute if instruction agrees on extra cycle.
-     * 
-     */
-    void prepExtraCycle();
-
-    /**
-     * @brief Performs extra clock cycle if agreed upon by the address mode.
-     * 
-     */
-    void doPossibleExtraCycle();
-
     /**
      * @brief Set the value in the PC directly.
      * 
