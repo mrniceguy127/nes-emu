@@ -513,11 +513,6 @@ uint8_t R6502::modeHasRedundantRead() {
         case ROR:
         case INC:
         case DEC:
-
- /*       case LDX:
-        case LDY:
-        case STX:
-        case STY:*/
           return 1;
         default:
           return 0;
@@ -527,6 +522,12 @@ uint8_t R6502::modeHasRedundantRead() {
       return 1;
     default:
       return 0;
+  }
+}
+
+void R6502::redundantWrite() {
+  if (currentInstruction.addressMode != ACCUMULATOR) {
+    write(fetchAddress, operand);
   }
 }
 
@@ -693,9 +694,7 @@ void R6502::opAND() {
 void R6502::opASL() {
   // C <- [76543210] <- 0
   // Flags changed: C Z N
-
-  if (currentInstruction.addressMode != ACCUMULATOR)
-    write(fetchAddress, operand); // for redundanct write on hardware
+  redundantWrite();
 
   tmp = dbyte(operand) << 1;
 
@@ -866,8 +865,7 @@ void R6502::opCPY() {
 void R6502::opDEC() {
   // M - 1 -> M
   // Flags changed: Z N
-  write(fetchAddress, operand); // redundant hardware write
-
+  redundantWrite();
 
   tmp = dbyte(operand - 1);
 
@@ -918,7 +916,7 @@ void R6502::opEOR() {
 void R6502::opINC() {
   // M + 1 -> M
   // Flags changed: Z N
-  write(fetchAddress, operand);
+  redundantWrite();
 
   tmp = dbyte(operand + 1);
 
@@ -1010,8 +1008,7 @@ void R6502::opLDY() {
 void R6502::opLSR() {
   // 0 -> [76543210] -> C
   // Flags changed: Z N C
-  if (currentInstruction.addressMode != ACCUMULATOR)
-    write(fetchAddress, operand); // for redundant write on hardware
+  redundantWrite();
 
   tmp = dbyte(operand >> 1);
 
@@ -1076,8 +1073,7 @@ void R6502::opPLP() {
 void R6502::opROL() {
   // C <- [76543210] <- C
   // Flags Changed: C Z N
-  if (currentInstruction.addressMode != ACCUMULATOR)
-    write(fetchAddress, operand); // for redundant write on hardware
+  redundantWrite();
   
   tmp = dbyte((operand << 1) | getFlag(C));
   
@@ -1094,8 +1090,7 @@ void R6502::opROL() {
 void R6502::opROR() {
   // C -> [76543210] -> C
   // Flags Changed: C Z N
-  if (currentInstruction.addressMode != ACCUMULATOR)
-    write(fetchAddress, operand); // for redundant write on hardware
+  redundantWrite();
 
   tmp = dbyte((operand >> 1) | (getFlag(C) << 7));
   

@@ -107,7 +107,7 @@ uint8_t testSimpleProgram(R6502& cpu, Memory * mem) {
     a9 01 8d 00 02 a9 05 8d 01 02 a9 08 8d 02 02 
   */
 
-  std::cout << "Testing simple program..." << std::endl;
+  //std::cout << "Testing simple program..." << std::endl;
 
   const size_t progSize = 15;
 
@@ -125,7 +125,7 @@ uint8_t testSimpleProgram(R6502& cpu, Memory * mem) {
   cpu.powerOn();
   ConsoleDebugger debugger = ConsoleDebugger(&cpu);
 
-  std::cout << "Simple program initial state: " << std::endl;
+  //std::cout << "Simple program initial state: " << std::endl;
   //debugger.showState();
 
   //debugger.enableStackTrace();
@@ -200,7 +200,7 @@ uint8_t assertEqual(R6502::State expected, R6502::State actual) {
     return 0x00;
   }
 
-  std::cout << "\tPassed" << std::endl;
+  //std::cout << "\tPassed" << std::endl;
   return 0x01;
 }
 

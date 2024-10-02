@@ -262,6 +262,12 @@ class R6502 {
      */
     uint8_t opIsWriteOnly();
 
+    /**
+     * @brief Do a redundant write, because thats what happens on hardware.
+     * 
+     */
+    void redundantWrite();
+
     enum OPS {
       ILLOP, // emulator utility. Not a real operation
 
