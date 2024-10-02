@@ -15,8 +15,15 @@ int main() {
   R6502 cpu = R6502(memory);
   cpu.powerOn();
 
-  test(cpu, memory);
-  testComprehensive(cpu, memory);
+  uint8_t testsPass =
+    test(cpu, memory) &&
+    testComprehensive(cpu, memory);
+
+  if (testsPass) {
+    std::cout << "All tests passed! Congrats!" << std::endl;
+  } else {
+    std::cout << "Some tests failed..." << std::endl;
+  }
 
   return 0;
 };
@@ -37,14 +44,13 @@ void prepCPUForInstructionCyclesTest(uint8_t opCode, R6502& cpu, Memory * mem) {
 
 uint8_t testInstructionCycleAccuracy(R6502& cpu, Memory * mem, uint8_t opCode, uint8_t expectedMachineCycles) {
   ConsoleDebugger debugger = ConsoleDebugger(&cpu);
-  std::cout << "Testing instruction cycles...\nIntruction: ";
-  printInstruction(opCode);
-  std::cout << std::endl;
+  //std::cout << "Testing instruction cycles...\nIntruction: ";
+  //printInstruction(opCode);
+  //std::cout << std::endl;
 
   prepCPUForInstructionCyclesTest(opCode, cpu, mem);
-  debugger.enableStackTrace();
+  //debugger.enableStackTrace();
   debugger.step();
-  //cpu.doNextInstruction();
 
   uint8_t extraCycles = cpu.getExtraCyclesPassedThisInstruction();
   return assertEqual(expectedMachineCycles + extraCycles, cpu.getCyclesPassedThisInstruction());
@@ -101,7 +107,7 @@ uint8_t testSimpleProgram(R6502& cpu, Memory * mem) {
     a9 01 8d 00 02 a9 05 8d 01 02 a9 08 8d 02 02 
   */
 
-  std::cout << "Testing simple program..." << std::endl;
+  //std::cout << "Testing simple program..." << std::endl;
 
   const size_t progSize = 15;
 
@@ -119,15 +125,16 @@ uint8_t testSimpleProgram(R6502& cpu, Memory * mem) {
   cpu.powerOn();
   ConsoleDebugger debugger = ConsoleDebugger(&cpu);
 
-  std::cout << "Simple program initial state: " << std::endl;
-  debugger.showState();
+  //std::cout << "Simple program initial state: " << std::endl;
+  //debugger.showState();
 
+  //debugger.enableStackTrace();
   while (cpu.getState().pc < progSize) {
-    cpu.doNextInstruction();
+    debugger.step();
   }
 
   std::cout << "Simple program end state: " << std::endl;
-  debugger.showState();
+  //debugger.showState();
 
   R6502::State actualState = cpu.getState();
   R6502::State expectedState = {
@@ -161,7 +168,6 @@ uint8_t test(R6502& cpu, Memory * mem) {
     return 0x00;
   }
 
-  std::cout << "All tests passed!" << std::endl;
   return 0x01;
 }
 
@@ -175,7 +181,7 @@ uint8_t assertEqual(uint8_t expected, uint8_t actual) {
     return 0x00;
   }
 
-  std::cout << "\tPassed" << std::endl;
+  //std::cout << "\tPassed" << std::endl;
   return 0x01;
 }
 
@@ -194,7 +200,7 @@ uint8_t assertEqual(R6502::State expected, R6502::State actual) {
     return 0x00;
   }
 
-  std::cout << "\tPassed" << std::endl;
+  //std::cout << "\tPassed" << std::endl;
   return 0x01;
 }
 
@@ -274,16 +280,22 @@ uint8_t testComprehensive(R6502& cpu, Memory * mem) {
 
   uint8_t hitTrap = 0x00;
   uint16_t lastPC = 0x0000;
-  debugger.enableStackTrace();
+  //debugger.enableStackTrace();
   uint16_t successAddress = 0x336D;
   while (cpu.pc != successAddress) {
     R6502::State state = cpu.getState();
 
     // detect traps
-    if ((state.pc == lastPC && cpu.getCurrentOpCode() == 0xD0) ||
+    if (
+        (state.pc == lastPC && cpu.getCurrentOpCode() == 0xD0) ||
         (state.pc == lastPC && cpu.getCurrentOpCode() == 0xB0) ||
-        (state.pc == lastPC && cpu.getCurrentOpCode() == 0x4C) && !hitTrap) {
-      if (!hitTrap) std::cout << "COMPREHENSIVE TESTS FAILED! CONTINUE STEPPING PROGRAM!" << std::endl;
+        (state.pc == lastPC && cpu.getCurrentOpCode() == 0x4C) && !hitTrap
+    ) {
+      if (!hitTrap) {
+        std::cout << "COMPREHENSIVE TESTS FAILED! CONTINUE STEPPING PROGRAM!\n"
+                  << "Expected: A working cpu / Actual: A broken cpu"
+                  << std::endl;
+      }
       hitTrap = 0x01;
       debugger.pause();
     }
@@ -293,9 +305,6 @@ uint8_t testComprehensive(R6502& cpu, Memory * mem) {
   }
 
   std::cout << "Success on comprehensive functional tests!" << std::endl;
-  std::cout << "END COMPREHENSIVE" << std::endl;
 
-  //debugger.showState();
-
-  return 0x00;
+  return 0x01;
 }

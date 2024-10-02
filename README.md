@@ -14,6 +14,7 @@ Status: At the very early stages currently. I don't even have all of the CPU emu
 - [NES architecture reference](http://fms.komkon.org/EMUL8/NES.html)
 - [CPU address mode cycles breakdown](https://www.nesdev.org/6502_cpu.txt)
 - [6510 CPU (still somewhat useful) instruction cycles breakdown](https://the-dreams.de/aay64.txt)
+- [www.obelisk.me.uk. - Andrew Jacobs ("BitWise") guide archive](https://www.nesdev.org/obelisk-6502-guide/)
 - These to help me get started understanding emulation:
   - Part 2 ONLY of [this series](https://www.youtube.com/watch?v=8XmxKPJDGU0)
   - ^ This is the only references used to understand my project at first and what i need to keep in mind when developing an emulator (in general!). Its what inspired me to start this project because i wanted to do it myself. I needed to know the non obvious things I needed to keep in mind (e.g. emulating bugs) and resources that were available to me such as data sheets and manuals. Anymore than this and the challenge would be lost. Along with the fun!!!! This project is also to test my own knowledge and push myself a little.

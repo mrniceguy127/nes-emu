@@ -115,7 +115,36 @@ class R6502 {
 
     uint64_t totalCyclesPassed = 0;
 
+    enum EXECUTION_STATE {
+      FETCH,
+      DECODE,
+      EXECUTE,
+      WRITE
+    }
+
+    executionState = FETCH;
+
+    /**
+     * @brief Set the state
+     * 
+     */
+    void setExecutionState(EXECUTION_STATE);
+
+    /**
+     * @brief do current state
+     * 
+     */
+    void stepExecutionState();
+
+    /**
+     * @brief do full execution cycle
+     * 
+     */
+    void doExecutionCycle();
+
     // Useful methods
+
+    void fetchOpcode();
 
     /**
      * @brief Reads from the currently relevant absolute address.
@@ -211,6 +240,34 @@ class R6502 {
       INDIRECT, INDIRECTX, INDIRECTY
     };
 
+    /**
+     * @brief is current instruction a mem read?
+     * 
+     * @return uint8_t 
+     */
+    uint8_t isMemoryReadMode();
+
+    /**
+     * @brief has redundant read?
+     * From https://www.nesdev.org/6502_cpu.txt:
+     * Notes: * The high byte of the effective address may be invalid
+                at this time, i.e. it may be smaller by $100.
+     * 
+     */
+    uint8_t modeHasRedundantRead();
+
+    /**
+     * @brief is current instruction a mem write only?
+     * 
+     */
+    uint8_t opIsWriteOnly();
+
+    /**
+     * @brief Do a redundant write, because thats what happens on hardware.
+     * 
+     */
+    void redundantWrite();
+
     enum OPS {
       ILLOP, // emulator utility. Not a real operation
 
@@ -296,7 +353,6 @@ class R6502 {
     /**
      * @brief Execute a given instruction.
      * 
-     * @param instruction - The instruction
      */
     void doInstruction(const Instruction&);
 
@@ -426,23 +482,6 @@ class R6502 {
      * 
      */
     void doRelBranch();
-
-
-    uint8_t extraCyclePrepped = 0x00;
-
-    /**
-     * @brief Preps an extra cycle if asked by address mode
-     * 
-     * Extra cycle will execute if instruction agrees on extra cycle.
-     * 
-     */
-    void prepExtraCycle();
-
-    /**
-     * @brief Performs extra clock cycle if agreed upon by the address mode.
-     * 
-     */
-    void doPossibleExtraCycle();
 
     /**
      * @brief Set the value in the PC directly.
