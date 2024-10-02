@@ -149,7 +149,8 @@ uint8_t R6502::getCurrentOpCode() {
 
 void R6502::doCycle() {
   // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
-  doCycle(0);
+  totalCyclesPassed++;
+  cyclesPassedThisInstruction++;
 }
 
 void R6502::doCycle(uint8_t extra) {
