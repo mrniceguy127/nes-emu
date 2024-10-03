@@ -96,53 +96,84 @@ void R6502::setExecutionState(R6502::EXECUTION_STATE state) {
   executionState = state;
 }
 
+void R6502::decodeOpCode() {
+  currentInstruction = instructionMatrix[opcode];
+}
+
+void R6502::advanceExecutionState() {
+  executionState = (EXECUTION_STATE) ((executionState + 1) % (WRITE + 1));
+}
+
 void R6502::stepExecutionState() {
   switch (executionState) {
-    case FETCH:
-      currentInstruction = NULL_INSTRUCTION;
+    case FETCH_OPCODE:
       fetchOpcode();
-      setExecutionState(DECODE);
       break;
     case DECODE:
-      currentInstruction = instructionMatrix[opcode];
-      setExecutionState(EXECUTE);
+      decodeOpCode();
       break;
-    case EXECUTE:
-      doInstruction(currentInstruction);
-      setExecutionState(WRITE);
+    case EXECUTE_MODE:
+      doAddressMode();
+      break;
+    case MODE_PAGE_CROSS:
+      doPageCross();
+      break;
+    case FETCH_OPERAND:
+      fetchOperand();
+      break;
+    case EXECUTE_REDUNDANT_READ:
+      redundantRead();
+      break;
+    case EXECUTE_REDUNDANT_WRITE:
+      redundantWrite();
+      break;
+    case EXECUTE_OP:
+      doOperation();
+      break;
+    case BRANCH:
+      doRelBranch();
+      break;
+    case OP_PAGE_CROSS:
+      doPageCross();
       break;
     case WRITE:
       opWrite();
-      setExecutionState(FETCH);
       break;
+    default:
+      break;
+  }
+  advanceExecutionState();
+}
+
+void R6502::tick() {
+  if (extraOpCycles) {
+    extraOpCycles--;
+  } else if (extraModeCycles) {
+    extraModeCycles--;
+  } else {
+    while (!cycled) stepExecutionState();
+    cycled = 0x00;
   }
 }
 
+
+
+
 void R6502::doExecutionCycle() {
-  stepExecutionState(); // Fetch
-  stepExecutionState(); // Decode
-  stepExecutionState(); // Execute
-  stepExecutionState(); // Write
-}
-
-void R6502::doAddressMode(MODES mode) {
-  (this->*modeFuncs[mode])();
-}
-
-void R6502::doOperation(OPS op) {
-  (this->*opFuncs[op])();
-}
-
-void R6502::doInstruction(const Instruction& instruction) {
-  doAddressMode(currentInstruction.addressMode);
-  fetchOperand();
-  doOperation(currentInstruction.operation);
-}
-
-void R6502::doNextInstruction() {
   cyclesPassedThisInstruction = 0x00;
   extraCyclesPassedThisInstruction = 0x00;
-  doExecutionCycle();
+  stepExecutionState();
+  while (executionState != FETCH_OPCODE) {
+    stepExecutionState();
+  }
+}
+
+void R6502::doAddressMode() {
+  (this->*modeFuncs[currentInstruction.addressMode])();
+}
+
+void R6502::doOperation() {
+  (this->*opFuncs[currentInstruction.operation])();
 }
 
 const char* R6502::getOpMnemonic(OPS op) {
@@ -185,6 +216,13 @@ void R6502::doCycle(uint8_t extra) {
   if (extra) {
     extraCyclesPassedThisInstruction++;
   }
+  if (executionState == EXECUTE_OP && cycled) {
+    extraOpCycles++;
+  }
+  if (executionState == EXECUTE_MODE && cycled) {
+    extraModeCycles++;
+  }
+  cycled = 0x01;
 }
 
 uint8_t R6502::getCyclesPassedThisInstruction() {
@@ -196,25 +234,29 @@ uint8_t R6502::getExtraCyclesPassedThisInstruction() {
 }
 
 void R6502::doRelBranch() {
-  doCycle(1);
-  uint16_t rel = dbyte(operand);
-  if (isNegative(operand)) rel |= 0xFF00;
-  fetchAddress = pc + (int16_t) rel;
-  if (hi16(pc) != hi16(fetchAddress)) doCycle(1);
-  setPC(fetchAddress);
+  if (branched) {
+    fetchAddress = pc + (int8_t) operand;
+    if (hi16(pc) != hi16(fetchAddress)) pageCrossed = 0x01;
+    setPC(fetchAddress);
+    doCycle(1);
+    branched = 0x00;
+  }
 }
 
-void R6502::clock() {
-  if (cyclesPassedThisInstruction == 0x00) {
-    doNextInstruction();
+void R6502::doPageCross() {
+  if (pageCrossed) {
+    doCycle(1);
+    pageCrossed = 0x00;
   }
-  cyclesPassedThisInstruction--;
 }
 
 void R6502::powerOn() {
   // Initialize power on state
   // Useful Variables
   tmp = 0x0000;
+  pageCrossed = 0x00;
+  branched = 0x00;
+  cycled = 0x00;
 
   accumulator = 0x00;
   x = 0x00;
@@ -244,6 +286,7 @@ void R6502::RES() {
   // "...loads the program counter from the memory vector locations FFFC and FFFD..."
   // (Page 2 under RESET (RES)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
   setPC(hi16(read(0xFFFC)) | lo16(read(0xFFFD)));
+  cycled = 0x00;
 
   // Done!
 }
@@ -260,6 +303,7 @@ void R6502::interrupt(R6502::INTERRUPTS interrupt) {
       setPC(lo16(read(0xFFFA)) | hi16(read(0xFFFB)));
       break;
   }
+  cycled = 0x00;
 }
 
 uint8_t R6502::read(uint16_t addr) {
@@ -523,19 +567,36 @@ uint8_t R6502::modeHasRedundantRead() {
   }
 }
 
+uint8_t R6502::isOpRedundantWriting() {
+  // redundant writes dont happen in accumulator mode.
+  if (currentInstruction.addressMode == ACCUMULATOR) return 0x00;
+  switch (currentInstruction.operation) {
+    case INC:
+    case DEC:
+    case ASL:
+    case LSR:
+    case ROL:
+    case ROR:
+      return 0x01;
+    default:
+      return 0x00;
+  }
+}
+
 void R6502::redundantWrite() {
-  if (currentInstruction.addressMode != ACCUMULATOR) {
+  if (isOpRedundantWriting()) {
     write(fetchAddress, operand);
+  }
+}
+
+void R6502::redundantRead() {
+  if (modeHasRedundantRead()) {
+    read(fetchAddress);
   }
 }
 
 void R6502::fetchOperand() {
   if (isMemoryReadMode() && !opIsWriteOnly()) operand = read(fetchAddress);
-
-  if (modeHasRedundantRead()) {
-    // THIS NEEDS TO BE FIXED TO ACCOUNT FOR FIXING THE HIGH BYTE
-    read(fetchAddress);
-  }
 }
 
 
@@ -546,6 +607,8 @@ void R6502::fetchOperand() {
 
 void R6502::onRegisterUpdate() {
   // Logging...
+  //std::cout << "A: " << (int) accumulator << " X: " << (int) x << " Y: " << (int) y << " PC: " << (int) pc << " SP: " << (int) sp << " P: " << (int) P;
+  //std::cout << " Exec State: " << (int) executionState << std::endl;
   return;
 }
 
@@ -568,14 +631,14 @@ void R6502::modeAbsoluteX() {
   fetchAddress = readPC16() + x;
  
   // Extra cycle is needed if page boundary crossed
-  if (hi16(fetchAddress) != hi16(fetchAddress - x)) doCycle(1);
+  if (hi16(fetchAddress) != hi16(fetchAddress - x)) pageCrossed = 0x01;
 }
 
 void R6502::modeAbsoluteY() {
   fetchAddress = readPC16() + y;
  
   // Extra cycle is needed if page boundary crossed
-  if (hi(fetchAddress) != hi(fetchAddress - y)) doCycle(1);
+  if (hi(fetchAddress) != hi(fetchAddress - y)) pageCrossed = 0x01;
 }
 
 void R6502::modeImplied() {
@@ -617,7 +680,7 @@ void R6502::modeIndirectY() {
   fetchAddress = read16(lo16(baseAddr));
   fetchAddress = fetchAddress + y;
 
-  if (hi16(fetchAddress - y) != hi16(fetchAddress)) doCycle(1);
+  if (hi16(fetchAddress - y) != hi16(fetchAddress)) pageCrossed = 1;
 }
 
 void R6502::modeIndirect() {
@@ -630,10 +693,8 @@ void R6502::modeIndirect() {
     * DO NOT simplify this. Need to make the bug clear and show details.
     */
 
-  uint8_t pointerLo = read(pc);
-  incPC();
-  uint8_t pointerHi = read(pc);
-  incPC();
+  uint8_t pointerLo = readPC();
+  uint8_t pointerHi = readPC();
 
   // fetch low address to latch - https://www.nesdev.org/6502_cpu.txt
   uint8_t loAddr = read(dbyte(pointerHi, pointerLo));
@@ -692,8 +753,6 @@ void R6502::opAND() {
 void R6502::opASL() {
   // C <- [76543210] <- 0
   // Flags changed: C Z N
-  redundantWrite();
-
   tmp = dbyte(operand) << 1;
 
   setFlags(
@@ -710,21 +769,21 @@ void R6502::opBCC() {
   // branch on C = 0
   // Flags changed: 
 
-  if (getFlag(C) == 0) doRelBranch();
+  if (getFlag(C) == 0) branched = 0x01;
 }
 
 void R6502::opBCS() {
   // branch on C = 1
   // Flags changed: 
 
-  if (getFlag(C) != 0) doRelBranch();
+  if (getFlag(C) != 0) branched = 0x01;
 }
 
 void R6502::opBEQ() {
   // branch on Z = 1
   // Flags changed: 
 
-  if (getFlag(Z) != 0) doRelBranch();
+  if (getFlag(Z) != 0) branched = 0x01;
 }
 
 void R6502::opBIT() {
@@ -744,21 +803,21 @@ void R6502::opBMI() {
   // branch on N = 1
   // Flags changed: 
 
-  if (getFlag(N) != 0) doRelBranch();
+  if (getFlag(N) != 0) branched = 0x01;
 }
 
 void R6502::opBNE() {
   // branch on Z = 0
   // Flags changed: 
 
-  if (getFlag(Z) == 0) doRelBranch();
+  if (getFlag(Z) == 0) branched = 0x01;
 }
 
 void R6502::opBPL() {
   // branch on N = 0
   // Flags changed: 
   
-  if (getFlag(N) == 0) doRelBranch();
+  if (getFlag(N) == 0) branched = 0x01;
 }
 
 void R6502::opBRK() {
@@ -787,14 +846,14 @@ void R6502::opBVC() {
   // branch on V = 0
   // Flags changed: 
 
-  if (getFlag(V) == 0) doRelBranch();
+  if (getFlag(V) == 0) branched = 0x01;
 }
 
 void R6502::opBVS() {
   // branch on V = 1
   // Flags changed: 
   
-  if (getFlag(V) != 0) doRelBranch();
+  if (getFlag(V) != 0) branched = 0x01;
 }
 
 void R6502::opCLC() {
@@ -863,8 +922,6 @@ void R6502::opCPY() {
 void R6502::opDEC() {
   // M - 1 -> M
   // Flags changed: Z N
-  redundantWrite();
-
   tmp = dbyte(operand - 1);
 
   setFlags(
@@ -914,8 +971,6 @@ void R6502::opEOR() {
 void R6502::opINC() {
   // M + 1 -> M
   // Flags changed: Z N
-  redundantWrite();
-
   tmp = dbyte(operand + 1);
 
   setFlags(
@@ -1006,8 +1061,6 @@ void R6502::opLDY() {
 void R6502::opLSR() {
   // 0 -> [76543210] -> C
   // Flags changed: Z N C
-  redundantWrite();
-
   tmp = dbyte(operand >> 1);
 
   setFlags(
@@ -1071,8 +1124,6 @@ void R6502::opPLP() {
 void R6502::opROL() {
   // C <- [76543210] <- C
   // Flags Changed: C Z N
-  redundantWrite();
-  
   tmp = dbyte((operand << 1) | getFlag(C));
   
   setFlags(
@@ -1088,8 +1139,6 @@ void R6502::opROL() {
 void R6502::opROR() {
   // C -> [76543210] -> C
   // Flags Changed: C Z N
-  redundantWrite();
-
   tmp = dbyte((operand >> 1) | (getFlag(C) << 7));
   
   setFlags(
