@@ -18,12 +18,6 @@ class R6502 {
     // External events
 
     /**
-     * @brief Start CPU clock.
-     * 
-     */
-    void clock();
-
-    /**
      * @brief Reset command.
      * 
      * https://wiki.nesdev.org/w/index.php?title=CPU_power_up_state
@@ -105,6 +99,11 @@ class R6502 {
     uint8_t opcode = 0x00;
     uint16_t tmp = 0x0000;
     uint8_t operand = 0x00;
+    uint8_t pageCrossed = 0x00;
+    uint8_t branched = 0x00;
+    uint8_t cycled = 0x00;
+    uint8_t extraOpCycles = 0x00;
+    uint8_t extraModeCycles = 0x00;
 
     uint8_t enableWrite = 0x00;
     uint8_t writeReg = 0x00;
@@ -115,8 +114,13 @@ class R6502 {
       FETCH_OPCODE,
       DECODE,
       EXECUTE_MODE,
+      MODE_PAGE_CROSS,
       FETCH_OPERAND,
+      EXECUTE_REDUNDANT_WRITE,
+      EXECUTE_REDUNDANT_READ,
       EXECUTE_OP,
+      BRANCH,
+      OP_PAGE_CROSS,
       WRITE
     }
 
@@ -129,10 +133,23 @@ class R6502 {
     void setExecutionState(EXECUTION_STATE);
 
     /**
-     * @brief do current state
+     * @brief advance the execution state
+     * 
+     */
+    void advanceExecutionState();
+
+    /**
+     * @brief do current state.
      * 
      */
     void stepExecutionState();
+
+    /**
+     * @brief do next clock tick. 
+     * 
+     * @return uint8_t 
+     */
+    void tick();
 
     /**
      * @brief do full execution cycle
@@ -270,6 +287,20 @@ class R6502 {
      */
     void redundantWrite();
 
+    /**
+     * @brief Do a redundant read, because thats what happens on hardware.
+     * 
+     */
+    void redundantRead();
+
+    /**
+     * @brief is current instruction a redundantly mem writing?
+     * because this happens for some reason!!
+     * 
+     * @return uint8_t 
+     */
+    uint8_t isOpRedundantWriting();
+
     enum OPS {
       ILLOP, // emulator utility. Not a real operation
 
@@ -306,6 +337,12 @@ class R6502 {
      * 
      */
     void decodeOpCode();
+
+    /**
+     * @brief Do a page cross cycle if necessary.
+     * 
+     */
+    void doPageCross();
 
     /**
      * @brief Get the address mode name for a given address mode enum
@@ -356,12 +393,6 @@ class R6502 {
      */
     void doOperation();
   public:
-    /**
-     * @brief Do next instruction pointed at by the PC.
-     * 
-     */
-    void doNextInstruction();
-
     /**
      * @brief Get the 6502 Instruction Matrx 
      * 

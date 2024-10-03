@@ -67,7 +67,7 @@ void Debugger::step() {
   const size_t inputSize = 2;
   char inputBuffer[inputSize];  
   previousState = cpu->getState();
-  cpu->doNextInstruction();
+  cpu->doExecutionCycle();
   R6502::State state = cpu->getState();
 
   if (state.pc == breakPoint && breakPointEnabled) hitBreak = 0x01;

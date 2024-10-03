@@ -43,17 +43,36 @@ void prepCPUForInstructionCyclesTest(uint8_t opCode, R6502& cpu, Memory * mem) {
 }
 
 uint8_t testInstructionCycleAccuracy(R6502& cpu, Memory * mem, uint8_t opCode, uint8_t expectedMachineCycles) {
-  ConsoleDebugger debugger = ConsoleDebugger(&cpu);
+  Memory * mem1 = new Memory();
+  R6502 cpu1 = R6502(mem1);
+
+  Memory * mem2 = new Memory();
+  R6502 cpu2 = R6502(mem2);
+
+
+  ConsoleDebugger debugger = ConsoleDebugger(&cpu1);
   //std::cout << "Testing instruction cycles...\nIntruction: ";
   //printInstruction(opCode);
   //std::cout << std::endl;
 
-  prepCPUForInstructionCyclesTest(opCode, cpu, mem);
+  prepCPUForInstructionCyclesTest(opCode, cpu1, mem1);
+  prepCPUForInstructionCyclesTest(opCode, cpu2, mem2);
   //debugger.enableStackTrace();
   debugger.step();
 
-  uint8_t extraCycles = cpu.getExtraCyclesPassedThisInstruction();
-  return assertEqual(expectedMachineCycles + extraCycles, cpu.getCyclesPassedThisInstruction());
+  uint8_t extraCycles = cpu1.getExtraCyclesPassedThisInstruction();
+  uint8_t instructionStepResult = assertEqual(expectedMachineCycles + extraCycles, cpu1.getCyclesPassedThisInstruction());
+  uint64_t totalCycles = cpu1.totalCyclesPassed;
+  while(totalCycles != cpu2.totalCyclesPassed) {
+    cpu2.tick();
+  }
+
+  // we need to catch cpu2 up to cpu1 because it may not have finished a full execution cycle.
+  while (cpu2.executionState != cpu1.executionState) {
+    cpu2.stepExecutionState();
+  }
+  uint8_t tickStepResult = assertEqual(cpu1.getState(), cpu2.getState());
+  return instructionStepResult && tickStepResult;
 }
 
 uint8_t testInstructionsCycleAccuracy(R6502& cpu, Memory * mem) {
@@ -196,6 +215,22 @@ uint8_t assertEqual(R6502::State expected, R6502::State actual) {
   ) {
     std::cout << "\tFailed!!!";
     std::cout << std::endl;
+
+    std::cout << "Expected: " << std::endl;
+    std::cout << "A: " << (int) expected.accumulator << std::endl;
+    std::cout << "X: " << (int) expected.x << std::endl;
+    std::cout << "Y: " << (int) expected.y << std::endl;
+    std::cout << "PC: " << (int) expected.pc << std::endl;
+    std::cout << "SP: " << (int) expected.sp << std::endl;
+    std::cout << "P: " << (int) expected.P << std::endl;
+
+    std::cout << "Actual: " << std::endl;
+    std::cout << "A: " << (int) actual.accumulator << std::endl;
+    std::cout << "X: " << (int) actual.x << std::endl;
+    std::cout << "Y: " << (int) actual.y << std::endl;
+    std::cout << "PC: " << (int) actual.pc << std::endl;
+    std::cout << "SP: " << (int) actual.sp << std::endl;
+    std::cout << "P: " << (int) actual.P << std::endl;
 
     return 0x00;
   }
