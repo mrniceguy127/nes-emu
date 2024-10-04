@@ -99,12 +99,12 @@ class R6502 {
     uint8_t opcode = 0x00;
     uint16_t tmp = 0x0000;
     uint8_t operand = 0x00;
+
+    // Cycle handling
     uint8_t pageCrossed = 0x00;
     uint8_t branched = 0x00;
     uint8_t cycled = 0x00;
-    uint8_t extraOpCycles = 0x00;
-    uint8_t extraModeCycles = 0x00;
-
+    uint8_t extraExecutionStateCyclesPassed = 0x00;
     uint8_t enableWrite = 0x00;
     uint8_t writeReg = 0x00;
 
