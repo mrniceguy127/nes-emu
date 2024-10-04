@@ -146,10 +146,8 @@ void R6502::stepExecutionState() {
 }
 
 void R6502::tick() {
-  if (extraOpCycles) {
-    extraOpCycles--;
-  } else if (extraModeCycles) {
-    extraModeCycles--;
+  if (extraExecutionStateCyclesPassed) {
+    extraExecutionStateCyclesPassed--;
   } else {
     while (!cycled) stepExecutionState();
     cycled = 0x00;
@@ -213,15 +211,8 @@ void R6502::doCycle(uint8_t extra) {
   // https://wiki.nesdev.org/w/index.php?title=Cycle_counting
   totalCyclesPassed++;
   cyclesPassedThisInstruction++;
-  if (extra) {
-    extraCyclesPassedThisInstruction++;
-  }
-  if (executionState == EXECUTE_OP && cycled) {
-    extraOpCycles++;
-  }
-  if (executionState == EXECUTE_MODE && cycled) {
-    extraModeCycles++;
-  }
+  if (extra) extraCyclesPassedThisInstruction++;
+  if (cycled) extraExecutionStateCyclesPassed++;
   cycled = 0x01;
 }
 
