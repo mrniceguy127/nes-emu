@@ -6,7 +6,8 @@
 
 int main() {
   std::array<Color, 0x100 * 0x80> screen;
-  NTSC2C02 ppu = NTSC2C02();
+  Memory * mem = new Memory();
+  NTSC2C02 ppu = NTSC2C02(mem);
   ppu.generatePixMap(screen);
   
   SDL_Init(SDL_INIT_VIDEO);
