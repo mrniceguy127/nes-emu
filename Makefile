@@ -12,8 +12,8 @@ ppulearning = src/NTSC2C02.cpp
 build_dir = ./build
 out = $(build_dir)/main
 test_out=$(build_dir)/test
-opts = -std=c++17
-sdl2 = -I/Library/Frameworks/SDL2.framework/Headers -F/Library/Frameworks -framework SDL2
+opts = -std=c++17 -lSDL3
+#sdl2 = -I/Library/Frameworks/SDL2.framework/Headers -F/Library/Frameworks -framework SDL2
 
 build: $(main)
 	mkdir -p $(build_dir)
@@ -36,6 +36,6 @@ test: $(test)
 
 ppulearning: $(ppulearning)
 	mkdir -p $(build_dir)
-	$(cc) $(ppulearning) $(sdl2) -o $(build_dir)/ppulearning $(opts)
+	$(cc) $(ppulearning) -o $(build_dir)/ppulearning $(opts)
 	chmod +x $(build_dir)/ppulearning
 	$(build_dir)/ppulearning

@@ -1,45 +1,10 @@
 #include <cstdint>
 #include <array>
 #include <fstream>
+#include <vector>
+#include "NESIncludes.h"
 
-void loadPatternTableFromFile(std::array<uint8_t, 0x1000>& patternTable0, std::array<uint8_t, 0x1000>& patternTable1) {
-  const char* filePath = "./src/mario.nes";
-  std::ifstream file(filePath, std::ios::binary);
-
-  if (!file.is_open()) {
-    std::cerr << "Failed to open file: " << filePath << std::endl;
-    return;
-  }
-
-  const size_t buffer_size = 1024;
-  unsigned int page = 0;
-  std::vector<char> buffer(buffer_size);
-  char header[0x10];
-  file.read(header, 0x10);
-  std::cout << "Header: " << header << std::endl;
-  uint32_t startAddress = 0x10;
-  uint8_t trainerPresent = ((uint8_t) header[0x06]) & 0x04;
-  if (trainerPresent) {
-    startAddress += 0x200;
-  }
-  uint32_t prgRomSize = ((uint32_t) header[0x04]) * 0x4000;
-  startAddress += prgRomSize;
-  std::cout << "Start Address: " << std::hex << startAddress << std::endl;
-  //uint16_t chrRomSize = header[0x05] * 0x2000;
-  uint16_t patternTableSize = 0x1000;
-  file.seekg(startAddress, std::ios::beg);
-  file.read(reinterpret_cast<char*>(patternTable0.data()), patternTableSize);
-  file.read(reinterpret_cast<char*>(patternTable1.data()), patternTableSize);
-  //std::cout << "Pattern Table 0: " << (int) patternTable0[0] << std::endl;
-
-  if (file.fail() && !file.eof()) {
-    std::cerr << "Error reading file: " << filePath << std::endl;
-    file.close();
-    return;
-  }
-
-  file.close();
-}
+void loadPatternTableFromFile(std::array<uint8_t, 0x1000>& patternTable0, std::array<uint8_t, 0x1000>& patternTable1);
 
 
 struct Color {
@@ -48,9 +13,7 @@ struct Color {
   uint8_t b = 0x00;
 };
 
-uint16_t calcLocation(uint16_t x, uint16_t y, uint16_t rowSize) {
-  return (y * rowSize) + x;
-}
+uint16_t calcLocation(uint16_t x, uint16_t y, uint16_t rowSize);
 
 class Tile {
   private:
@@ -60,25 +23,9 @@ class Tile {
     };
     std::array<uint8_t, 0x8 * 0x8> tileData;
   public:
-    void loadTile(uint16_t tileNum, std::array<uint8_t, 0x1000>& patternTable0, std::array<uint8_t, 0x1000>& patternTable1) {
-      uint16_t tileAddress = tileNum * 0x10;
-      std::array<uint8_t, 0x1000>& patternTable = patternTable0;
-      if (tileNum > 0xFF) {
-        patternTable = patternTable1;
-        tileAddress = (tileNum - 0x100) * 0x10;
-      }
-      for (uint16_t j = 0; j < 0x08; j++) {
-        for (uint16_t i = 0; i < 0x08; i++) {
-          uint8_t p0 = (patternTable[tileAddress + j] >> (0x07 - i)) & 0x01;
-          uint8_t p1 = (patternTable[tileAddress + 0x08 + j] >> (0x07 - i)) & 0x01;
-          tileData[calcLocation(i, j, 0x08)] = (p1 << 1) | p0;
-        }
-      }
-    }
+    void loadTile(uint16_t tileNum, std::array<uint8_t, 0x1000>& patternTable0, std::array<uint8_t, 0x1000>& patternTable1);
 
-    Color getColor(uint16_t pixel, Color * palette) {
-      return palette[currentPalette[tileData[pixel]]];
-    }
+    Color getColor(uint16_t pixel, Color * palette);
 };
 
 
@@ -105,43 +52,38 @@ class NTSC2C02 {
     std::array<uint8_t, 0x400> &nameTable2 = nameTable0;
     std::array<uint8_t, 0x400> &nameTable3 = nameTable1;
 
+    std::array<uint8_t, 0x40> attributeTable0;
+    std::array<uint8_t, 0x40> attributeTable1;
+    std::array<uint8_t, 0x40> attributeTable2;
+    std::array<uint8_t, 0x40> attributeTable3;
+
     std::array<uint8_t, 0xF00> unused0;
+
+    uint8_t controlRegister1 = 0x00;
+    uint8_t controlRegister2 = 0x00;
+    uint8_t statusRegister = 0x00;
+    uint8_t spriteAddress = 0x00;
+    uint8_t spriteData = 0x00;
+    uint8_t scroll = 0x00;
+    uint8_t address = 0x00;
+    uint8_t data = 0x00;
+
+    Memory * memory;
+    uint16_t scanLineCycle = 0;
+
 
     // mirror of palette
     //std::array<Color, 0x40> &palleteMirror = palette;
 
+    void mapMemoryToTables();
   public:
-    Tile generateTile(uint32_t tileNum) {
-      Tile tile = Tile();
-      tile.loadTile(tileNum, patternTable0, patternTable1);
-      return tile;
-    }
-
-    void generatePixMap(std::array<Color, 0x100 * 0x80>& pixMap) {
-      loadPatternTable();
-      //patternTable0.fill(0xFF);
-      //patternTable1.fill(0x00);
-      //patternTable0[0] = 0x00;
-      for (uint32_t tileNum = 0; tileNum < 0x200; tileNum++) {
-        Tile tile = generateTile(tileNum);
-        int32_t offset = 0;
-        if (tileNum > 0xFF) offset = 0x80;
-        for (uint32_t j = 0; j < 0x08; j++) {
-          for (uint32_t i = 0; i < 0x08; i++) {
-            Color color = tile.getColor(calcLocation(i, j, 0x08), palette);
-            uint32_t tileXOffset = (tileNum & 0x0F) * 0x08;
-            uint32_t tileYOffset = ((tileNum & 0xF0) >> 0x04) * 0x08;
-            uint32_t pixelXOffset = i;
-            uint32_t pixelYOffset = j;
-            uint32_t tileOffset = calcLocation(tileXOffset + pixelXOffset, tileYOffset + pixelYOffset, 0x100);
-            uint32_t location = tileOffset + offset;
-            pixMap[location] = color;
-          }
-        }
-      }
-    }
-
-    void loadPatternTable() {
-      loadPatternTableFromFile(patternTable0, patternTable1);
-    }
+    NTSC2C02(Memory * mem) : memory(mem) {
+      mapMemoryToTables();
+      mapMemoryToCPUBus(mem);
+    };
+    Tile generateTile(uint32_t tileNum);
+    void generatePixMap(std::array<Color, 0x100 * 0x80>& pixMap);
+    void loadPatternTable();
+    void mapMemoryToCPUBus(Memory * mem);
+    void tick();
 };

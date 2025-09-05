@@ -11,6 +11,7 @@ uint8_t testSimpleProgram(R6502& cpu, Memory * mem);
 uint8_t testComprehensive(R6502& cpu, Memory * mem);
 
 int main() {
+  std::cout << "Starting tests..." << std::endl;
   Memory * memory = new Memory();
   R6502 cpu = R6502(memory);
   cpu.powerOn();
