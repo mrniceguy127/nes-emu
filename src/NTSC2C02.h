@@ -4,6 +4,9 @@
 #include <vector>
 #include "NESIncludes.h"
 
+#ifndef NTSC2C02_H
+#define NTSC2C02_H
+
 void loadPatternTableFromFile(std::array<uint8_t, 0x1000>& patternTable0, std::array<uint8_t, 0x1000>& patternTable1);
 
 
@@ -32,7 +35,7 @@ class Tile {
 
 
 class NTSC2C02 {
-  private:
+  public:
     Color palette[0x40] = {
       { 0x62, 0x62, 0x62 }, { 0x00, 0x2c, 0x7c }, { 0x11, 0x15, 0x9c }, { 0x36, 0x03, 0x9c }, { 0x55, 0x00, 0x7c }, { 0x67, 0x00, 0x44 }, { 0x67, 0x07, 0x03 }, { 0x55, 0x1c, 0x00 }, { 0x36, 0x32, 0x00 }, { 0x11, 0x44, 0x00 }, { 0x00, 0x4e, 0x00 }, { 0x00, 0x4c, 0x03 }, { 0x00, 0x40, 0x44 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 },
       { 0xab, 0xab, 0xab }, { 0x12, 0x60, 0xce }, { 0x3d, 0x42, 0xfa }, { 0x6e, 0x29, 0xfa }, { 0x99, 0x1c, 0xce }, { 0xb1, 0x1e, 0x81 }, { 0xb1, 0x2f, 0x29 }, { 0x99, 0x4a, 0x00 }, { 0x6e, 0x69, 0x00 }, { 0x3d, 0x82, 0x00 }, { 0x12, 0x8f, 0x00 }, { 0x00, 0x8d, 0x29 }, { 0x00, 0x7c, 0x81 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 }, { 0x00, 0x00, 0x00 },
@@ -58,7 +61,16 @@ class NTSC2C02 {
     std::array<uint8_t, 0x40> attributeTable3;
 
     std::array<uint8_t, 0xF00> unused0;
+    uint16_t scanLineCycle = 0;
 
+
+    // mirror of palette
+    //std::array<Color, 0x40> &palleteMirror = palette;
+
+    void mapMemoryToTables();
+
+  public:
+    Memory * memory;
     uint8_t controlRegister1 = 0x00;
     uint8_t controlRegister2 = 0x00;
     uint8_t statusRegister = 0x00;
@@ -68,22 +80,30 @@ class NTSC2C02 {
     uint8_t address = 0x00;
     uint8_t data = 0x00;
 
-    Memory * memory;
-    uint16_t scanLineCycle = 0;
-
-
-    // mirror of palette
-    //std::array<Color, 0x40> &palleteMirror = palette;
-
-    void mapMemoryToTables();
   public:
-    NTSC2C02(Memory * mem) : memory(mem) {
-      mapMemoryToTables();
-      mapMemoryToCPUBus(mem);
-    };
+    NTSC2C02(Memory * mem);
     Tile generateTile(uint32_t tileNum);
     void generatePixMap(std::array<Color, 0x100 * 0x80>& pixMap);
     void loadPatternTable();
     void mapMemoryToCPUBus(Memory * mem);
     void tick();
 };
+
+class CPUToPPUAddressMappingFunction : public AddressMappingFunction {
+  private:
+    NTSC2C02 * ppu;
+  public:
+    CPUToPPUAddressMappingFunction(NTSC2C02 * ppu);
+    uint8_t read(uint16_t addr);
+    void write(uint16_t addr, uint8_t data);
+};
+
+class PPUAddressMappingFunction : public AddressMappingFunction {
+  private:
+    NTSC2C02 * ppu;
+  public:
+    PPUAddressMappingFunction(NTSC2C02 * ppu);
+    uint8_t read(uint16_t addr);
+    void write(uint16_t addr, uint8_t data);
+};
+#endif

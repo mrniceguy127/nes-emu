@@ -1,5 +1,13 @@
 #include "NESIncludes.h"
 
+class AddressMappingFunction {
+  private:
+    std::array<uint8_t, 0x10000>& memory;
+  public:
+    AddressMappingFunction(std::array<uint8_t, 0x10000>& memory);
+    uint8_t read(uint16_t addr);
+    void write(uint16_t addr, uint8_t data);
+};
 class Memory {
   public:
     Memory();
@@ -14,7 +22,7 @@ class Memory {
    * @brief Address mappings
    * 
    */
-  std::array<uint64_t, 0x10000> addressMap;
+  std::array<AddressMappingFunction*, 0x10000> addressMap;
 
   public:
   /**
@@ -33,7 +41,7 @@ class Memory {
      */
     void write(uint16_t addr, uint8_t data);
 
-    void mapAddress(uint16_t addr, uint64_t pointer);
+    void mapAddress(uint16_t addr, AddressMappingFunction* addressMappingFunction);
 
-    void mapAddressRange(uint16_t startAddr, uint16_t endAddr, uint64_t pointer);
+    void mapAddressRange(uint16_t startAddr, uint16_t endAddr, AddressMappingFunction* addressMappingFunction);
 };

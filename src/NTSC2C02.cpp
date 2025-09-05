@@ -3,6 +3,7 @@
 #include <SDL3/SDL.h>
 
 #include "NTSC2C02.h"
+#include "NESIncludes.h"
 
 int main() {
   std::array<Color, 0x100 * 0x80> screen;
@@ -171,6 +172,10 @@ Color Tile::getColor(uint16_t pixel, Color * palette) {
 }
 
 
+NTSC2C02::NTSC2C02(Memory * mem) : memory(mem) {
+    mapMemoryToTables();
+    //mapMemoryToCPUBus(mem);
+};
 
 Tile NTSC2C02::generateTile(uint32_t tileNum) {
   Tile tile = Tile();
@@ -208,27 +213,28 @@ void NTSC2C02::loadPatternTable() {
 
 
 void NTSC2C02::mapMemoryToTables() {
-  memory->mapAddressRange(0x0000, 0x0FFF, reinterpret_cast<uint64_t>(patternTable0.data()));
-  memory->mapAddressRange(0x1000, 0x1FFF, reinterpret_cast<uint64_t>(patternTable1.data()));
-  memory->mapAddressRange(0x2000, 0x23BF, reinterpret_cast<uint64_t>(nameTable0.data()));
-  memory->mapAddressRange(0x23C0, 0x23FF, reinterpret_cast<uint64_t>(attributeTable0.data()));
-  memory->mapAddressRange(0x2400, 0x27BF, reinterpret_cast<uint64_t>(nameTable1.data()));
-  memory->mapAddressRange(0x27C0, 0x27FF, reinterpret_cast<uint64_t>(attributeTable1.data()));
-  memory->mapAddressRange(0x2800, 0x2BBF, reinterpret_cast<uint64_t>(nameTable0.data())); // Mirror
-  memory->mapAddressRange(0x2BC0, 0x2BFF, reinterpret_cast<uint64_t>(attributeTable2.data()));
-  memory->mapAddressRange(0x2C00, 0x2FBF, reinterpret_cast<uint64_t>(nameTable1.data())); // Mirror
-  memory->mapAddressRange(0x2FC0, 0x2FFF, reinterpret_cast<uint64_t>(attributeTable3.data()));
-
+  PPUAddressMappingFunction* ppuAddressMappingFunction = new PPUAddressMappingFunction(this);
+  memory->mapAddressRange(0x0000, 0x0FFF, ppuAddressMappingFunction);
+  memory->mapAddressRange(0x1000, 0x1FFF, ppuAddressMappingFunction);
+  memory->mapAddressRange(0x2000, 0x23BF, ppuAddressMappingFunction);
+  memory->mapAddressRange(0x23C0, 0x23FF, ppuAddressMappingFunction);
+  memory->mapAddressRange(0x2400, 0x27BF, ppuAddressMappingFunction);
+  memory->mapAddressRange(0x27C0, 0x27FF, ppuAddressMappingFunction);
+  memory->mapAddressRange(0x2800, 0x2BBF, ppuAddressMappingFunction);
+  memory->mapAddressRange(0x2BC0, 0x2BFF, ppuAddressMappingFunction);
+  memory->mapAddressRange(0x2C00, 0x2FBF, ppuAddressMappingFunction);
+  memory->mapAddressRange(0x2FC0, 0x2FFF, ppuAddressMappingFunction);
 }
 void NTSC2C02::mapMemoryToCPUBus(Memory * mem) {
-  mem->mapAddress(0x2000, reinterpret_cast<uint64_t>(&controlRegister1));
-  mem->mapAddress(0x2001, reinterpret_cast<uint64_t>(&controlRegister2));
-  mem->mapAddress(0x2002, reinterpret_cast<uint64_t>(&statusRegister));
-  mem->mapAddress(0x2003, reinterpret_cast<uint64_t>(&spriteAddress));
-  mem->mapAddress(0x2004, reinterpret_cast<uint64_t>(&spriteData));
-  mem->mapAddress(0x2005, reinterpret_cast<uint64_t>(&scroll));
-  mem->mapAddress(0x2006, reinterpret_cast<uint64_t>(&address));
-  mem->mapAddress(0x2007, reinterpret_cast<uint64_t>(&data));
+  CPUToPPUAddressMappingFunction* CPUToPPUMappingFunction = new CPUToPPUAddressMappingFunction(this);
+  mem->mapAddress(0x2000, CPUToPPUMappingFunction);
+  mem->mapAddress(0x2001, CPUToPPUMappingFunction);
+  mem->mapAddress(0x2002, CPUToPPUMappingFunction);
+  mem->mapAddress(0x2003, CPUToPPUMappingFunction);
+  mem->mapAddress(0x2004, CPUToPPUMappingFunction);
+  mem->mapAddress(0x2005, CPUToPPUMappingFunction);
+  mem->mapAddress(0x2006, CPUToPPUMappingFunction);
+  mem->mapAddress(0x2007, CPUToPPUMappingFunction);
 }
 
 void NTSC2C02::tick() {
@@ -250,6 +256,8 @@ void NTSC2C02::tick() {
           break;
         case 3:
           // Fetch high tile byte
+          break;
+        default:
           break;
       }
     } else {
@@ -273,6 +281,8 @@ void NTSC2C02::tick() {
         case 3:
           // Fetch high tile byte
           break;
+        default:
+          break;
       }
     }
   } else if (scanLineCycle <= 336) {
@@ -289,6 +299,8 @@ void NTSC2C02::tick() {
         case 1:
           // Fetch name table byte (unknown reason)
           break;
+        default:
+          break;
       }
     } else {
       // Do nothing
@@ -300,4 +312,107 @@ void NTSC2C02::tick() {
   } else {
     scanLineCycle = 0;
   }
+}
+
+
+CPUToPPUAddressMappingFunction::CPUToPPUAddressMappingFunction(NTSC2C02 * ppu) : ppu(ppu), AddressMappingFunction(ppu->memory->ram) {}
+uint8_t CPUToPPUAddressMappingFunction::read(uint16_t addr) {
+    switch (addr) {
+    case 0x2000:
+        return ppu->controlRegister1;
+    case 0x2001:
+        return ppu->controlRegister2;
+    case 0x2002:
+        return ppu->statusRegister;
+    case 0x2003:
+        return ppu->spriteAddress;
+    case 0x2004:
+        return ppu->spriteData;
+    case 0x2005:
+        return ppu->scroll;
+    case 0x2006:
+        return ppu->address;
+    case 0x2007:
+        return ppu->data;
+    default:
+        return 0x00;
+    }
+}
+void CPUToPPUAddressMappingFunction::write(uint16_t addr, uint8_t data) {
+    switch (addr) {
+    case 0x2000:
+        ppu->controlRegister1 = data;
+        break;
+    case 0x2001:
+        ppu->controlRegister2 = data;
+        break;
+    case 0x2002:
+        // status register is read only
+        break;
+    case 0x2003:
+        ppu->spriteAddress = data;
+        break;
+    case 0x2004:
+        ppu->spriteData = data;
+        break;
+    case 0x2005:
+        ppu->scroll = data;
+        break;
+    case 0x2006:
+        ppu->address = data;
+        break;
+    case 0x2007:
+        ppu->data = data;
+        break;
+    }
+}
+
+
+PPUAddressMappingFunction::PPUAddressMappingFunction(NTSC2C02 * ppu) : ppu(ppu), AddressMappingFunction(ppu->memory->ram) {}
+uint8_t PPUAddressMappingFunction::read(uint16_t addr) {
+    if (addr >= 0x0000 && addr <= 0x0FFF) {
+        return ppu->patternTable0[addr];
+    } else if (addr >= 0x1000 && addr <= 0x1FFF) {
+        return ppu->patternTable1[addr - 0x1000];
+    } else if (addr >= 0x2000 && addr <= 0x23BF) {
+        return ppu->nameTable0[addr - 0x2000];
+    } else if (addr >= 0x23C0 && addr <= 0x23FF) {
+        return ppu->attributeTable0[addr - 0x23C0];
+    } else if (addr >= 0x2400 && addr <= 0x27BF) {
+        return ppu->nameTable1[addr - 0x2400];
+    } else if (addr >= 0x27C0 && addr <= 0x27FF) {
+        return ppu->attributeTable1[addr - 0x27C0];
+    } else if (addr >= 0x2800 && addr <= 0x2BBF) {
+        return ppu->nameTable0[addr - 0x2800]; // Mirror
+    } else if (addr >= 0x2BC0 && addr <= 0x2BFF) {
+        return ppu->attributeTable2[addr - 0x2BC0];
+    } else if (addr >= 0x2C00 && addr <= 0x2FBF) {
+        return ppu->nameTable1[addr - 0x2C00]; // Mirror
+    } else if (addr >= 0x2FC0 && addr <= 0x2FFF) {
+        return ppu->attributeTable3[addr - 0x2FC0];
+    }
+    return 0x00;
+}
+void PPUAddressMappingFunction::write(uint16_t addr, uint8_t data) {
+    if (addr >= 0x0000 && addr <= 0x0FFF) {
+        ppu->patternTable0[addr] = data;
+    } else if (addr >= 0x1000 && addr <= 0x1FFF) {
+        ppu->patternTable1[addr - 0x1000] = data;
+    } else if (addr >= 0x2000 && addr <= 0x23BF) {
+        ppu->nameTable0[addr - 0x2000] = data;
+    } else if (addr >= 0x23C0 && addr <= 0x23FF) {
+        ppu->attributeTable0[addr - 0x23C0] = data;
+    } else if (addr >= 0x2400 && addr <= 0x27BF) {
+        ppu->nameTable1[addr - 0x2400] = data;
+    } else if (addr >= 0x27C0 && addr <= 0x27FF) {
+        ppu->attributeTable1[addr - 0x27C0] = data;
+    } else if (addr >= 0x2800 && addr <= 0x2BBF) {
+        ppu->nameTable0[addr - 0x2800] = data; // Mirror
+    } else if (addr >= 0x2BC0 && addr <= 0x2BFF) {
+        ppu->attributeTable2[addr - 0x2BC0] = data;
+    } else if (addr >= 0x2C00 && addr <= 0x2FBF) {
+        ppu->nameTable1[addr - 0x2C00] = data; // Mirror
+    } else if (addr >= 0x2FC0 && addr <= 0x2FFF) {
+        ppu->attributeTable3[addr - 0x2FC0] = data;
+    }
 }

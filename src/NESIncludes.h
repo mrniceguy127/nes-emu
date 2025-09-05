@@ -10,5 +10,6 @@
 
 #include "Memory.h"
 #include "R6502.h"
+#include "NTSC2C02.h"
 
 #endif
