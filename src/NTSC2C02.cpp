@@ -214,27 +214,11 @@ void NTSC2C02::loadPatternTable() {
 
 void NTSC2C02::mapMemoryToTables() {
   PPUAddressMappingFunction* ppuAddressMappingFunction = new PPUAddressMappingFunction(this);
-  memory->mapAddressRange(0x0000, 0x0FFF, ppuAddressMappingFunction);
-  memory->mapAddressRange(0x1000, 0x1FFF, ppuAddressMappingFunction);
-  memory->mapAddressRange(0x2000, 0x23BF, ppuAddressMappingFunction);
-  memory->mapAddressRange(0x23C0, 0x23FF, ppuAddressMappingFunction);
-  memory->mapAddressRange(0x2400, 0x27BF, ppuAddressMappingFunction);
-  memory->mapAddressRange(0x27C0, 0x27FF, ppuAddressMappingFunction);
-  memory->mapAddressRange(0x2800, 0x2BBF, ppuAddressMappingFunction);
-  memory->mapAddressRange(0x2BC0, 0x2BFF, ppuAddressMappingFunction);
-  memory->mapAddressRange(0x2C00, 0x2FBF, ppuAddressMappingFunction);
-  memory->mapAddressRange(0x2FC0, 0x2FFF, ppuAddressMappingFunction);
+  memory->mapAddressRange(0x0000, 0x2FFF, ppuAddressMappingFunction);
 }
 void NTSC2C02::mapMemoryToCPUBus(Memory * mem) {
   CPUToPPUAddressMappingFunction* CPUToPPUMappingFunction = new CPUToPPUAddressMappingFunction(this);
-  mem->mapAddress(0x2000, CPUToPPUMappingFunction);
-  mem->mapAddress(0x2001, CPUToPPUMappingFunction);
-  mem->mapAddress(0x2002, CPUToPPUMappingFunction);
-  mem->mapAddress(0x2003, CPUToPPUMappingFunction);
-  mem->mapAddress(0x2004, CPUToPPUMappingFunction);
-  mem->mapAddress(0x2005, CPUToPPUMappingFunction);
-  mem->mapAddress(0x2006, CPUToPPUMappingFunction);
-  mem->mapAddress(0x2007, CPUToPPUMappingFunction);
+  mem->mapAddressRange(0x2000, 0x2007, CPUToPPUMappingFunction);
 }
 
 void NTSC2C02::tick() {
