@@ -172,6 +172,31 @@ Color Tile::getColor(uint16_t pixel, Color * palette) {
 }
 
 
+void Register::set(uint8_t val) {
+  reg = val;
+}
+
+void Register::setFlags(uint8_t byte, bool val) {
+  if (val) {
+    reg |= byte;
+  } else {
+    reg &= ~byte;
+  }
+}
+
+void Register::setFlags(uint8_t byte) {
+  setFlags(byte, 0x1);
+}
+
+uint8_t Register::get() {
+  return reg;
+}
+
+uint8_t Register::getFlag(uint8_t bit) {
+  return (reg & bit) ? 0x1 : 0x0;
+}
+
+
 NTSC2C02::NTSC2C02(Memory * mem) : memory(mem) {
     mapMemoryToTables();
     //mapMemoryToCPUBus(mem);
