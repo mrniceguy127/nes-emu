@@ -73,6 +73,8 @@ class NTSC2C02 {
 
     std::array<uint8_t, 0xF00> unused0;
     uint16_t scanLineCycle = 0;
+    uint16_t scanLine = 261;
+    uint8_t frame = 0;
 
 
     // mirror of palette

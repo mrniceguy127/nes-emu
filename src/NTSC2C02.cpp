@@ -247,79 +247,108 @@ void NTSC2C02::mapMemoryToCPUBus(Memory * mem) {
 }
 
 void NTSC2C02::tick() {
-  if (scanLineCycle == 0) {
-    // Do nothing
-  } else if (scanLineCycle <= 256) {
-    uint16_t scanLinePhaseCycle = scanLineCycle - 1;
-    if ((scanLinePhaseCycle) % 8 == 0) {
-      // Fetch tile data
-      switch ((scanLineCycle / 8) % 4) {
-        case 0:
-          // Fetch name table byte
-          break;
-        case 1:
-          // Fetch attribute table byte
-          break;
-        case 2:
-          // Fetch low tile byte
-          break;
-        case 3:
-          // Fetch high tile byte
-          break;
-        default:
-          break;
-      }
-    } else {
-      // Do nothing
-    }
-  } else if (scanLineCycle <= 320) {
-    // Fetch sprite data
-    uint16_t scanLinePhaseCycle = scanLineCycle - 257;
-    if ((scanLinePhaseCycle) % 8 == 0) {
-      // Fetch tile data
-      switch ((scanLineCycle / 8) % 4) {
-        case 0:
-          // Fetch garbage name table byte
-          break;
-        case 1:
-          // Fetch garbage name table byte
-          break;
-        case 2:
-          // Fetch low tile byte
-          break;
-        case 3:
-          // Fetch high tile byte
-          break;
-        default:
-          break;
-      }
-    }
-  } else if (scanLineCycle <= 336) {
-    uint16_t scanLinePhaseCycle = scanLineCycle - 321;
-    // Idle
-  } else if (scanLineCycle <= 340) {
-    uint16_t scanLinePhaseCycle = scanLineCycle - 337;
-    if ((scanLinePhaseCycle) % 4 == 0) {
-      // Fetch tile data
-      switch ((scanLineCycle / 4) % 2) {
-        case 0:
-          // Fetch name table byte (unknown reason)
-          break;
-        case 1:
-          // Fetch name table byte (unknown reason)
-          break;
-        default:
-          break;
-      }
-    } else {
-      // Do nothing
-    }
-  }
-
-  if (scanLineCycle < 340) {
+  if (scanLine == 261) {
     scanLineCycle++;
-  } else {
-    scanLineCycle = 0;
+    if (scanLineCycle == 339 && frame == 0) {
+      scanLine = 0;
+      scanLineCycle = 0;
+    }
+  } else if (scanLine <= 239) {
+    if (scanLineCycle == 0) {
+      // Do nothing
+    } else if (scanLineCycle <= 256) {
+      uint16_t scanLinePhaseCycle = scanLineCycle - 1;
+      if ((scanLinePhaseCycle) % 8 == 0) {
+        // Fetch tile data
+        switch ((scanLineCycle / 8) % 4) {
+          case 0:
+            // Fetch name table byte
+            break;
+          case 1:
+            // Fetch attribute table byte
+            break;
+          case 2:
+            // Fetch low tile byte
+            break;
+          case 3:
+            // Fetch high tile byte
+            break;
+          default:
+            break;
+        }
+      } else {
+        // Do nothing
+      }
+    } else if (scanLineCycle <= 320) {
+      // Fetch sprite data
+      uint16_t scanLinePhaseCycle = scanLineCycle - 257;
+      if ((scanLinePhaseCycle) % 8 == 0) {
+        // Fetch tile data
+        switch ((scanLineCycle / 8) % 4) {
+          case 0:
+            // Fetch garbage name table byte
+            break;
+          case 1:
+            // Fetch garbage name table byte
+            break;
+          case 2:
+            // Fetch low tile byte
+            break;
+          case 3:
+            // Fetch high tile byte
+            break;
+          default:
+            break;
+        }
+      }
+    } else if (scanLineCycle <= 336) {
+      uint16_t scanLinePhaseCycle = scanLineCycle - 321;
+      // Idle
+    } else if (scanLineCycle <= 340) {
+      uint16_t scanLinePhaseCycle = scanLineCycle - 337;
+      if ((scanLinePhaseCycle) % 4 == 0) {
+        // Fetch tile data
+        switch ((scanLineCycle / 4) % 2) {
+          case 0:
+            // Fetch name table byte (unknown reason)
+            break;
+          case 1:
+            // Fetch name table byte (unknown reason)
+            break;
+          default:
+            break;
+        }
+      } else {
+        // Do nothing
+      }
+    }
+
+    if (scanLineCycle < 340) {
+      scanLineCycle++;
+    } else {
+      scanLineCycle = 0;
+      scanLine++;
+    }
+  } else if (scanLine == 240) {
+    // Post render scanline
+    scanLineCycle++;
+    if (scanLineCycle == 340) {
+      scanLineCycle = 0;
+      scanLine++;
+    }
+  } else if (scanLine <= 260) {
+    if (scanLineCycle == 1) {
+      PPUSTATUS->setFlags(STATUS_V, 0x1);
+    }
+    scanLineCycle++;
+    if (scanLineCycle == 340) {
+      scanLineCycle = 0;
+      scanLine++;
+      if (scanLine == 261) {
+        PPUSTATUS->setFlags(STATUS_V, 0x0);
+        frame = (frame + 1) % 2;
+      }
+    }
   }
 }
 
@@ -328,21 +357,21 @@ CPUToPPUAddressMappingFunction::CPUToPPUAddressMappingFunction(NTSC2C02 * ppu) :
 uint8_t CPUToPPUAddressMappingFunction::read(uint16_t addr) {
     switch (addr) {
     case 0x2000:
-        return ppu->controlRegister1;
+        return ppu->PPUCTRL->get();
     case 0x2001:
-        return ppu->controlRegister2;
+        return ppu->PPUMASK->get();
     case 0x2002:
-        return ppu->statusRegister;
+        return ppu->PPUSTATUS->get();
     case 0x2003:
-        return ppu->spriteAddress;
+        return ppu->OAMADDR->get();
     case 0x2004:
-        return ppu->spriteData;
+        return ppu->OAMDATA->get();
     case 0x2005:
-        return ppu->scroll;
+        return ppu->PPUSCROLL->get();
     case 0x2006:
-        return ppu->address;
+        return ppu->PPUADDR->get();
     case 0x2007:
-        return ppu->data;
+        return ppu->PPUDATA->get();
     default:
         return 0x00;
     }
@@ -350,28 +379,30 @@ uint8_t CPUToPPUAddressMappingFunction::read(uint16_t addr) {
 void CPUToPPUAddressMappingFunction::write(uint16_t addr, uint8_t data) {
     switch (addr) {
     case 0x2000:
-        ppu->controlRegister1 = data;
+        ppu->PPUCTRL->set(data);
         break;
     case 0x2001:
-        ppu->controlRegister2 = data;
+        ppu->PPUMASK->set(data);
         break;
     case 0x2002:
         // status register is read only
         break;
     case 0x2003:
-        ppu->spriteAddress = data;
+        ppu->OAMADDR->set(data);
         break;
     case 0x2004:
-        ppu->spriteData = data;
+        ppu->OAMDATA->set(data);
         break;
     case 0x2005:
-        ppu->scroll = data;
+        ppu->PPUSCROLL->set(data);
         break;
     case 0x2006:
-        ppu->address = data;
+        ppu->PPUADDR->set(data);
         break;
     case 0x2007:
-        ppu->data = data;
+        ppu->PPUDATA->set(data);
+        break;
+    default:
         break;
     }
 }
