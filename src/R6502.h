@@ -43,6 +43,8 @@ class R6502 {
   public:
     Memory* memory;
 
+    uint8_t nmiPending = 0x00;
+
     /**
      * @brief Read byte at address
      * 

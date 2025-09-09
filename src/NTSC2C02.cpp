@@ -246,8 +246,11 @@ void NTSC2C02::mapMemoryToCPUBus(Memory * mem) {
   mem->mapAddressRange(0x2000, 0x2007, CPUToPPUMappingFunction);
 }
 
-void NTSC2C02::tick() {
+void NTSC2C02::tick(R6502 * cpu) {
   if (scanLine == 261) {
+    if (scanLineCycle == 0) {
+      PPUSTATUS->setFlags(STATUS_V, 0x0);
+    }
     scanLineCycle++;
     if (scanLineCycle == 339 && frame == 0) {
       scanLine = 0;
@@ -339,6 +342,9 @@ void NTSC2C02::tick() {
   } else if (scanLine <= 260) {
     if (scanLineCycle == 1) {
       PPUSTATUS->setFlags(STATUS_V, 0x1);
+      if (PPUCTRL->getFlag(CTRL_V)) {
+        cpu->nmiPending = 0x01;
+      }
     }
     scanLineCycle++;
     if (scanLineCycle == 340) {
@@ -356,54 +362,54 @@ void NTSC2C02::tick() {
 CPUToPPUAddressMappingFunction::CPUToPPUAddressMappingFunction(NTSC2C02 * ppu) : ppu(ppu), AddressMappingFunction(ppu->memory->ram) {}
 uint8_t CPUToPPUAddressMappingFunction::read(uint16_t addr) {
     switch (addr) {
-    case 0x2000:
-        return ppu->PPUCTRL->get();
-    case 0x2001:
-        return ppu->PPUMASK->get();
-    case 0x2002:
-        return ppu->PPUSTATUS->get();
-    case 0x2003:
-        return ppu->OAMADDR->get();
-    case 0x2004:
-        return ppu->OAMDATA->get();
-    case 0x2005:
-        return ppu->PPUSCROLL->get();
-    case 0x2006:
-        return ppu->PPUADDR->get();
-    case 0x2007:
-        return ppu->PPUDATA->get();
-    default:
-        return 0x00;
+      case 0x2000:
+          return ppu->PPUCTRL->get();
+      case 0x2001:
+          return ppu->PPUMASK->get();
+      case 0x2002:
+          return ppu->PPUSTATUS->get();
+      case 0x2003:
+          return ppu->OAMADDR->get();
+      case 0x2004:
+          return ppu->OAMDATA->get();
+      case 0x2005:
+          return ppu->PPUSCROLL->get();
+      case 0x2006:
+          return ppu->PPUADDR->get();
+      case 0x2007:
+          return ppu->PPUDATA->get();
+      default:
+          return 0x00;
     }
 }
 void CPUToPPUAddressMappingFunction::write(uint16_t addr, uint8_t data) {
     switch (addr) {
-    case 0x2000:
-        ppu->PPUCTRL->set(data);
-        break;
-    case 0x2001:
-        ppu->PPUMASK->set(data);
-        break;
-    case 0x2002:
-        // status register is read only
-        break;
-    case 0x2003:
-        ppu->OAMADDR->set(data);
-        break;
-    case 0x2004:
-        ppu->OAMDATA->set(data);
-        break;
-    case 0x2005:
-        ppu->PPUSCROLL->set(data);
-        break;
-    case 0x2006:
-        ppu->PPUADDR->set(data);
-        break;
-    case 0x2007:
-        ppu->PPUDATA->set(data);
-        break;
-    default:
-        break;
+      case 0x2000:
+          ppu->PPUCTRL->set(data);
+          break;
+      case 0x2001:
+          ppu->PPUMASK->set(data);
+          break;
+      case 0x2002:
+          // status register is read only
+          break;
+      case 0x2003:
+          ppu->OAMADDR->set(data);
+          break;
+      case 0x2004:
+          ppu->OAMDATA->set(data);
+          break;
+      case 0x2005:
+          ppu->PPUSCROLL->set(data);
+          break;
+      case 0x2006:
+          ppu->PPUADDR->set(data);
+          break;
+      case 0x2007:
+          ppu->PPUDATA->set(data);
+          break;
+      default:
+          break;
     }
 }
 

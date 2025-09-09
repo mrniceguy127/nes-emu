@@ -146,11 +146,18 @@ void R6502::stepExecutionState() {
 }
 
 void R6502::tick() {
-  if (extraExecutionStateCyclesPassed) {
-    extraExecutionStateCyclesPassed--;
-  } else {
-    while (!cycled) stepExecutionState();
+  if (executionState == FETCH_OPCODE && nmiPending) {
+    nmiPending = 0x00;
+    interrupt(NMI);
     cycled = 0x00;
+    return;
+  } else {
+    if (extraExecutionStateCyclesPassed) {
+      extraExecutionStateCyclesPassed--;
+    } else {
+      while (!cycled) stepExecutionState();
+      cycled = 0x00;
+    }
   }
 }
 
