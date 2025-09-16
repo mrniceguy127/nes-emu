@@ -247,9 +247,19 @@ void NTSC2C02::mapMemoryToCPUBus(Memory * mem) {
 }
 
 void NTSC2C02::tick(R6502 * cpu) {
+  // https://www.nesdev.org/wiki/PPU_scrolling#Tile_and_attribute_fetching
+  uint16_t tileAddress = 0x2000 | (v & 0x0FFF);
+  uint16_t attributeAddress = 0x23C0 | (v & 0x0C00) | ((v >> 4) & 0x38) | ((v >> 2) & 0x07);
+
   if (scanLine == 261) {
     if (scanLineCycle == 0) {
+      allowMaskWrites = 0x1;
       PPUSTATUS->setFlags(STATUS_V, 0x0);
+      vBlankStatusNotRead = 0x01;
+    }
+    if (scanLineCycle >= 257 && scanLineCycle <= 320) {
+      ppu->OAMADDR->set(0x00);
+      // Sprite evaluation
     }
     scanLineCycle++;
     if (scanLineCycle == 339 && frame == 0) {
@@ -266,15 +276,17 @@ void NTSC2C02::tick(R6502 * cpu) {
         switch ((scanLineCycle / 8) % 4) {
           case 0:
             // Fetch name table byte
+            nameTableByte = memory->read(tileAddress);
             break;
           case 1:
             // Fetch attribute table byte
+            attributeTableByte = memory->read(attributeAddress);
             break;
           case 2:
-            // Fetch low tile byte
+            // Fetch low pattern table tile byte
             break;
           case 3:
-            // Fetch high tile byte
+            // Fetch high pattern table tile byte
             break;
           default:
             break;
@@ -295,10 +307,10 @@ void NTSC2C02::tick(R6502 * cpu) {
             // Fetch garbage name table byte
             break;
           case 2:
-            // Fetch low tile byte
+            // Fetch low pattern table tile byte
             break;
           case 3:
-            // Fetch high tile byte
+            // Fetch high pattern table tile byte
             break;
           default:
             break;
@@ -342,9 +354,10 @@ void NTSC2C02::tick(R6502 * cpu) {
   } else if (scanLine <= 260) {
     if (scanLineCycle == 1) {
       PPUSTATUS->setFlags(STATUS_V, 0x1);
-      if (PPUCTRL->getFlag(CTRL_V)) {
-        cpu->nmiPending = 0x01;
-      }
+    }
+    if (PPUCTRL->getFlag(CTRL_V) && vBlankStatusNotRead) {
+      cpu->nmiPending = 0x01;
+      vBlankStatusNotRead = 0x00;
     }
     scanLineCycle++;
     if (scanLineCycle == 340) {
@@ -367,16 +380,32 @@ uint8_t CPUToPPUAddressMappingFunction::read(uint16_t addr) {
       case 0x2001:
           return ppu->PPUMASK->get();
       case 0x2002:
-          return ppu->PPUSTATUS->get();
+          ppu->OAMDMA->set(0x00); // Reading PPUSTATUS resets OAMDMA
+          uint8_t tmp = ppu->PPUSTATUS->get();
+          ppu->PPUSTATUS->setFlags(ppu->PPUSTATUS->STATUS_V, 0x0); // Clear VBlank flag
+          return tmp;
       case 0x2003:
           return ppu->OAMADDR->get();
       case 0x2004:
+          if (ppu->PPUMASK->getFlag(ppu->PPUMASK->MASK_s) || ppu->PPUMASK->getFlag(ppu->PPUMASK->MASK_b)) {
+            // rendering is enabled, return open bus
+            return 0x00;
+          }
           return ppu->OAMDATA->get();
       case 0x2005:
           return ppu->PPUSCROLL->get();
       case 0x2006:
           return ppu->PPUADDR->get();
       case 0x2007:
+          if (ppu->PPUMASK->getFlag(ppu->PPUMASK->MASK_s) || ppu->PPUMASK->getFlag(ppu->PPUMASK->MASK_b)) {
+            // rendering is enabled, return open bus
+            return 0x00;
+          }
+          if (ppu->PPUCTRL->getFlag(ppu->PPUCTRL->CTRL_I)) {
+            ppu->PPUADDR->set(ppu->PPUADDR->get() + 32); // Increment by 32
+          } else {
+            ppu->PPUADDR->set(ppu->PPUADDR->get() + 1); // Increment by 1
+          }
           return ppu->PPUDATA->get();
       default:
           return 0x00;
@@ -386,9 +415,10 @@ void CPUToPPUAddressMappingFunction::write(uint16_t addr, uint8_t data) {
     switch (addr) {
       case 0x2000:
           ppu->PPUCTRL->set(data);
+          ppu->t = (((uint16_t) d & 0x03) << 10) | ppu->t;
           break;
       case 0x2001:
-          ppu->PPUMASK->set(data);
+          if (ppu->allowMaskWrites) ppu->PPUMASK->set(data);
           break;
       case 0x2002:
           // status register is read only
@@ -397,15 +427,74 @@ void CPUToPPUAddressMappingFunction::write(uint16_t addr, uint8_t data) {
           ppu->OAMADDR->set(data);
           break;
       case 0x2004:
+          if (ppu->PPUMASK->getFlag(ppu->PPUMASK->MASK_s) || ppu->PPUMASK->getFlag(ppu->PPUMASK->MASK_b)) {
+            // rendering is enabled, do nothing
+            break;
+          }
           ppu->OAMDATA->set(data);
+          memory->write(OAMADDR->get(), data);
+          ppu->OAMADDR->set(ppu->OAMADDR->get() + 1); // Increment OAMADDR
           break;
       case 0x2005:
           ppu->PPUSCROLL->set(data);
+          if (ppu->w == 0) {
+            ppu->t = ((uint16_t) data >> 3) | (ppu->t & 0xFFE0);
+            ppu->x = data & 0x07;
+            ppu->w = 1;
+          } else {
+            ppu->t = ((((uint16_t) data) & 0x07) << 12) |
+                     ((((uint16_t) data) & 0xF8) << 2) |
+                      (ppu->t & 8C1F);
+
+            ppu->w = 0;
+          }
           break;
       case 0x2006:
+          if (ppu->w == 0) {
+            ppu->t = ((uint16_t)(data & 0x3F) << 8) | (ppu->t & 0x00FF);
+            ppu->w = 1;
+          } else {
+            ppu->t = (((uint16_t) data) | (ppu->t & 0x7F00));
+            ppu->v = ppu->t;
+            ppu->w = 0;
+          }
           ppu->PPUADDR->set(data);
           break;
       case 0x2007:
+          if (ppu->PPUMASK->getFlag(ppu->PPUMASK->MASK_s) || ppu->PPUMASK->getFlag(ppu->PPUMASK->MASK_b)) {
+            // rendering is enabled, do nothing
+
+            // https://www.nesdev.org/wiki/PPU_scrolling#Coarse_X_increment
+            if ((ppu->v & 0x001F) == 31) {// if coarse X == 31
+              ppu->v &= ~0x001F          // coarse X = 0
+              ppu->v ^= 0x0400           // switch horizontal nametable
+            } else {
+              ppu->v += 1                // increment coarse X
+            }
+
+            // https://www.nesdev.org/wiki/PPU_scrolling#Y_increment
+            if ((ppu->v & 0x7000) != 0x7000) {       // if fine Y < 7
+              ppu->v += 0x1000                      // increment fine Y
+            } else {
+              ppu->v &= ~0x7000                     // fine Y = 0
+              uint16_t y = (ppu->v & 0x03E0) >> 5        // let y = coarse Y
+              if (y == 29) {
+                y = 0                          // coarse Y = 0
+                ppu->v ^= 0x0800                    // switch vertical nametable
+              } else if (y == 31) {
+                y = 0                          // coarse Y = 0, nametable not switched
+              } else {
+                y += 1
+              }                         // increment coarse Y
+              ppu->v = (ppu->v & ~0x03E0) | (y << 5)     // put coarse Y back into v
+            }
+            break;
+          }
+          if (ppu->PPUCTRL->getFlag(ppu->PPUCTRL->CTRL_I)) {
+            ppu->PPUADDR->set(ppu->PPUADDR->get() + 32); // Increment by 32
+          } else {
+            ppu->PPUADDR->set(ppu->PPUADDR->get() + 1); // Increment by 1
+          }
           ppu->PPUDATA->set(data);
           break;
       default:
