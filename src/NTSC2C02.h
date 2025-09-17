@@ -24,6 +24,7 @@ class Tile {
     uint8_t currentPalette[0x04] = {
       0x21, 0x36, 0x17, 0x0F
     };
+  public:
     std::array<uint8_t, 0x8 * 0x8> tileData;
   public:
     void loadTile(uint16_t tileNum, std::array<uint8_t, 0x1000>& patternTable0, std::array<uint8_t, 0x1000>& patternTable1);
@@ -41,7 +42,7 @@ class Register {
     uint8_t get();
     void setFlags(uint8_t byte, bool val);
     void setFlags(uint8_t byte);
-    bool getFlag(uint8_t bit);
+    uint8_t getFlag(uint8_t bit);
 };
 
 
@@ -87,6 +88,7 @@ class NTSC2C02 {
 
   public:
     Memory * memory;
+    std::array<Color, 0x100 * 0xF0> pixMap;
 
     Register * PPUCTRL = new Register();
     Register * PPUMASK = new Register();
@@ -105,6 +107,8 @@ class NTSC2C02 {
 
     uint8_t nameTableByte = 0x00;
     uint8_t attributeTableByte = 0x00;
+    uint8_t tmpLowPatternTableTileByte = 0x00;
+    uint8_t tmpHighPatternTableTileByte = 0x00;
     uint8_t lowPatternTableTileByte = 0x00;
     uint8_t highPatternTableTileByte = 0x00;
 
@@ -140,11 +144,13 @@ class NTSC2C02 {
 
   public:
     NTSC2C02(Memory * mem);
+    void incVertV();
+    void incHoriV();
     Tile generateTile(uint32_t tileNum);
     void generatePixMap(std::array<Color, 0x100 * 0x80>& pixMap);
     void loadPatternTable();
     void mapMemoryToCPUBus(Memory * mem);
-    void tick();
+    void tick(R6502 * cpu);
 };
 
 class CPUToPPUAddressMappingFunction : public AddressMappingFunction {
