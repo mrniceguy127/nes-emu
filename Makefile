@@ -1,7 +1,7 @@
 .PHONY: build clean run test ppulearning
 
 cc = g++
-core = src/utils/ByteUtils.cpp src/R6502.cpp src/Memory.cpp src/Debugger.cpp
+core = src/utils/ByteUtils.cpp src/R6502.cpp src/Memory.cpp src/Debugger.cpp src/NTSC2C02.cpp
 main = src/main.cpp $(core)
 
 test = test/Test.cpp $(core)

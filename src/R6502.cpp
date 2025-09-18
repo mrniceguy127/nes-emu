@@ -283,7 +283,10 @@ void R6502::RES() {
 
   // "...loads the program counter from the memory vector locations FFFC and FFFD..."
   // (Page 2 under RESET (RES)) http://archive.6502.org/datasheets/rockwell_r650x_r651x.pdf
-  setPC(hi16(read(0xFFFC)) | lo16(read(0xFFFD)));
+  setPC((lo16(read(0xFFFC))) | (lo16(read(0xFFFD)) << 8));
+  std::cout << "RESET Vector: " << std::hex << pc << std::dec << std::endl;
+  std::cout << "FFFC: " << std::hex << int(lo16(read(0xFFFC))) << std::dec << std::endl;
+  std::cout << "FFFD: " << std::hex << int(lo16(read(0xFFFD))) << std::dec << std::endl;
   cycled = 0x00;
 
   // Done!
@@ -297,8 +300,11 @@ void R6502::interrupt(R6502::INTERRUPTS interrupt) {
     // lo byte, than hi. C order of evalutation. Left expression first (lo). I AM BEING CAUTIOUS OF READ ORDER.
     case IRQ:
       setPC(lo16(read(0xFFFE)) | hi16(read(0xFFFF)));
+      break;
     case NMI:
       setPC(lo16(read(0xFFFA)) | hi16(read(0xFFFB)));
+      break;
+    default:
       break;
   }
   cycled = 0x00;
