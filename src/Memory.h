@@ -4,9 +4,9 @@ class AddressMappingFunction {
   private:
     std::array<uint8_t, 0x10000>& memory;
   public:
-    AddressMappingFunction(std::array<uint8_t, 0x10000>& memory);
-    uint8_t read(uint16_t addr);
-    void write(uint16_t addr, uint8_t data);
+    explicit AddressMappingFunction(std::array<uint8_t, 0x10000>& memory);
+    virtual uint8_t read(uint16_t addr);
+    virtual void write(uint16_t addr, uint8_t data);
 };
 class Memory {
   public:

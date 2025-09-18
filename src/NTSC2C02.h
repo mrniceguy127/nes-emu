@@ -161,17 +161,17 @@ class CPUToPPUAddressMappingFunction : public AddressMappingFunction {
   private:
     NTSC2C02 * ppu;
   public:
-    CPUToPPUAddressMappingFunction(NTSC2C02 * ppu);
-    uint8_t read(uint16_t addr);
-    void write(uint16_t addr, uint8_t data);
+    explicit CPUToPPUAddressMappingFunction(NTSC2C02 * ppu);
+    uint8_t read(uint16_t addr) override;
+    void write(uint16_t addr, uint8_t data) override;
 };
 
 class PPUAddressMappingFunction : public AddressMappingFunction {
   private:
     NTSC2C02 * ppu;
   public:
-    PPUAddressMappingFunction(NTSC2C02 * ppu);
-    uint8_t read(uint16_t addr);
-    void write(uint16_t addr, uint8_t data);
+    explicit PPUAddressMappingFunction(NTSC2C02 * ppu);
+    uint8_t read(uint16_t addr) override;
+    void write(uint16_t addr, uint8_t data) override;
 };
 #endif

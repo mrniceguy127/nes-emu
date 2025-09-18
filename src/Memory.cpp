@@ -31,9 +31,6 @@ void Memory::mapAddress(uint16_t addr, AddressMappingFunction* addressMappingFun
 
 void Memory::mapAddressRange(uint16_t startAddr, uint16_t endAddr, AddressMappingFunction* addressMappingFunction) {
   for (uint16_t addr = startAddr; addr <= endAddr; addr++) {
-    if (addr >= 0x2000 && addr <= 0x2007) {
-      std::cout << "Mapping address: " << std::hex << addr << std::dec << std::endl;
-    }
     mapAddress(addr, addressMappingFunction);
   }
 }
@@ -41,9 +38,6 @@ void Memory::mapAddressRange(uint16_t startAddr, uint16_t endAddr, AddressMappin
 
 AddressMappingFunction::AddressMappingFunction(std::array<uint8_t, 0x10000>& memory) : memory(memory) {}
 uint8_t AddressMappingFunction::read(uint16_t addr) {
-  if (addr = 0x2002) {
-   // std::cout << "Read from 2002" << std::endl;
-  }
   return memory[addr];
 }
 void AddressMappingFunction::write(uint16_t addr, uint8_t data) {     

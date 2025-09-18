@@ -156,8 +156,8 @@ int main() {
     switch(phase) {
       case 0:
         cpu.tick();
-        //dbg.showState();
-        //SDL_Delay(50);
+        dbg.showState();
+        SDL_Delay(50);
         //std::cout << "cpu1" << std::endl;
         //std::cout << "ppu 2002: " << std::hex << int(ppu.PPUSTATUS->get()) << std::dec << std::endl;
         //std::cout << "cpu 2002: " << std::hex << int(cpu.memory->read(0x2002)) << std::dec << std::endl;

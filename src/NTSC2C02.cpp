@@ -249,8 +249,8 @@ void NTSC2C02::tick(R6502 * cpu) {
       //std::cout << "VBLANK Scanline: " << scanLine << " Cycle: " << scanLineCycle << std::endl;
     if (scanLine == 241 && scanLineCycle == 1) {
       //std::cout << "VBLANK\n" << std::endl;
-      std::cout << "ppu 2002: " << std::hex << int(PPUSTATUS->get()) << std::dec << std::endl;
-      std::cout << "cpu 2002: " << std::hex << int(cpu->memory->read(0x2002)) << std::dec << std::endl;
+      //std::cout << "ppu 2002: " << std::hex << int(PPUSTATUS->get()) << std::dec << std::endl;
+      //std::cout << "cpu 2002: " << std::hex << int(cpu->memory->read(0x2002)) << std::dec << std::endl;
       PPUSTATUS->setFlags(STATUS_V, 0x1);
       if (PPUCTRL->getFlag(CTRL_V) && vBlankStatusNotRead) {
         cpu->nmiPending = 0x01;
